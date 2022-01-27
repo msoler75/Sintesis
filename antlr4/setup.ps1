@@ -1,0 +1,1 @@
+$env:CLASSPATH = "D:\projects\juego-programacion\nuxt2\sintesis\jar\antlr-4.9.3-complete.jar;.;" + $env:CLASSPATH

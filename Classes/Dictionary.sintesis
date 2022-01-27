@@ -1,0 +1,23 @@
+class Dictionary {
+
+  attributes : data
+
+  methods:
+
+  method constructor() {
+    attributes.data = vector[]
+  }
+
+  method get(key) {
+    return attributes.data[key]
+  }
+
+  method set(key, value) {
+     attributes.data[key] = value
+  }
+
+  method delete(key) {
+    delete attributes.data[key]
+  }
+  
+}

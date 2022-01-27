@@ -1,0 +1,17 @@
+{
+  "name": "sintesis",
+  "version": "1.0.0",
+  "description": "Lenguaje de programación para aprendizaje",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "testit"
+  },
+  "keywords": [
+    "antlr4"
+  ],
+  "author": "Marcel Soler / Pigmalión",
+  "license": "ISC"
+}
