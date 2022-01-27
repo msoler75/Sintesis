@@ -1,0 +1,9 @@
+// factorial
+fun f(n) { if n<=1 return 1 else return n*f(n-1) } 
+print f(4)
+
+
+// suma
+fun s(a,b) ret a+b
+fun m(a,b) ret a*b
+print s(7, m(2, 3))

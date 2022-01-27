@@ -1,0 +1,6 @@
+// factorial
+fun s() print 1
+s()
+
+fun m(a,b) return a*b
+print m(1,2)

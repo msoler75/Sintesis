@@ -30,7 +30,7 @@ export default class SintesisEval extends SintesisParserVisitor {
   visitFunctionDeclaration(ctx) {
     let id = ctx.id.text
     const fn = new Function(ctx)
-    if (id in this.symbols.currentContext().classes)
+    if (id in this.symbols.currentContext().functions)
       throw new Error(`La función '${id}' ya fue definida en este contexto`)
     this.symbols.addFunction(id, fn)
     return fn
@@ -309,7 +309,9 @@ export default class SintesisEval extends SintesisParserVisitor {
     }
 
     // ejecutamos el cuerpo de la función
-    const r = func.context.stmt ? this.visit(func.context.stmt) : null
+    func.context.stmt ? this.visit(func.context.stmt) : null
+
+    const r = this.symbols.currentContext().functionResult
 
     // restauramos el contexto de símbolos anterior
     this.symbols.popLevel()

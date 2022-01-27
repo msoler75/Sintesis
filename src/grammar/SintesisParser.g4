@@ -9,7 +9,6 @@ parser grammar SintesisParser;
 
 options {
     tokenVocab=SintesisLexer;
-    superClass=SintesisParserBase;
 }
 
 program
@@ -27,10 +26,10 @@ statement
     | ifStatement
     | iterationStatement
     | returnStatement
-    | expression
     | varDeclaration
     | classDeclaration
     | functionDeclaration
+    | expression
     ;
 
 block
@@ -80,14 +79,15 @@ expression
     |    MinusMinus exp=expression                           #expPreDecrease
     |    Plus exp=expression                                 #expUnaryPlus
     |    Minus exp=expression                                #expUnaryMinus
-    |    exp=expression {this.notLineTerminator()}? PlusPlus       #expPostIncrement
-    |    exp=expression {this.notLineTerminator()}? MinusMinus     #expPostDecrease
+    |    exp=expression PlusPlus                             #expPostIncrement
+    |    exp=expression MinusMinus                           #expPostDecrease
     |    Vector? idx=vectorIndexes                                  #expVectorDeclaration
     |    <assoc=right> dest=assignable Assign exp=expression                 #expAssignment
     |    <assoc=right> dest=assignable op=assignmentOperator exp=expression    #expAssignmentOperator
     |    id=Identifier                                       #expIdentifier
     |    literal                                             #expLiteral
     |    '(' exp=expression ')'                              #expParenthesis
+    |    SingleLineComment                                   #expComment
     ;
 
 
@@ -177,6 +177,7 @@ formalParameterArg
 
 functionBody 
     : block
+    | statement
     ;
 
 
@@ -242,13 +243,10 @@ keyword
     | Function_
     | If
     | Vector
-    | Dictionary
     | 
     ;
 
 eos
     : SemiColon
     | EOF
-    | {this.lineTerminatorAhead()}?
-    | {this.closeBrace()}?
     ;

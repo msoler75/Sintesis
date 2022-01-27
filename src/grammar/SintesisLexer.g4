@@ -8,14 +8,6 @@ lexer grammar SintesisLexer;
 
 channels { ERROR }
 
-options { 
-    superClass=SintesisLexerBase; 
-}
-
-@header {
-import SintesisLexerBase from '../grammar/SintesisLexerBase.js';
-}
-
 
 MultiLineComment:               '/*' .*? '*/';
 SingleLineComment:              '//' ~[\r\n\u2028\u2029]*;
@@ -24,8 +16,8 @@ OpenBracket:                    '[';
 CloseBracket:                   ']';
 OpenParen:                      '(';
 CloseParen:                     ')';
-OpenBrace:                      '{' {this.ProcessOpenBrace();};
-CloseBrace:                     '}' {this.ProcessCloseBrace();};
+OpenBrace:                      '{'; 
+CloseBrace:                     '}'; 
 SemiColon:                      ';';
 Comma:                          ',';
 Assign:                         '=';
@@ -142,7 +134,8 @@ Repeat
               :   'repeat'
               |   'repetir'
               |   'repeteix'
-              |   'r' [eé] 'p' [eé] 'ter'
+              |   'repeter'
+              |   'répéter'
               |   'ripetere'
               |   'rep'
               ;
@@ -160,28 +153,31 @@ Then
               |    'llavors'
               |    'poi'
               |    'ensuite'
-              |    'ent' [aã] 'o'
+              |    'entao'
+              |    'então'
               |    'ent'
               ;
 
 ElseIf
               :    'else if'
               |    'elseif'
-              |    'o si'
-              |    'ou se' ' for'?
-              |    'ou si'
-              |    'o s' [èe]
+              |    'o' 'si'
+              |    'ou' 'se' 'for'?
+              |    'ou' 'si'
+              |    'o' 'sè'
+              |    'o' 'se'
               ;
 
 Else
               :    'else'
-              |    'y si no'
-              |    'i si no'
+              |    'y' 'si' 'no'
+              |    'i' 'si' 'no'
               |    'o'
               |    'altrament'
               |    'sinon'
               |    'altrimenti'
-              |    'sen' [ãa] ' o'
+              |    'senã' 'o'
+              |    'sena' 'o'
               ;
 
 Return
@@ -196,10 +192,12 @@ Return
 
 Function_   
               :    'function'
-              |    'funci' [óo] 'n'
+              |    'funcion'
+              |    'función'
               |    'fonction'
               |    'funzione'
-              |    'fun' [çc][aã] 'o'
+              |    'funçao'
+              |    'função'
               |    'fun'
               ;
 
@@ -209,7 +207,8 @@ Vector
               |    'matriu'
               |    'arreglo'
               |    'vecteur'
-              |    'd' [eé] 'ployer'
+              |    'deployer'
+              |    'déployer'
               |    'vettore'
               |    'vetor'
               |    'variedade'
@@ -232,7 +231,8 @@ Delete
 NumberOf       
               :     'num'
               |     'numero'
-              |     'tama' [nñ] 'o'
+              |     'tamano'
+              |     'tamaño'
               |     'size'
               |     'length'
               |     'len'
@@ -289,7 +289,8 @@ Dictionary
               |    'diccionari'
               |    'dictionnaire'
               |    'dizionario'
-              |    'dicion' [aá] 'rio'
+              |    'dicionario'
+              |    'dicionário'
               |    'mapa'
               |    'carte'
               |    'mappa'
@@ -310,8 +311,11 @@ Set
               :     'set'
               |     'establecer'
               |     'establir'
+              |     'asignar'
+              |     'assignar'
               |     'stabilire'
-              |     [eé] 'tablir'
+              |     'etablir'
+              |     'établir'
               |     'estabelecer'
               |     'est'
               ;
