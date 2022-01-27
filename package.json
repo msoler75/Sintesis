@@ -7,11 +7,29 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "testit"
+    "test": "jest",
+    "generate": "java  -cp D:/projects/juego-programacion/sintesis/antlr4/jar/antlr-4.9.3-complete.jar org.antlr.v4.Tool -Dlanguage=JavaScript -DsuperClass=SintesisLexerBase -lib ./src ./src/grammar/SintesisLexer.g4 ./src/grammar/SintesisParser.g4 -o ./src/generated -no-listener -visitor",
+    "setup": "@powershell -NoProfile -ExecutionPolicy Unrestricted -Command ./sintesis/setup.ps1"
   },
   "keywords": [
     "antlr4"
   ],
   "author": "Marcel Soler / Pigmalión",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "antlr4": "^4.9.3",
+    "fs": "^0.0.1-security",
+    "jest": "^27.4.7"
+  },
+  "jest": {
+    "verbose": true,
+    "transformIgnorePatterns": [
+      "node_modules/(?!variables/.*)"
+    ]
+  },
+  "devDependencies": {
+    "@babel/core": "^7.16.12",
+    "@babel/preset-env": "^7.16.11",
+    "babel-jest": "^27.4.6"
+  }
 }

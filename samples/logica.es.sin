@@ -1,0 +1,29 @@
+c = cierto
+f = falso
+
+imprimir f || f
+imprimir f || c
+imprimir c || f
+imprimir c || c
+imprimir f && f
+imprimir f && c
+imprimir c && f
+imprimir c && c
+
+imprimir !(f || f)
+imprimir !(f || c)
+imprimir !(c || f)
+imprimir !(c || c)
+imprimir !(f && f)
+imprimir !(f && c)
+imprimir !(c && f)
+imprimir !(c && c)
+
+imprimir !f || !f
+imprimir !f || !c
+imprimir !c || !f
+imprimir !c || !c
+imprimir !f && !f
+imprimir !f && !c
+imprimir !c && !f
+imprimir !c && !c

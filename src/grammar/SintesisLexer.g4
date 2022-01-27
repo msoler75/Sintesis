@@ -12,6 +12,10 @@ options {
     superClass=SintesisLexerBase; 
 }
 
+@header {
+import SintesisLexerBase from '../grammar/SintesisLexerBase.js';
+}
+
 
 MultiLineComment:               '/*' .*? '*/';
 SingleLineComment:              '//' ~[\r\n\u2028\u2029]*;
@@ -173,6 +177,7 @@ Else
               :    'else'
               |    'y si no'
               |    'i si no'
+              |    'o'
               |    'altrament'
               |    'sinon'
               |    'altrimenti'

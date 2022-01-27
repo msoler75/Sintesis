@@ -1,9 +1,9 @@
-// Generated from ./sintesis/Sintesis/src/SintesisParser.g4 by ANTLR 4.9.3
+// Generated from ./src/grammar/SintesisParser.g4 by ANTLR 4.9.3
 // jshint ignore: start
 import antlr4 from 'antlr4';
 import SintesisParserVisitor from './SintesisParserVisitor.js';
 
-import SintesisParserBase from './SintesisParserBase.js';
+import SintesisLexerBase from './SintesisLexerBase.js';
 
 
 const serializedATN = ["\u0003\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786",
@@ -332,7 +332,7 @@ const decisionsToDFA = atn.decisionToState.map( (ds, index) => new antlr4.dfa.DF
 
 const sharedContextCache = new antlr4.PredictionContextCache();
 
-export default class SintesisParser extends SintesisParserBase {
+export default class SintesisParser extends SintesisLexerBase {
 
     static grammarFileName = "SintesisParser.g4";
     static literalNames = [ null, null, null, "'['", "']'", "'('", "')'", 

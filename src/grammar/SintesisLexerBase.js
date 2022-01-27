@@ -1,5 +1,5 @@
 import antlr4 from 'antlr4';
-import JavaScriptLexer from './SintesisLexer.js';
+import JavaScriptLexer from '../lib/SintesisLexer.js';
 
 export default class BasicLexerBase extends antlr4.Lexer {
 

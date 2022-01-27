@@ -1,0 +1,16 @@
+a=nuevo Vector[][4]
+a[1][3]=1 
+print num(a)
+eliminar a[3]
+sumar([3])
+a[4] = "amor"
+a["pepe"] = "javier"
+b=nuevo Diccionario()
+b.establecer('123','Jorge')
+print b.get('123')
+print a
+c = nuevo Cliente(123, 'Jorge', 'García')
+si(c es Persona) 
+{
+  print c
+}

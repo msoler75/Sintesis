@@ -1,0 +1,16 @@
+a=1
+imprimir 1>2
+imprimir 2>2
+imprimir 3>2
+imprimir 1<2
+imprimir 2<2
+imprimir 3<2
+imprimir 1>=2
+imprimir 2>=2
+imprimir 3>=2
+imprimir 1<=2
+imprimir 2<=2
+imprimir 3<=2
+imprimir 1==a
+imprimir a!=1
+

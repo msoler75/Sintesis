@@ -1,5 +1,5 @@
 import antlr4 from 'antlr4';
-import SintesisParser from './SintesisParser.js';
+import SintesisParser from '../lib/SintesisParser.js';
 
 export default class SintesisParserBase extends antlr4.Parser {
 

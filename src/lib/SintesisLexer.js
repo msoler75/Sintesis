@@ -1,9 +1,9 @@
-// Generated from ./sintesis/Sintesis/src/SintesisLexer.g4 by ANTLR 4.9.3
+// Generated from ./src/grammar/SintesisLexer.g4 by ANTLR 4.9.3
 // jshint ignore: start
 import antlr4 from 'antlr4';
 
 
-import SintesisLexerBase from './SintesisLexerBase.js';
+import SintesisLexerBase from '../grammar/SintesisLexerBase.js';
 
 
 const serializedATN = ["\u0003\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786",

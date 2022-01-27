@@ -1,25 +1,9 @@
-import SintesisParserVisitor from './SintesisParserVisitor.js';
 import Class from './internals/Class.js'
 import Vector from './internals/Vector.js'
 import Variable from './internals/Variable.js'
 import Function from './internals/Function.js'
 import SymbolContexts from './internals/SymbolContexts.js'
-
-/*
-const IAmInsideFunction = (ctx) => {
-  for (let c = ctx; c; c = c.parentCtx)
-    if (c.constructor.name == 'FunctionDeclarationContext')
-      return c.fn
-  return null;
-}
-
-const IAmInsideClass = (ctx) => {
-  for (let c = ctx; c; c = c.parentCtx)
-    if (c.constructor.name == 'ClassDeclarationContext')
-      return c
-  return null;
-}
-*/
+import SintesisParserVisitor from './lib/SintesisParserVisitor.js'
 
 export default class SintesisEval extends SintesisParserVisitor {
 
