@@ -1,0 +1,6 @@
+{
+    "scripts":{
+        "compile": "javac -cp D:/projects/juego-programacion/sintesis/antlr4/jar/antlr-4.9.3-complete.jar *.java",
+        "grun": "java -cp D:/projects/juego-programacion/sintesis/antlr4/jar/antlr-4.9.3-complete.jar;. org.antlr.v4.gui.TestRig Sintesis program -gui "
+    }
+}

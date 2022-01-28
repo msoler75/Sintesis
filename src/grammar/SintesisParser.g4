@@ -247,8 +247,3 @@ keyword
     | Vector
     | 
     ;
-
-eos
-    : SemiColon
-    | EOF
-    ;

@@ -1,5 +1,5 @@
 import exec from '../bin/exec.js'
-test('Variables-1', () => {
+test('logical-1', () => {
     
     expect(exec(
         `c = cierto

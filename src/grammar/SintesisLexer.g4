@@ -159,25 +159,24 @@ Then
               ;
 
 ElseIf
-              :    'else if'
-              |    'elseif'
-              |    'o' 'si'
-              |    'ou' 'se' 'for'?
-              |    'ou' 'si'
-              |    'o' 'sè'
-              |    'o' 'se'
+              :    'else'[ \t\n]*'if'
+              |    'o'[ \t\n]+'si'
+              |    'ou'[ \t\n]+'se'[ \t\n]+'for'?
+              |    'ou'[ \t\n]+'si'
+              |    'o'[ \t\n]+'sè'
+              |    'o'[ \t\n]+'se'
               ;
 
 Else
               :    'else'
-              |    'y' 'si' 'no'
-              |    'i' 'si' 'no'
+              |    'y'[ \t\n]+'si'[ \t\n]+'no'
+              |    'i'[ \t\n]+'si'[ \t\n]+'no'
               |    'o'
               |    'altrament'
               |    'sinon'
               |    'altrimenti'
-              |    'senã' 'o'
-              |    'sena' 'o'
+              |    'senã'[ \t\n]+'o'
+              |    'sena'[ \t\n]+'o'
               ;
 
 Return
