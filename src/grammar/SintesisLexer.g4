@@ -269,6 +269,7 @@ Attributes
 Methods
               :     'methods'
               |     'metodos'
+              |     'métodos'
               ;
 
 Super

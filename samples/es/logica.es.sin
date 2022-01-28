@@ -1,28 +1,37 @@
 c = cierto
 f = falso
 
+imprimir "O"
 imprimir f || f
 imprimir f || c
 imprimir c || f
 imprimir c || c
+
+imprimir "Y"
 imprimir f && f
 imprimir f && c
 imprimir c && f
 imprimir c && c
 
+imprimir "NO O"
 imprimir !(f || f)
 imprimir !(f || c)
 imprimir !(c || f)
 imprimir !(c || c)
+
+imprimir "NO Y"
 imprimir !(f && f)
 imprimir !(f && c)
 imprimir !(c && f)
 imprimir !(c && c)
 
+imprimir "O(con valores invertidos)"
 imprimir !f || !f
 imprimir !f || !c
 imprimir !c || !f
 imprimir !c || !c
+
+imprimir "Y(con valores invertidos)"
 imprimir !f && !f
 imprimir !f && !c
 imprimir !c && !f

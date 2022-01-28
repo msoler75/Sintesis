@@ -90,6 +90,12 @@ export default class SintesisParserVisitor extends antlr4.tree.ParseTreeVisitor 
 	}
 
 
+	// Visit a parse tree produced by SintesisParser#expSuperExpression.
+	visitExpSuperExpression(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
 	// Visit a parse tree produced by SintesisParser#expOp.
 	visitExpOp(ctx) {
 	  return this.visitChildren(ctx);
@@ -108,20 +114,26 @@ export default class SintesisParserVisitor extends antlr4.tree.ParseTreeVisitor 
 	}
 
 
-	// Visit a parse tree produced by SintesisParser#expNot.
-	visitExpNot(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
 	// Visit a parse tree produced by SintesisParser#expPreDecrease.
 	visitExpPreDecrease(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
+	// Visit a parse tree produced by SintesisParser#expNot.
+	visitExpNot(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
 	// Visit a parse tree produced by SintesisParser#expBitNot.
 	visitExpBitNot(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by SintesisParser#expMethodCall.
+	visitExpMethodCall(ctx) {
 	  return this.visitChildren(ctx);
 	}
 

@@ -1,11 +1,4 @@
-import exec from '../bin/exec.js'
-test('Variables-1', () => {
-    expect(exec(`a=1 imprimir a`)).toContainText('1')
-})
-
-test('Variables-2', () => {
-    expect(exec(`
-    // asigna un valor a una variable, y como no existe, la crea
+ // asigna un valor a una variable, y como no existe, la crea
     a = 1
 
     // imprime el valor de a
@@ -31,5 +24,3 @@ test('Variables-2', () => {
     }
 
     imprimir a
-`)).toContainText('1 2 2 3 2')
-})

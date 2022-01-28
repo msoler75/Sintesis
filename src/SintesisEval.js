@@ -2,6 +2,7 @@ import Class from './internals/Class.js'
 import Vector from './internals/Vector.js'
 import Variable from './internals/Variable.js'
 import Function from './internals/Function.js'
+import SintesisError from './SintesisError.js'
 import SymbolContexts from './internals/SymbolContexts.js'
 import SintesisParserVisitor from './lib/SintesisParserVisitor.js'
 
@@ -31,7 +32,7 @@ export default class SintesisEval extends SintesisParserVisitor {
     let id = ctx.id.text
     const fn = new Function(ctx)
     if (id in this.symbols.currentContext().functions)
-      throw new Error(`La función '${id}' ya fue definida en este contexto`)
+      throw new SintesisError(ctx.id, `La función '${id}' ya fue definida en este contexto`)
     this.symbols.addFunction(id, fn)
     return fn
   }
@@ -50,7 +51,7 @@ export default class SintesisEval extends SintesisParserVisitor {
       methods[idm] = method
     }
     if (id in this.symbols.currentContext().classes)
-      throw new Error(`La clase '${id}' ya fue definida en este contexto`)
+      throw new SintesisError(ctx.id, `La clase '${id}' ya fue definida en este contexto`)
     const cls = new Class(id, extend, attributes, methods)
     this.symbols.addClass(id, cls)
     return this.visitChildren(ctx)
@@ -103,7 +104,7 @@ export default class SintesisEval extends SintesisParserVisitor {
 	visitExpVectorDeclaration(ctx) {
     const id = ctx.id.text
     if (id in this.symbols.currentContext().variables)
-      throw new Error(`La variable '${id}' ya fue declarada en este contexto`)
+      throw new SintesisError(ctx.id, `La variable '${id}' ya fue declarada en este contexto`)
     const idx = this.visitChildren(ctx.idx)
 	  let vec = new Vector(idx.map(x => x + 1))
     this.symbols.addVar(id, vec)
@@ -113,7 +114,7 @@ export default class SintesisEval extends SintesisParserVisitor {
 	visitVarSingleDeclaration(ctx) {
     const id = ctx.id.text
     if (id in this.symbols.currentContext().variables)
-      throw new Error(`La variable '${id}' ya fue declarada en este contexto`)
+      throw new SintesisError(ctx.id, `La variable '${id}' ya fue declarada en este contexto`)
     let value = this.visit(ctx.exp);
     let variable = new Variable(value)
     this.symbols.addVar(id, variable)
@@ -138,9 +139,9 @@ export default class SintesisEval extends SintesisParserVisitor {
     const idx = this.visitChildren(ctx.idx)
     let vec = this.symbols.findVar(id)
     if (!vec)
-      throw new Error(`El vector ${id} no existe`)
+      throw new SintesisError(ctx.id, `El vector ${id} no existe`)
     if (!(vec instanceof Vector))
-      throw new Error(`La variable ${id} no es un vector`)
+      throw new SintesisError(ctx.id, `La variable ${id} no es un vector`)
     return vec.getValueFrom(idx)
   }
 
@@ -156,7 +157,7 @@ export default class SintesisEval extends SintesisParserVisitor {
     if (!context)
       context = findContextBlock(ctx)*/
     if (!variable)
-      throw new Error(`No se ha encontrado ${id}`)
+      throw new SintesisError(ctx.id, `No se ha encontrado ${id}`)
     let r = e1
     switch (ctx.op.text) {
       case '*=':
@@ -293,7 +294,7 @@ export default class SintesisEval extends SintesisParserVisitor {
     let id = ctx.id.text
     let func = this.symbols.findFunc(id)
     if (!func)
-      throw new Error(`La función '${id}' no existe`)
+      throw new SintesisError(ctx.id, `La función '${id}' no existe`)
 
     // obtenemos los argumentos o parámetros de la función y los valores
     let params = func.context.pl ? this.visit(func.context.pl).params : []
@@ -324,7 +325,7 @@ export default class SintesisEval extends SintesisParserVisitor {
     const r = this.visit(ctx.exp)
     let callContext = this.symbols.getFuncContext()
     if (!callContext)
-      throw new Error('Se ha intentado retornar de un contexto que no es una función o método')
+      throw new SintesisError(ctx, 'Se ha intentado retornar de un contexto que no es una función o método')
     callContext.functionEnded = true
     callContext.functionResult = r
     return r;
@@ -371,7 +372,7 @@ export default class SintesisEval extends SintesisParserVisitor {
     const id = ctx.id.text
     let variable = this.symbols.findVar(id)
     if (!variable)
-      throw new Error(`La variable ${this.id} no ha sido definida`);
+      throw new SintesisError(ctx.id, `La variable ${id} no ha sido definida`);
     return variable.value
   }
 
@@ -394,9 +395,9 @@ export default class SintesisEval extends SintesisParserVisitor {
   visitPrintStatement(ctx) {
     let r = this.visit(ctx.exp);
     if (r instanceof Vector)
-      r = r.data
+      r = r.text()
     this.output += r +'\n'
-    console.log('PRINTING', r);
+    // console.log('PRINTING', r);
     return r
   }
 

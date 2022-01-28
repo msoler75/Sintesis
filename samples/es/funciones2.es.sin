@@ -1,5 +1,5 @@
 // factorial
-fun f(n) { if n<=1 return 1 else return n*f(n-1) } 
+fun f(n) if n<=1 ret 1 else ret n*f(n-1)
 print f(4)
 
 

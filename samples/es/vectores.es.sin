@@ -1,3 +1,5 @@
 a = vector [3]
 m = vector [2][3]
 
+print a
+print m

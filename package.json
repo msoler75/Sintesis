@@ -26,7 +26,8 @@
     "verbose": true,
     "transformIgnorePatterns": [
       "node_modules/(?!variables/.*)"
-    ]
+    ],
+    "setupFilesAfterEnv": ["./setupJest.js"]
   },
   "devDependencies": {
     "@babel/core": "^7.16.12",

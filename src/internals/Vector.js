@@ -76,6 +76,16 @@ class Vector extends Variable {
   size() {
     return this.data.length
   }
+
+  toText(v) {
+    if(Array.isArray(v)) 
+      return  '[' + v.map(x=>this.toText(x)).join(', ') +']'
+    return v
+  }
+
+  text() {
+    return this.toText(this.data)
+  }
 }
 
 export default Vector

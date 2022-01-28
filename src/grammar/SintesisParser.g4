@@ -45,49 +45,51 @@ printStatement
     ;
 
 expression 
-    :    id=Identifier idx=vectorIndexes                     #expVector
-    |    id=Identifier args=arguments                        #expFunctionCall
-    |    id=Identifier '.' Get '(' exp=expression ')'        #expDictionaryGet
-    |    id=Identifier '.' Set '(' key=StringLiteral ',' expression ')'        #expDictionarySet
-    |    id=Identifier '.' Delete '(' key=StringLiteral ')'  #expDictionaryDelete
-    |    id=Identifier '.' method=Identifier args=arguments  #expMemberMethod
-    |    id=Identifier '.' attr=Identifier                   #expMemberAttribute
-    |    id=Identifier InstanceOf is=Identifier              #expInstanceOf
-    |    Attributes '.' id=Identifier                        #expAttribute
-    |    e1=expression op=Plus e2=expression                 #expOp
-    |    e1=expression op=Minus e2=expression                #expOp
-    |    e1=expression op=Multiply e2=expression             #expOp
-    |    e1=expression op=Divide e2=expression               #expOp
-    |    e1=expression op=Power e2=expression                #expOp
-    |    e1=expression op=Modulus e2=expression              #expOp
-    |    e1=expression op=LessThan e2=expression             #expOp
-    |    e1=expression op=MoreThan e2=expression             #expOp
-    |    e1=expression op=LessThanEquals e2=expression       #expOp
-    |    e1=expression op=GreaterThanEquals e2=expression    #expOp
-    |    e1=expression op=BitAnd e2=expression               #expOp
-    |    e1=expression op=BitOr e2=expression                #expOp
-    |    e1=expression op=BitXOr e2=expression               #expOp
-    |    e1=expression op=IdentityEquals e2=expression       #expOp
-    |    e1=expression op=IdentityNotEquals e2=expression    #expOp
-    |    e1=expression op=Equals_ e2=expression              #expOp
-    |    e1=expression op=NotEquals e2=expression            #expOp
-    |    e1=expression op=And e2=expression                  #expOp
-    |    e1=expression op=Or e2=expression                   #expOp
-    |    Not exp=expression                                  #expNot
-    |    BitNot exp=expression                               #expBitNot
-    |    PlusPlus exp=expression                             #expPreIncrement
-    |    MinusMinus exp=expression                           #expPreDecrease
-    |    Plus exp=expression                                 #expUnaryPlus
-    |    Minus exp=expression                                #expUnaryMinus
-    |    exp=expression PlusPlus                             #expPostIncrement
-    |    exp=expression MinusMinus                           #expPostDecrease
-    |    Vector? idx=vectorIndexes                                  #expVectorDeclaration
-    |    <assoc=right> dest=assignable Assign exp=expression                 #expAssignment
+    :    id=Identifier idx=vectorIndexes                                #expVector
+    |    id=Identifier args=arguments                                   #expFunctionCall
+    |    id=Identifier '.' Get '(' exp=expression ')'                   #expDictionaryGet
+    |    id=Identifier '.' Set '(' key=StringLiteral ',' expression ')' #expDictionarySet
+    |    id=Identifier '.' Delete '(' key=StringLiteral ')'             #expDictionaryDelete
+    |    id=Identifier '.' method=Identifier args=arguments             #expMemberMethod
+    |    id=Identifier '.' attr=Identifier                              #expMemberAttribute
+    |    id=Identifier InstanceOf is=Identifier                         #expInstanceOf
+    |    Attributes '.' id=Identifier                                   #expAttribute
+    |    Methods '.' id=Identifier  args=arguments                      #expMethodCall
+    |    Super  args=arguments                                          #expSuperExpression
+    |    PlusPlus exp=expression                                        #expPreIncrement
+    |    MinusMinus exp=expression                                      #expPreDecrease
+    |    Plus exp=expression                                            #expUnaryPlus
+    |    Minus exp=expression                                           #expUnaryMinus
+    |    BitNot exp=expression                                          #expBitNot
+    |    Not exp=expression                                             #expNot
+    |    e1=expression op=Plus e2=expression                            #expOp
+    |    e1=expression op=Minus e2=expression                           #expOp
+    |    e1=expression op=Multiply e2=expression                        #expOp
+    |    e1=expression op=Divide e2=expression                          #expOp
+    |    <assoc=right> e1=expression op=Power e2=expression             #expOp
+    |    e1=expression op=Modulus e2=expression                         #expOp
+    |    e1=expression op=LessThan e2=expression                        #expOp
+    |    e1=expression op=MoreThan e2=expression                        #expOp
+    |    e1=expression op=LessThanEquals e2=expression                  #expOp
+    |    e1=expression op=GreaterThanEquals e2=expression               #expOp
+    |    e1=expression op=BitAnd e2=expression                          #expOp
+    |    e1=expression op=BitOr e2=expression                           #expOp
+    |    e1=expression op=BitXOr e2=expression                          #expOp
+    |    e1=expression op=IdentityEquals e2=expression                  #expOp
+    |    e1=expression op=IdentityNotEquals e2=expression               #expOp
+    |    e1=expression op=Equals_ e2=expression                         #expOp
+    |    e1=expression op=NotEquals e2=expression                       #expOp
+    |    e1=expression op=And e2=expression                             #expOp
+    |    e1=expression op=Or e2=expression                              #expOp
+    |    exp=expression PlusPlus                                        #expPostIncrement
+    |    exp=expression MinusMinus                                      #expPostDecrease
+    |    Vector? idx=vectorIndexes                                      #expVectorDeclaration
+    |    <assoc=right> dest=assignable Assign exp=expression            #expAssignment
     |    <assoc=right> dest=assignable op=assignmentOperator exp=expression    #expAssignmentOperator
-    |    id=Identifier                                       #expIdentifier
-    |    literal                                             #expLiteral
-    |    '(' exp=expression ')'                              #expParenthesis
-    |    SingleLineComment                                   #expComment
+    |    id=Identifier                                                  #expIdentifier
+    |    literal                                                        #expLiteral
+    |    '(' exp=expression ')'                                         #expParenthesis
+    |    SingleLineComment                                              #expComment
     ;
 
 
