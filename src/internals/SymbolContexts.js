@@ -119,7 +119,9 @@ class SymbolContexts {
   addVar(id, value) {
     if(!(value instanceof Variable))
       throw new Error('Adding a non Variable class')
-    this.contexts[this.current].variables[id] = value
+    let context = this.contexts[this.current]
+    context.variables[id] = value
+    return context.variables[id]
   }
 
   // añade una función al contexto actual
@@ -128,6 +130,7 @@ class SymbolContexts {
       throw new Error('Adding a non Function class')
     let context = this.contexts[this.current]
     context.functions[id] = value
+    return context.functions[id]
   }
 
   // añade una clase  al contexto actual
@@ -136,15 +139,16 @@ class SymbolContexts {
       throw new Error('Adding a non {Class} class')
     let context = this.contexts[this.current]
     context.classes[id] = value
+    return context.classes[id]
   }
 
   // busca primero si existe la variable enalgun contexto actual o previo y si no, la crea en el contexto actual
   varAssign(id, value) {
-    let idContext = this.findVarContext(id)
+    let idContext = this.findVarIndex(id)
     if (idContext < 0)
       return this.addVar(id, value)
     if(!(value instanceof Variable))
-      console.warning(value, 'is not Variable Class')
+      console.warn(value, 'is not Variable Class')
     this.contexts[idContext].variables[id] = value
   }
 }

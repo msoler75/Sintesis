@@ -54,8 +54,8 @@ export default class SintesisParserVisitor extends antlr4.tree.ParseTreeVisitor 
 	}
 
 
-	// Visit a parse tree produced by SintesisParser#expPostDecrease.
-	visitExpPostDecrease(ctx) {
+	// Visit a parse tree produced by SintesisParser#expMapDeclaration.
+	visitExpMapDeclaration(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -110,12 +110,6 @@ export default class SintesisParserVisitor extends antlr4.tree.ParseTreeVisitor 
 
 	// Visit a parse tree produced by SintesisParser#expMemberMethod.
 	visitExpMemberMethod(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by SintesisParser#expPreDecrease.
-	visitExpPreDecrease(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -204,6 +198,12 @@ export default class SintesisParserVisitor extends antlr4.tree.ParseTreeVisitor 
 	}
 
 
+	// Visit a parse tree produced by SintesisParser#expNumberOf.
+	visitExpNumberOf(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
 	// Visit a parse tree produced by SintesisParser#expressionSequence.
 	visitExpressionSequence(ctx) {
 	  return this.visitChildren(ctx);
@@ -252,6 +252,24 @@ export default class SintesisParserVisitor extends antlr4.tree.ParseTreeVisitor 
 	}
 
 
+	// Visit a parse tree produced by SintesisParser#forFromToStatement.
+	visitForFromToStatement(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by SintesisParser#forEachInCollectionStatement.
+	visitForEachInCollectionStatement(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by SintesisParser#forEachOfCollectionStatement.
+	visitForEachOfCollectionStatement(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
 	// Visit a parse tree produced by SintesisParser#returnStatement.
 	visitReturnStatement(ctx) {
 	  return this.visitChildren(ctx);
@@ -260,6 +278,12 @@ export default class SintesisParserVisitor extends antlr4.tree.ParseTreeVisitor 
 
 	// Visit a parse tree produced by SintesisParser#vectorDeclaration.
 	visitVectorDeclaration(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by SintesisParser#mapDeclaration.
+	visitMapDeclaration(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -330,6 +354,12 @@ export default class SintesisParserVisitor extends antlr4.tree.ParseTreeVisitor 
 	}
 
 
+	// Visit a parse tree produced by SintesisParser#vectorLiteral.
+	visitVectorLiteral(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
 	// Visit a parse tree produced by SintesisParser#formalParameterArg.
 	visitFormalParameterArg(ctx) {
 	  return this.visitChildren(ctx);
@@ -354,8 +384,8 @@ export default class SintesisParserVisitor extends antlr4.tree.ParseTreeVisitor 
 	}
 
 
-	// Visit a parse tree produced by SintesisParser#assignableVector.
-	visitAssignableVector(ctx) {
+	// Visit a parse tree produced by SintesisParser#assignableMapOrVector.
+	visitAssignableMapOrVector(ctx) {
 	  return this.visitChildren(ctx);
 	}
 

@@ -1,0 +1,13 @@
+para a=1 hasta 3 repetir {
+        imprimir a
+    }
+
+para a=1 .. 3 repetir {
+    imprimir a
+}
+
+para a=1 .. 6 repetir {
+    imprimir a
+    si a==2 a=5
+}
+

@@ -6,11 +6,11 @@ else {
 }
 
 a = 1
-mientras a < 6 repetir {
+mientras a < 7 repetir {
     si a == 1 imprimir "1"
     elseif a == 2 imprimir "2"
     elseif a == 3 imprimir "3"
     elseif a == 4 imprimir "4"
-    o imprimir "otros"
+    y si no imprimir ">4"
     a++
 }

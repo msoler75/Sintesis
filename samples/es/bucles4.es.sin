@@ -1,0 +1,3 @@
+para (a en ['r', 'f', 33]) imp a
+
+para cada (a en [3, 2, 1]) imp a

@@ -1,13 +1,15 @@
+import Map from './internals/Map.js'
 import Class from './internals/Class.js'
+import Object from './internals/Object.js'
 import Vector from './internals/Vector.js'
 import Variable from './internals/Variable.js'
 import Function from './internals/Function.js'
+import Iterator from './internals/Iterator.js'
 import SintesisError from './SintesisError.js'
 import SymbolContexts from './internals/SymbolContexts.js'
 import SintesisParserVisitor from './lib/SintesisParserVisitor.js'
 
 export default class SintesisEval extends SintesisParserVisitor {
-
 
   // Visit a parse tree produced by SintesisParser#program.
   visitProgram(ctx) {
@@ -17,15 +19,6 @@ export default class SintesisEval extends SintesisParserVisitor {
     return this.visitChildren(ctx);
   }
 
-  // Visit a parse tree produced by SintesisParser#vectorDeclaration.
-  /*visitVectorDeclaration(ctx) {
-    let id = ctx.id.text;
-    let indexes = this.visitChildren(ctx.idx)
-    let [context, fid] = findContextBlock(ctx)
-    if (!('vars' in context)) context.vars = {}
-    context.vars[fid] = new Vector(indexes)
-    return this.visitChildren(ctx)
-  }*/
 
   // Visit a parse tree produced by SintesisParser#functionDeclaration.
   visitFunctionDeclaration(ctx) {
@@ -43,6 +36,7 @@ export default class SintesisEval extends SintesisParserVisitor {
     const id = ctx.id.text;
     const extend = ctx.ext ? this.visitChildren(ctx.ext) : null
     const attributes = ctx.atrs ? ctx.atrs.children.map(x => x.getText()).filter(x => x != ',') : {}
+    // const attributes = ctx.atrs? ctx.atrs.children.filter(x=>x.constructor.name!=='TerminalNodeImpl').map(x => x.getText())
     const methodList = ctx.methods ? ctx.methods.children.map(x => new Function(x, ctx)) : {}
     let methods = {}
     for (const i in methodList) {
@@ -74,51 +68,48 @@ export default class SintesisEval extends SintesisParserVisitor {
       }
       break
 
-    case 'AssignableVectorContext': {
+    case 'AssignableMapOrVectorContext': {
       let idx = this.visitChildren(ctx.dest.idx)
-      let vec = this.symbols.findVar(id)
-      if (vec && !(vec instanceof Vector))
-        vec = null
-      if (!vec) {
-        vec = new Vector(idx.map(x => x + 1))
-        this.symbols.addVar(id, vec)
+      let obj = this.symbols.findVar(id)
+      if (!obj) {
+        if (value && typeof value === 'string')
+          obj = new Map()
+        else
+          obj = Vector.createWithSizes(idx.map(x => x + 1))
       }
       // set value in vector
-      vec.setValueAt(idx, value)
+      if (obj instanceof Map)
+        obj.set(idx[0], value)
+      else if(obj instanceof Vector)
+        obj.setValueAt(idx, value)
+      else if(obj instanceof Variable)
+        obj.value = value
+      this.symbols.varAssign(id, obj)
+      return obj.value
     }
-    break
+
 
     default: {
       let variable = this.symbols.findVar(id)
       if (!variable) {
-        variable = new Variable(value)
+        variable = Array.isArray(variable)?new Vector(variable):typeof variable ==='object'?new Map(variable):new Variable(value)
         this.symbols.addVar(id, variable)
-      }
-      variable.setValue(value)
+      } else
+        variable.value = value
     }
     }
     return value
   }
 
-  // Visit a parse tree produced by SintesisParser#expVectorDeclaration.
-	visitExpVectorDeclaration(ctx) {
-    const id = ctx.id.text
-    if (id in this.symbols.currentContext().variables)
-      throw new SintesisError(ctx.id, `La variable '${id}' ya fue declarada en este contexto`)
-    const idx = this.visitChildren(ctx.idx)
-	  let vec = new Vector(idx.map(x => x + 1))
-    this.symbols.addVar(id, vec)
-	}
-
   // Visit a parse tree produced by SintesisParser#varSingleDeclaration.
-	visitVarSingleDeclaration(ctx) {
+  visitVarSingleDeclaration(ctx) {
     const id = ctx.id.text
     if (id in this.symbols.currentContext().variables)
       throw new SintesisError(ctx.id, `La variable '${id}' ya fue declarada en este contexto`)
     let value = this.visit(ctx.exp);
     let variable = new Variable(value)
     this.symbols.addVar(id, variable)
-	}
+  }
 
 
   // Visit a parse tree produced by SintesisParser#vectorIndex.
@@ -127,11 +118,53 @@ export default class SintesisEval extends SintesisParserVisitor {
     return items.length ? this.visit(items[0]) : null
   }
 
-  // Visit a parse tree produced by SintesisParser#expVectorDeclaration.
   visitExpVectorDeclaration(ctx) {
     let indexes = this.visitChildren(ctx.idx)
-    return new Vector(indexes)
+    let defaultValue = 0
+    if (ctx.args) {
+      let args = this.visit(ctx.args).values
+      defaultValue = args[0]
+    }
+    return Vector.createWithSizes(indexes, defaultValue).value
   }
+
+
+
+  visitExpNumberOf(ctx) {
+    var value = this.visit(ctx.exp)
+    if (!value) return 0
+    if (typeof value !== 'object')
+      throw new SintesisError(ctx.exp, 'Tipo incorrecto')
+    if (Array.isArray(value)) {
+      let vec = new Vector(value)
+      return vec.size()
+    }
+    let map = new Map(value)
+    return map.size()
+  }
+
+
+  visitExpMapDeclaration(ctx) {
+    return new Map().value
+  }
+
+
+  // Visit a parse tree produced by SintesisParser#vectorLiteral.
+  visitVectorLiteral(ctx) {
+    let values = ctx.children.filter(x => x.constructor.name !== 'TerminalNodeImpl').map(x => this.visit(x))
+    return new Vector(values).value
+  }
+
+
+  // Visit a parse tree produced by SintesisParser#expVectorDeclaration.
+  /*visitExpVectorDeclaration(ctx) {
+    const id = ctx.id.text
+    if (id in this.symbols.currentContext().variables)
+      throw new SintesisError(ctx.id, `La variable '${id}' ya fue declarada en este contexto`)
+    const idx = this.visitChildren(ctx.idx)
+    let vec = Vector.createWithSizes(idx.map(x => x + 1))
+    this.symbols.addVar(id, vec)
+  }*/
 
   // Visit a parse tree produced by SintesisParser#expVector.
   visitExpVector(ctx) {
@@ -195,7 +228,7 @@ export default class SintesisEval extends SintesisParserVisitor {
         break;
     }
     // context.vars[fid] = r
-    variable.setValue(r)
+    variable.value = r
     return r
   }
 
@@ -288,6 +321,66 @@ export default class SintesisEval extends SintesisParserVisitor {
       this.visit(ctx.stmt)
   }
 
+  // Visit a parse tree produced by SintesisParser#forFromToStatement.
+  visitForFromToStatement(ctx) {
+    const id = ctx.id.text
+    const start = this.visit(ctx.start)
+    const to = this.visit(ctx.to)
+    this.symbols.pushLevel()
+    let it = this.symbols.addVar(id, new Variable(start))
+    while (it.value <= to) {
+      this.visit(ctx.stmt)
+      it.value++
+    }
+    this.symbols.popLevel()
+  }
+
+
+
+  // Visit a parse tree produced by SintesisParser#forEachInCollectionStatement.
+  visitForEachInCollectionStatement(ctx) {
+    const item_id = ctx.id.text
+    const collection = this.visit(ctx.coll)
+    if (!Array.isArray(collection) && !(collection instanceof Vector) && (typeof collection !== 'object'))
+      throw new SintesisError(ctx.dest, `El valor no es iterable`)
+
+    let iterator = new Iterator(collection)
+
+    if (iterator.size) {
+      this.symbols.pushLevel()
+      let item = this.symbols.addVar(item_id, new Variable(iterator.idx))
+      while (!iterator.ended()) {
+        item.value = iterator.idx
+        this.visit(ctx.stmt)
+        iterator.next()
+      }
+      this.symbols.popLevel()
+    }
+  }
+
+
+  // Visit a parse tree produced by SintesisParser#forEachOfCollectionStatement.
+  visitForEachOfCollectionStatement(ctx) {
+    const item_id = ctx.id.text
+    const collection = this.visit(ctx.coll)
+    if (!Array.isArray(collection) && !(collection instanceof Vector) && (typeof collection !== 'object'))
+      throw new SintesisError(ctx.dest, `El valor no es iterable`)
+
+    let iterator = new Iterator(collection)
+
+    if (iterator.size) {
+      this.symbols.pushLevel()
+      let item = this.symbols.addVar(item_id, new Variable(iterator.current))
+      while (!iterator.ended()) {
+        item.value = iterator.current
+        this.visit(ctx.stmt)
+        iterator.next()
+      }
+      this.symbols.popLevel()
+    }
+  }
+
+
 
   // Visit a parse tree produced by SintesisParser#expFunctionCall.
   visitExpFunctionCall(ctx) {
@@ -338,6 +431,13 @@ export default class SintesisEval extends SintesisParserVisitor {
     while ((!callContext || !callContext.functionEnded) && i < ctx.children.length)
       this.visit(ctx.children[i++])
     return callContext ? (callContext.functionResult || null) : null
+  }
+
+  // Visit a parse tree produced by SintesisParser#statement.
+  visitStatement(ctx) {
+    // console.log('statement', ctx.getText())
+    return ctx.children.length ? this.visit(ctx.children[0]) : null
+    //return this.visitChildren(ctx);
   }
 
 
@@ -394,11 +494,15 @@ export default class SintesisEval extends SintesisParserVisitor {
   // Visit a parse tree produced by SintesisParser#printStatement.
   visitPrintStatement(ctx) {
     let r = this.visit(ctx.exp);
-    if (r instanceof Vector)
+    if (Array.isArray(r))
+      r = new Vector(r)
+    else if (typeof r === 'object')
+      r = new Object(r)
+    if (r instanceof Variable)
       r = r.text()
-    this.output += r +'\n'
+    r = '' + r
+    this.output += r.replace(/\\n/g, '\n') + '\n'
     // console.log('PRINTING', r);
-    return r
   }
 
   visitStepStatement(ctx) {
@@ -455,28 +559,90 @@ export default class SintesisEval extends SintesisParserVisitor {
   }
 
 
-  // Visit a parse tree produced by SintesisParser#expPostDecrease.
-  visitExpPostDecrease(ctx) {
-    return this.visit(ctx.exp);
-  }
 
+  visitExpIncrement(ctx, pre, inc) {
+    const id = ctx.dest.id.text
+    let value = 0
+    switch (ctx.dest.constructor.name) {
+      case 'AssignableAttributeContext': {
+        /*
+        let [context] = findContextVar(ctx, '#' + id)
+        if (!context)
+          throw new Error(`El atributo '${id}' no existe`)
+        context.vars['#' + id] = value
+        */
+      }
+      break
+
+    case 'AssignableMapOrVectorContext': {
+      let idx = this.visitChildren(ctx.dest.idx)
+      if (!idx.length)
+        throw new SintesisError(ctx.idx, `No se permite un índice vacío`)
+      let obj = this.symbols.findVar(id)
+      if (obj && !(obj instanceof Vector) && !(obj instanceof Map))
+        obj = null
+      if (!obj) {
+        throw new SintesisError(ctx.id, `El vector o mapa '${id}' no existe`)
+      }
+      if (obj instanceof Map) {
+        if (idx.length > 1)
+          throw new SintesisError(ctx.id, `Un mapa solo tiene un índice p.ej: '${id}[clave]'`)
+        if (pre) {
+          value = obj.get(idx[0]) + inc
+          obj.set(idx[0], value)
+        } else {
+          value = obj.get(idx[0])
+          obj.set(idx[0], value + inc)
+        }
+      } else {
+        // set value incremented/decremented in vector
+        if (pre) {
+          value = obj.getValueAt(idx) + inc
+          obj.setValueAt(idx, value)
+        } else {
+          value = obj.getValueAt(idx)
+          obj.setValueAt(idx, value + inc)
+        }
+      }
+    }
+    break
+
+    default: {
+      let variable = this.symbols.findVar(id)
+      if (!variable) {
+        throw new SintesisError(ctx.id, `La variable '${id}' no existe`)
+      }
+      if (variable instanceof 'Vector')
+        throw new SintesisError(ctx.id, `Tipo incorrecto`)
+      if (pre) {
+        value = variable.value + inc
+        variable.value = value
+      } else {
+        variable.value = value + inc
+      }
+    }
+    }
+    return value
+  }
 
   // Visit a parse tree produced by SintesisParser#expPreIncrement.
   visitExpPreIncrement(ctx) {
-    return this.visit(ctx.exp);
+    const inc = ctx.op.text == '++' ? 1 : -1
+    return this.visitExpIncrement(ctx, true, inc)
   }
 
-
-  // Visit a parse tree produced by SintesisParser#expUnaryMinus.
-  visitExpUnaryMinus(ctx) {
-    return this.visit(ctx.exp);
-  }
 
 
   // Visit a parse tree produced by SintesisParser#expPostIncrement.
   visitExpPostIncrement(ctx) {
-    // let id = ctx.id.text;
-    return this.visit(ctx.exp);
+    const inc = ctx.op.text == '++' ? 1 : -1
+    return this.visitExpIncrement(ctx, false, inc)
+  }
+
+  // Visit a parse tree produced by SintesisParser#expUnaryMinus.
+  visitExpUnaryMinus(ctx) {
+    const value = this.visit(ctx.exp);
+    return -value
   }
 
 
@@ -484,7 +650,6 @@ export default class SintesisEval extends SintesisParserVisitor {
   visitExpUnaryPlus(ctx) {
     return this.visit(ctx.exp);
   }
-
 
   // Visit a parse tree produced by SintesisParser#numericLiteral.
   visitNumericLiteral(ctx) {

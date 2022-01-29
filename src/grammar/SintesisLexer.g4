@@ -23,7 +23,7 @@ Comma:                          ',';
 Assign:                         '=';
 QuestionMark:                   '?';
 Colon:                          ':';
-Ellipsis:                       '...';
+Ellipsis:                       '-...-';
 Dot:                            '.';
 PlusPlus:                       '++';
 MinusMinus:                     '--';
@@ -120,6 +120,7 @@ Print
               |   'imprimer' 
               |   'imp'
               |   'prt'
+              |   'prn'
               ;
 
 While
@@ -138,6 +139,46 @@ Repeat
               |   'répéter'
               |   'ripetere'
               |   'rep'
+              ;
+
+Times
+              :   'times'
+              |   'veces'
+              ;
+
+Do
+              :   'do'
+              |   'hacer'
+              ;
+
+For
+              :   'for'
+              |   'para'
+              ;
+
+Each            
+              :   'each'
+              |   'cada'
+              ;
+
+ForEach
+              :   'foreach'
+              |   'paracada'
+              ;
+In
+              :   'in'
+              |   'en'
+              ;
+
+Of
+              :   'of'
+              |   'de'
+              ;
+
+To
+              :   '..'
+              |   'to'
+              |   'hasta'
               ;
 
 If     
@@ -282,21 +323,12 @@ InstanceOf
                ;
 
 
-// DICCIONARIO
-Dictionary
-              :    'dictionary'
-              |    'diccionario'
-              |    'diccionari'
-              |    'dictionnaire'
-              |    'dizionario'
-              |    'dicionario'
-              |    'dicionário'
+// Mapa
+Map
+              :    'map'
               |    'mapa'
               |    'carte'
               |    'mappa'
-              |    'map'
-              |    'dict'
-              |    'dic'
               ;
 
 Get  

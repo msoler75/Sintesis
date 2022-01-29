@@ -1,0 +1,6 @@
+usuarios = mapa()
+usuarios[12] = 'jorge'
+usuarios[24] = 'jaime'
+
+imprimir usuarios
+imprimir num(usuarios)

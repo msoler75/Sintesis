@@ -1,0 +1,11 @@
+diccionario['casa'] = 11
+diccionario['pub'] = 22
+diccionario['local'] = 33
+
+imprimir diccionario
+
+imprimir '\ntipos de habitáculos:'
+para cada (indice en diccionario) imprimir '-'+indice
+
+imprimir '\ncódigos de habitáculos:'
+para cada (código de diccionario) imprimir '-'+código

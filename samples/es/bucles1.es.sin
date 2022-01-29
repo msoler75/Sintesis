@@ -4,7 +4,7 @@ repetir 3 {
     a=a+1
 }
 
-a=1 repetir 3 imprimir a++
+a=1 rep 3 imp a++
 
 a=1
 repetir {
@@ -12,7 +12,7 @@ repetir {
     a=a+1
 } mientras a<4
 
-a=1 repetir imprimir a++ mientras a<4
+a=1 rep imp a++ mientras a<4
 
 
 a=1
@@ -21,25 +21,25 @@ mientras a<4 repetir {
     a=a+1
 }
 
-a=1 mientras a<4 imprimir a++
+a=1 mientras a<4 imp a++
 
 
 para a=1 hasta 3 repetir {
     imprimir a
 }
 
-para a=1 hasta 3 imprimir a
+para a=1 hasta 3 imp a
 
 
-para a=1 hasta 3 repetir {
+para a=1..3 repetir {
     imprimir a
 }
 
-para a=1 hasta 3 imprimir a
+para a=1..3 imp a
 
 
-para a en 1..3 repetir {
+para a de [1, 2, 3] repetir {
     imprimir a
 }
 
-para a en 1..3 imprimir a
+para a de [1, 2, 3] imp a

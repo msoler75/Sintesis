@@ -12,7 +12,7 @@ options {
 }
 
 program
-    : statementList
+    : statementList EOF
     ;
 
 statementList
@@ -56,8 +56,7 @@ expression
     |    Attributes '.' id=Identifier                                   #expAttribute
     |    Methods '.' id=Identifier  args=arguments                      #expMethodCall
     |    Super  args=arguments                                          #expSuperExpression
-    |    PlusPlus exp=expression                                        #expPreIncrement
-    |    MinusMinus exp=expression                                      #expPreDecrease
+    |    op=(PlusPlus | MinusMinus) dest=assignable                     #expPreIncrement
     |    Plus exp=expression                                            #expUnaryPlus
     |    Minus exp=expression                                           #expUnaryMinus
     |    BitNot exp=expression                                          #expBitNot
@@ -81,9 +80,10 @@ expression
     |    e1=expression op=NotEquals e2=expression                       #expOp
     |    e1=expression op=And e2=expression                             #expOp
     |    e1=expression op=Or e2=expression                              #expOp
-    |    exp=expression PlusPlus                                        #expPostIncrement
-    |    exp=expression MinusMinus                                      #expPostDecrease
-    |    Vector? idx=vectorIndexes                                      #expVectorDeclaration
+    |    NumberOf '(' exp=expression ')'                                #expNumberOf
+    |    dest=assignable op=(PlusPlus|MinusMinus)                       #expPostIncrement
+    |    Vector idx=vectorIndexes  args=arguments?                      #expVectorDeclaration
+    |    Map args=arguments                                             #expMapDeclaration
     |    <assoc=right> dest=assignable Assign exp=expression            #expAssignment
     |    <assoc=right> dest=assignable op=assignmentOperator exp=expression    #expAssignmentOperator
     |    id=Identifier                                                  #expIdentifier
@@ -116,9 +116,12 @@ elseStatement
     ;
 
 iterationStatement
-    : Repeat exp=expression stmt=statement                   #repeatStatement
-    | Repeat stmt=statement While exp=expression             #repeatWhileStatement
-    | Repeat? While exp=expression Repeat? stmt=statement    #whileRepeatStatement
+    : Repeat exp=expression Times? stmt=statement                 #repeatStatement
+    | (Repeat|Do) stmt=statement While exp=expression             #repeatWhileStatement
+    | Repeat? While exp=expression (Repeat|Do)? stmt=statement    #whileRepeatStatement
+    | For '('? id=Identifier (Assign|In) start=expression To to=expression ')'? Repeat? stmt=statement #forFromToStatement
+    | (For Each?|ForEach) '('? id=Identifier In coll=expression ')'? (Repeat|Do)? stmt=statement                      #forEachInCollectionStatement
+    | (For Each?|ForEach) '('? id=Identifier Of coll=expression ')'? (Repeat|Do)? stmt=statement                      #forEachOfCollectionStatement
     ;
 
 returnStatement
@@ -127,6 +130,7 @@ returnStatement
 
 varDeclaration
     : Var id=Identifier Assign Vector? idx=vectorIndexes   #vectorDeclaration
+    | Var id=Identifier Assign Map? arg=arguments          #mapDeclaration
     | Var id=Identifier Assign exp=expression              #varSingleDeclaration
     ;
 
@@ -173,6 +177,10 @@ vectorIndexes
     : vectorIndex+
     ;
 
+vectorLiteral
+    : '[' (expression (',' expression)*)? ']'
+    ;
+
 formalParameterArg
     : Identifier (Assign expression)?      
     ;
@@ -201,7 +209,7 @@ assignmentOperator
 
 assignable
     : Attributes '.' id=Identifier      #assignableAttribute
-    | id=Identifier idx=vectorIndexes   #assignableVector
+    | id=Identifier idx=vectorIndexes   #assignableMapOrVector
     | id=Identifier                     #assignableId
     ;
 
@@ -215,7 +223,8 @@ literal
     : nullLiteral       
     | booleanLiteral    
     | stringLiteral     
-    | numericLiteral    
+    | numericLiteral
+    | vectorLiteral    
     ;
 
 
@@ -245,5 +254,4 @@ keyword
     | Function_
     | If
     | Vector
-    | 
     ;
