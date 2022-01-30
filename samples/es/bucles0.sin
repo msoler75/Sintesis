@@ -1,0 +1,9 @@
+a = 1
+mientras (a < 3)  {
+    imprimir a++
+}
+
+b = 1
+mientras (b < 3)  {
+    imprimir ++b
+}

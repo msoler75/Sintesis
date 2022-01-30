@@ -1,0 +1,15 @@
+    a = vector[3]
+    b[2] = 'x'
+    c[3] = 'y'
+    c[7] = 7
+    d = map()
+    d[1] = 1
+    d['h'] = 5
+    imp a
+    imp b
+    imp c
+    imp d
+    imp num(a)
+    imp num(b)
+    imp num(c)
+    imp num(d)

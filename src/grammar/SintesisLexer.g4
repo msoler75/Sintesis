@@ -210,8 +210,7 @@ ElseIf
 
 Else
               :    'else'
-              |    'y'[ \t\n]+'si'[ \t\n]+'no'
-              |    'i'[ \t\n]+'si'[ \t\n]+'no'
+              |    [yio][ \t\n]+'si'[ \t\n]+'no'
               |    'o'
               |    'altrament'
               |    'sinon'

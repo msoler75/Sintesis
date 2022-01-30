@@ -26,7 +26,7 @@ class Vector extends Variable {
       if (!(index in ref)) {
         if (create)
           for (let i = ref.length; i <= index; i++)
-            ref[i] = _createEmptyArraySizes([index + 1], 0, this.defaultValue)
+            ref[i] = 0// _createEmptyArraySizes([index + 1], 0, this.defaultValue)
         else
           return [
             [], 0

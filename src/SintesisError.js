@@ -3,10 +3,10 @@ class SintesisError {
         this.context = context
         this.msg = msg
         //this.throw new Error(JSON.stringify({msg, start: context.start, stop: context.stop, line, column}))
-        this.start = context.start
-        this.stop = context.stop
-        this.line = context.line
-        this.column = context.column
+        this.start = context.start.start
+        this.stop = context.stop.stop
+        this.line = context.start.line
+        this.column = context.start.column
     }
 }
 

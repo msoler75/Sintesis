@@ -1,0 +1,9 @@
+a = vector[3]
+a[2] = mapa()
+a[2]['h'] = 88
+imprimir a
+
+a = vector[2][2]
+a[1] = mapa()
+a[1]['x']='e'
+imprimir a

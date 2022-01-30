@@ -26,7 +26,7 @@ if (file.match(/.*\.sint?(tesis)?$/) || fs.existsSync(file)) {
 if (input) {
   const lines = input.split('\n')
 
-  function mostrarError(err, titulo) {
+  function mostrarError(titulo, err) {
     let line = lines[err.line - 1]
     let numline = 'Línea ' + err.line + ':   '
     console.log(numline + line)
@@ -38,16 +38,10 @@ if (input) {
     console.log(exec(input))
   } catch (err) {
     if (err instanceof SyntaxError) {
-      try {
-        let data = JSON.parse(err.message)
-        mostrarError(data, 'Error de sintaxis:')
-      } catch (err2) {
-        console.error(err2)
-        console.error(err)
-      }
+      mostrarError('Error de sintaxis:', err)
     } else if (err instanceof SintesisError) {
       //SintesisError
-      mostrarError(err, 'Error en la ejecución:')
+      mostrarError('Error en la ejecución:', err)
     } else
       console.error(err)
   }

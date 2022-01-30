@@ -12,7 +12,6 @@ test('Bucles-1 repeat', () => {
 })
 
 
-
 test('Bucles-2 repeat while', () => {
     expect(exec(`
     a=1
@@ -25,7 +24,22 @@ test('Bucles-2 repeat while', () => {
 })
 
 
-test('Bucles-3 while repeat', () => {
+test('Bucles-3 pre and post', () => {
+    expect(exec(`
+    a = 1
+    mientras (a < 3)  {
+        imprimir a++
+    }
+
+    b = 1
+    mientras (b < 3)  {
+        imprimir ++b
+    }
+    `)).toContainText(`1 2 2 3`)
+    })
+
+
+test('Bucles-4 while repeat', () => {
     expect(exec(`
     a=1
     mientras a<4 repetir {
@@ -37,7 +51,7 @@ test('Bucles-3 while repeat', () => {
 })
 
 
-test('Bucles-4 for to', () => {
+test('Bucles-5 for to', () => {
     expect(exec(`
     para a=1 hasta 3 repetir {
         imprimir a
@@ -53,7 +67,7 @@ test('Bucles-4 for to', () => {
 })
 
 
-test('Bucles-5 for each of', () => {
+test('Bucles-6 for each of', () => {
     expect(exec(`
     para cada a de [1, 2, 3] repetir {
         imprimir a
@@ -63,7 +77,7 @@ test('Bucles-5 for each of', () => {
 })
 
 
-test('Bucles-6 for modyfing iterator', () => {
+test('Bucles-7 for modyfing iterator', () => {
     expect(exec(`
     para a=1 .. 3 repetir {
         imprimir a
@@ -85,13 +99,8 @@ test('Bucles-6 for modyfing iterator', () => {
 
 })
 
-test('Bucles-7 parentesis', () => {
-    expect(exec(`
-    for(a=1 .. 3) {
-        imprimir a
-    }
-    `)).toContainText(`1 2 3`)
 
+test('Bucles-8 for each of', () => {
     expect(exec(`
     for each (a of [1,2,3])
         prn a
@@ -101,5 +110,49 @@ test('Bucles-7 parentesis', () => {
     foreach (a of [1,2,3]) do
         prn a
     `)).toContainText(`1 2 3`)
+
+    expect(exec(`
+    foreach (a of [1,2,3]) do
+        prn ++a
+    `)).toContainText(`2 3 4`)
+
+    expect(exec(`
+    foreach (a of [1,2,3]) do
+        prn a++
+    `)).toContainText(`1 2 3`)
+})
+
+
+test('Bucles-9 for each in', () => {
+    expect(exec(`
+    for each (a in [7,8,9])
+        prn a
+    `)).toContainText(`0 1 2`)
+
+    expect(exec(`
+    foreach a in [7,8,9] do
+        prn a
+    `)).toContainText(`0 1 2`)
+
+    expect(exec(`
+    foreach (a in [1,2,3]) do
+        prn ++a
+    `)).toContainText(`1 2 3`)
+
+    expect(exec(`
+    a = map() 
+    a['z'] = 1
+    a[3] = 99
+    for x in a prn x
+    `)).toContainText(`3 z`)
+})
+
+
+test('Bucles-10 uninitialized and negative', () => {
+    expect(exec(`
+    while a>-4 imp a--    
+
+    rep 4 imp b--    
+    `)).toContainText(`0 -1 -2 -3 0 -1 -2 -3`)
 
 })

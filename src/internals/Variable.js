@@ -8,15 +8,18 @@ class Variable {
     }
 
     set value(value) {
-        if (!value) this._value = null
+        const t = typeof value
+        if (value === null || value === undefined || t === 'undefined') 
+            this._value = null
         else if (Array.isArray(value)) {
             this._value = [...value]
-        }
-        else if (typeof value === 'object') {
+        } else if (t === 'object') {
             this._value = {
                 ...value
             }
-        } else
+        } else if (['number', 'string', 'boolean'].includes(t))
+            this._value = value
+        else
             try {
                 this._value = JSON.parse(JSON.stringify(value instanceof Variable ? value.value : value))
             }
@@ -26,12 +29,12 @@ class Variable {
     }
 
     toText(v) {
-        if(v===null) return 'null'
+        if (v === null) return 'null'
         if (Array.isArray(v))
             return '[' + v.map(x => this.toText(x)).join(', ') + ']'
         if (typeof v === 'object') {
             let values = []
-            Object.keys(v).forEach(k=> values.push(k + ': ' + this.toText(v[k])))
+            Object.keys(v).forEach(k => values.push(k + ': ' + this.toText(v[k])))
             return '{' + values.join(', ') + '}'
         }
         return v

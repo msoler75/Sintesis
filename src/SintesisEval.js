@@ -1,6 +1,5 @@
 import Map from './internals/Map.js'
 import Class from './internals/Class.js'
-import Object from './internals/Object.js'
 import Vector from './internals/Vector.js'
 import Variable from './internals/Variable.js'
 import Function from './internals/Function.js'
@@ -72,17 +71,25 @@ export default class SintesisEval extends SintesisParserVisitor {
       let idx = this.visitChildren(ctx.dest.idx)
       let obj = this.symbols.findVar(id)
       if (!obj) {
-        if (value && typeof value === 'string')
+        if (value && typeof idx[0] === 'string')
           obj = new Map()
         else
-          obj = Vector.createWithSizes(idx.map(x => x + 1))
+          obj = Vector.createWithSizes(idx.map(x => x + 1), 0)
       }
       // set value in vector
       if (obj instanceof Map)
         obj.set(idx[0], value)
-      else if(obj instanceof Vector)
-        obj.setValueAt(idx, value)
-      else if(obj instanceof Variable)
+      else if (obj instanceof Vector) 
+      {
+        if(idx.length===1 && typeof idx[0] === 'string')
+        {
+          // auto-convert to Map ?
+          throw new SintesisError(ctx.dest, 'Índice no numérico en un vector')
+        }
+        else
+          obj.setValueAt(idx, value)
+      }
+      else if (obj instanceof Variable)
         obj.value = value
       this.symbols.varAssign(id, obj)
       return obj.value
@@ -91,8 +98,8 @@ export default class SintesisEval extends SintesisParserVisitor {
 
     default: {
       let variable = this.symbols.findVar(id)
-      if (!variable) {
-        variable = Array.isArray(variable)?new Vector(variable):typeof variable ==='object'?new Map(variable):new Variable(value)
+      if (variable === null) {
+        variable = Array.isArray(value) ? new Vector(value, 0) : typeof value === 'object' ? new Map(value) : new Variable(value)
         this.symbols.addVar(id, variable)
       } else
         variable.value = value
@@ -471,8 +478,9 @@ export default class SintesisEval extends SintesisParserVisitor {
   visitExpIdentifier(ctx) {
     const id = ctx.id.text
     let variable = this.symbols.findVar(id)
-    if (!variable)
-      throw new SintesisError(ctx.id, `La variable ${id} no ha sido definida`);
+    if (variable===null)
+      //throw new SintesisError(`La variable ${id} no existe`)
+      return 0
     return variable.value
   }
 
@@ -497,7 +505,7 @@ export default class SintesisEval extends SintesisParserVisitor {
     if (Array.isArray(r))
       r = new Vector(r)
     else if (typeof r === 'object')
-      r = new Object(r)
+      r = new Map(r)
     if (r instanceof Variable)
       r = r.text()
     r = '' + r
@@ -609,15 +617,17 @@ export default class SintesisEval extends SintesisParserVisitor {
 
     default: {
       let variable = this.symbols.findVar(id)
-      if (!variable) {
-        throw new SintesisError(ctx.id, `La variable '${id}' no existe`)
+      if (variable===null) {
+        // throw new SintesisError(ctx.id, `La variable '${id}' no existe`)
+        variable = this.symbols.addVar(id, new Variable(0))
       }
-      if (variable instanceof 'Vector')
+      if (variable instanceof Vector)
         throw new SintesisError(ctx.id, `Tipo incorrecto`)
       if (pre) {
         value = variable.value + inc
         variable.value = value
       } else {
+        value = variable.value
         variable.value = value + inc
       }
     }
