@@ -20,3 +20,12 @@ test('map-2', () => {
     imprimir a
     `)).toContainText(`{jorge: {manuel: 123}}`)
 })
+
+test('map-3', () => {
+    expect(exec(`
+    a = mapa()
+    a['jorge'] = 33
+    a['jaime'] = 77
+    imprimir buscar(a, 77), buscar(a, 99)
+    `)).toContainText(`jaime null`)
+})

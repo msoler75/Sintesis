@@ -75,4 +75,8 @@ class Iterator {
     }
 }
 
+Iterator.iterable = (obj) => {
+    return Array.isArray(obj) || (obj instanceof Vector) || (typeof obj === 'object') || (typeof obj === 'string')
+}
+
 export default Iterator

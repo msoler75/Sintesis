@@ -65,7 +65,7 @@ BitAndAssign:                   '&=';
 BitXorAssign:                   '^=';
 BitOrAssign:                    '|=';
 PowerAssign:                    '**=';
-ARROW:                          '=>';
+ARROW:                          '=>' | '->';
 
 /// Null Literals
 

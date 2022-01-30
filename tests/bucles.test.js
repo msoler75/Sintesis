@@ -127,24 +127,26 @@ test('Bucles-9 for each in', () => {
     expect(exec(`
     for each (a in [7,8,9])
         prn a
-    `)).toContainText(`0 1 2`)
+    `)).toContainText(`7 8 9`)
 
     expect(exec(`
     foreach a in [7,8,9] do
         prn a
-    `)).toContainText(`0 1 2`)
+    `)).toContainText(`7 8 9`)
 
     expect(exec(`
     foreach (a in [1,2,3]) do
         prn ++a
-    `)).toContainText(`1 2 3`)
+    `)).toContainText(`2 3 4`)
 
     expect(exec(`
     a = map() 
     a['z'] = 1
     a[3] = 99
     for x in a prn x
-    `)).toContainText(`3 z`)
+    for x of a prn x
+    for x,i of a prn i, x
+    `)).toContainText(`99 1 99 1 3 99 z 1`)
 })
 
 test('Bucles-10 negative values', () => {
@@ -154,4 +156,12 @@ test('Bucles-10 negative values', () => {
     b = 0 rep 4 imp b--    
     `)).toContainText(`0 -1 -2 -3 0 -1 -2 -3`)
 
+})
+
+test('Bucles-11', () => {
+    expect(exec(`
+    para cada letra de 'jor' imp letra
+    para cada (posicion =>  letra de 'jor') imp posicion, letra    
+    para cada letra, posicion de 'jor' imp posicion, letra
+    `)).toContainText(`j o r 0 j 1 o 2 r 0 j 1 o 2 r `)
 })

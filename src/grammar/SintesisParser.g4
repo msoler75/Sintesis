@@ -47,7 +47,7 @@ expression
     :    Vector idx=vectorIndexes args=arguments?                       #expVectorDeclaration
     |    Map args=arguments                                             #expMapDeclaration
     |    fn=basicFunction args=arguments                                #expBasicFunction
-    |    Math'.'fn=(Identifier|Min|Max|Random) args=arguments                            #expMath
+    |    Math'.'fn=(Identifier|Min|Max|Random) args=arguments           #expMath
     |    src=expression '.' method=Identifier args=arguments            #tODO______expMemberMethod
     |    src=expression '.' attr=Identifier                             #tODO______expMemberAttribute
     |    id=Identifier InstanceOf is=Identifier                         #tODO______expInstanceOf
@@ -144,18 +144,23 @@ elseStatement
     ;
 
 iteratorIndexes
-    : id=Identifier op=In coll=expression
-    | id=Identifier op=Of coll=expression
-    | id1=Identifier ',' id2=Identifier op=(In|Of) coll=expression
+    : idv=Identifier op=(In|Of) coll=expression                      #aer
+    | idv=Identifier ',' idk=Identifier op=(In|Of) coll=expression  #ewfewq
+    | idk=Identifier ARROW idv=Identifier op=(In|Of) coll=expression #qxeeq
+    ;
+
+iteratorRange
+    :  id=Identifier (Assign|In) start=expression To to=expression 
     ;
 
 iterationStatement
-    : Repeat exp=expression Times? stmt=statement                 #repeatStatement
-    | (Repeat|Do) stmt=statement While exp=expression             #repeatWhileStatement
-    | Repeat? While exp=expression (Repeat|Do)? stmt=statement    #whileRepeatStatement
-    | For '('? id=Identifier (Assign|In) start=expression To to=expression ')'? Repeat? stmt=statement #forFromToStatement
-    | (For Each?|ForEach) iter=iteratorIndexes (Repeat|Do)? stmt=statement                              #forEachStatement
-    | (For Each?|ForEach) '(' iter=iteratorIndexes ')' (Repeat|Do)? stmt=statement                      #forEachStatement2
+    : Repeat exp=expression Times? stmt=statement                   #repeatStatement
+    | (Repeat|Do) stmt=statement While exp=expression               #repeatWhileStatement
+    | Repeat? While exp=expression (Repeat|Do)? stmt=statement      #whileRepeatStatement
+    | For iter=iteratorRange (Repeat|Do)? stmt=statement                            #forFromToStatement
+    | For '(' iter=iteratorRange ')' (Repeat|Do)? stmt=statement                    #forFromToStatement2
+    | (For Each?|ForEach) iter=iteratorIndexes (Repeat|Do)? stmt=statement          #forEachStatement
+    | (For Each?|ForEach) '(' iter=iteratorIndexes ')' (Repeat|Do)? stmt=statement  #forEachStatement2
     ;
 
 returnStatement

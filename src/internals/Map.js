@@ -4,7 +4,8 @@ import Variable from './Variable.js'
 class Map extends Variable {
 
     constructor(obj) {
-        super(obj || {})
+        if(obj===undefined) obj = {}
+        super(obj)
     }
 
     get(key) {
@@ -47,6 +48,15 @@ class Map extends Variable {
 
     size() {
         return Object.keys(this._value).length
+    }
+
+    indexOf(v) {
+        for(const key in this._value)
+        {
+            if(v===this._value[key])
+            return key
+        }
+        return null
     }
 
 }
