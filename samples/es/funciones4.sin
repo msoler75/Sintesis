@@ -1,0 +1,11 @@
+fun haceralgo(a) {
+ 
+    fun suma_dos(a) {
+        ret a+2
+    }
+ 
+    ret suma_dos(a)
+}
+
+imprimir haceralgo(3)
+

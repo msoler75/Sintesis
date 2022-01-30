@@ -1,0 +1,13 @@
+a = mapa()
+a['jorge'] = mapa()
+a['jorge']['manuel'] = 123
+imprimir a
+
+// da error:
+// b = mapa()
+// b['jorge']['manuel'] = 456
+// imprimir a
+
+// da error:
+// a['jorge']['garcía']['lópez'] = 789
+// imprimir a

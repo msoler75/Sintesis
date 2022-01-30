@@ -40,7 +40,7 @@ test('Vector-declaration-6-initialisation', () => {
 })
 
 
-test('Vector-7-deep', () => {
+test('Vector-7-to-map', () => {
     expect(exec(`
     a = vec[1][1]
     a[2]['z'] = 'hola'
@@ -52,13 +52,3 @@ test('Vector-7-deep', () => {
     `)).toContainText('[[0], 0, {z: hola}, [0, 0, [a, b, c], 0, 99], [0, [0, 0, 777]], {x: 1}]')
 })
 
-
-
-test('Vector-8-to-map', () => {
-    expect(exec(`
-    a = vec[]
-    a['y'] = 123
-    a[3] = 321
-    imp a
-    `)).toContainText('{3: 321, y: 123}')
-})

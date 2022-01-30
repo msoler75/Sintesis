@@ -136,7 +136,7 @@ Repeat
               |   'repetir'
               |   'repeteix'
               |   'repeter'
-              |   'répéter'
+              |   'r\u00E9p\u00E9ter'
               |   'ripetere'
               |   'rep'
               ;
@@ -195,7 +195,7 @@ Then
               |    'poi'
               |    'ensuite'
               |    'entao'
-              |    'então'
+              |    'ent\u00E3o'
               |    'ent'
               ;
 
@@ -204,7 +204,7 @@ ElseIf
               |    'o'[ \t\n]+'si'
               |    'ou'[ \t\n]+'se'[ \t\n]+'for'?
               |    'ou'[ \t\n]+'si'
-              |    'o'[ \t\n]+'sè'
+              |    'o'[ \t\n]+'s\u00E8'
               |    'o'[ \t\n]+'se'
               ;
 
@@ -215,7 +215,7 @@ Else
               |    'altrament'
               |    'sinon'
               |    'altrimenti'
-              |    'senã'[ \t\n]+'o'
+              |    'sen\u00E3'[ \t\n]+'o'
               |    'sena'[ \t\n]+'o'
               ;
 
@@ -232,11 +232,11 @@ Return
 Function_   
               :    'function'
               |    'funcion'
-              |    'función'
+              |    'funci\u00F3n'
               |    'fonction'
               |    'funzione'
-              |    'funçao'
-              |    'função'
+              |    'fun\u00E7ao'
+              |    'fun\u00E7\u00E3o'
               |    'fun'
               ;
 
@@ -247,7 +247,7 @@ Vector
               |    'arreglo'
               |    'vecteur'
               |    'deployer'
-              |    'déployer'
+              |    'd\u00E9ployer'
               |    'vettore'
               |    'vetor'
               |    'variedade'
@@ -271,7 +271,7 @@ NumberOf
               :     'num'
               |     'numero'
               |     'tamano'
-              |     'tamaño'
+              |     'tama\u00F1o'
               |     'size'
               |     'length'
               |     'len'
@@ -308,7 +308,7 @@ Attributes
 Methods
               :     'methods'
               |     'metodos'
-              |     'métodos'
+              |     'm\u00E9todos'
               ;
 
 Super
@@ -346,7 +346,7 @@ Set
               |     'assignar'
               |     'stabilire'
               |     'etablir'
-              |     'établir'
+              |     '\u00E9tablir'
               |     'estabelecer'
               |     'est'
               ;

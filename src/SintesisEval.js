@@ -77,19 +77,17 @@ export default class SintesisEval extends SintesisParserVisitor {
           obj = Vector.createWithSizes(idx.map(x => x + 1), 0)
       }
       // set value in vector
-      if (obj instanceof Map)
-        obj.set(idx[0], value)
-      else if (obj instanceof Vector) 
-      {
-        if(idx.length===1 && typeof idx[0] === 'string')
-        {
+      if (obj instanceof Map) {
+        if (!obj.set(idx, value))
+          throw new SintesisError(ctx.dest.idx, 'Índice no existe')
+      } else if (obj instanceof Vector) {
+        if (idx.length === 1 && typeof idx[0] === 'string') {
           // auto-convert to Map ?
           throw new SintesisError(ctx.dest, 'Índice no numérico en un vector')
-        }
-        else
+        } else
           obj.setValueAt(idx, value)
-      }
-      else if (obj instanceof Variable)
+
+      } else if (obj instanceof Variable)
         obj.value = value
       this.symbols.varAssign(id, obj)
       return obj.value
@@ -478,9 +476,9 @@ export default class SintesisEval extends SintesisParserVisitor {
   visitExpIdentifier(ctx) {
     const id = ctx.id.text
     let variable = this.symbols.findVar(id)
-    if (variable===null)
-      //throw new SintesisError(`La variable ${id} no existe`)
-      return 0
+    if (variable === null)
+      throw new SintesisError(ctx.id, `La variable ${id} no existe`)
+      //return 0
     return variable.value
   }
 
@@ -597,19 +595,23 @@ export default class SintesisEval extends SintesisParserVisitor {
           throw new SintesisError(ctx.id, `Un mapa solo tiene un índice p.ej: '${id}[clave]'`)
         if (pre) {
           value = obj.get(idx[0]) + inc
-          obj.set(idx[0], value)
+          if (!obj.set(idx, value))
+            throw new SintesisError(ctx.dest.idx, 'Índice no existe')
         } else {
           value = obj.get(idx[0])
-          obj.set(idx[0], value + inc)
+          if (!obj.set(idx, value + inc))
+            throw new SintesisError(ctx.dest.idx, 'Índice no existe')
         }
       } else {
         // set value incremented/decremented in vector
         if (pre) {
           value = obj.getValueAt(idx) + inc
-          obj.setValueAt(idx, value)
+          if (!obj.setValueAt(idx, value))
+            throw new SintesisError(ctx.dest.idx, 'Índice no existe')
         } else {
           value = obj.getValueAt(idx)
-          obj.setValueAt(idx, value + inc)
+          if (!obj.setValueAt(idx, value + inc))
+            throw new SintesisError(ctx.dest.idx, 'Índice no existe')
         }
       }
     }
@@ -617,7 +619,7 @@ export default class SintesisEval extends SintesisParserVisitor {
 
     default: {
       let variable = this.symbols.findVar(id)
-      if (variable===null) {
+      if (variable === null) {
         // throw new SintesisError(ctx.id, `La variable '${id}' no existe`)
         variable = this.symbols.addVar(id, new Variable(0))
       }

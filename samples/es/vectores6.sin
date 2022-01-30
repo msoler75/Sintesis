@@ -1,9 +1,5 @@
- a = vec[2]
-a['x'] = 1
-prn a
-
 b = vec[2][2]
-b['x'] = 1
+b[0]['x'] = 1
 prn b
 
 c = vec[2][2]

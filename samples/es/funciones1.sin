@@ -1,6 +1,5 @@
-// factorial
-fun s() {print 1}
-s()
-
+fun s() {print 1 return 5}
 fun m(a,b) ret a*b
-print m(2,3)
+s()
+imprimir  m(2,3)
+imprimir m(s(),2)
