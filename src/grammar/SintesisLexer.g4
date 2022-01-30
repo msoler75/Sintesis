@@ -20,7 +20,7 @@ OpenBrace:                      '{';
 CloseBrace:                     '}'; 
 SemiColon:                      ';';
 Comma:                          ',';
-Assign:                         '=';
+Assign:                         '=' | '<-';
 QuestionMark:                   '?';
 Colon:                          ':';
 Ellipsis:                       '-...-';
@@ -45,7 +45,7 @@ MoreThan:                       '>';
 LessThanEquals:                 '<=';
 GreaterThanEquals:              '>=';
 Equals_:                        '==';
-NotEquals:                      '!=';
+NotEquals:                      '!=' | '<>';
 IdentityEquals:                 '===';
 IdentityNotEquals:              '!==';
 BitAnd:                         '&';
@@ -268,7 +268,8 @@ Delete
               ;
 
 NumberOf       
-              :     'num'
+              :     'number'
+              |     'num'
               |     'numero'
               |     'tamano'
               |     'tama\u00F1o'
@@ -283,13 +284,16 @@ NumberOf
               |     'length'
               |     'longitud'
               |     'len'
+              |     'long'
               |     'lon'
               ;
 
 IndexOf 
               :     'indexOf'
+              |     'find'
               |     'search'
               |     'buscar'
+              |     'bus'
               ;
 
 Sub
@@ -306,15 +310,21 @@ Upper
               |     'may'[u\u00FA]'scula''s'?
               ;
 
+Math            
+              :     'Math'
+              |     'mates'
+              ;
 
 Min         
               :     'min'
               |     'm'[i\u00ED]'nimo'
+              |     'm'[i\u00ED]'n'
               ;
 
 Max         
               :     'max'
-              |     'm'[a\u00C1]'ximo'
+              |     'm'[a\u00E1]'ximo'
+              |     'm'[a\u00E1]'x'
               ;
 
 Random        
@@ -342,6 +352,7 @@ Prompt
 Convert
               :     'convert'
               |     'convertir'
+              |     'conv'
               ;
 
 New_            

@@ -8,39 +8,34 @@ class Iterator {
     }
 
     reset() {
-        this.idx = Array.isArray(this._collection)?0:
-                typeof this._collection === 'object' ? Object.keys(this._collection)[0]
-                : 0
+        this.idx = Array.isArray(this._collection) ? 0 :
+            typeof this._collection === 'object' ? Object.keys(this._collection)[0] :
+            0
     }
 
     next() {
-        if(this.ended()) return null
-        if(typeof this.idx == 'number')
-        {
+        if (this.ended()) return null
+        if (typeof this.idx == 'number') {
             this.idx++
-            if(this.idx>=this.size)
-            {
+            if (this.idx >= this.size) {
                 this._ended = true
                 this.idx = null
             }
-        }
-        else {
+        } else {
             const keys = Object.keys(this._collection)
             let curIdx = keys.indexOf(this.idx)
-            if(curIdx===-1||curIdx ===keys.length-1)
-            {
+            if (curIdx === -1 || curIdx === keys.length - 1) {
                 this._ended = true
                 this.idx = null
-            }
-            else {
-                this.idx = keys[curIdx+1]
+            } else {
+                this.idx = keys[curIdx + 1]
             }
         }
         return this.current
     }
 
     ended() {
-        return this._ended        
+        return this._ended
     }
 
     set collection(collection) {
@@ -53,27 +48,30 @@ class Iterator {
 
     get size() {
         const coll = this._collection
-        if(!coll) return 0
-        if(Array.isArray(coll)) {
+        if (!coll) return 0
+        if (typeof coll === 'string')
+            return coll.length
+        if (Array.isArray(coll)) {
             return coll.length
         }
         if (coll instanceof Vector) {
             return coll.value.length
         }
-        if(coll instanceof Object) {
+        if (coll instanceof Object) {
             let n = 0
-            for(let key in coll) n++
+            for (let key in coll) n++
             return n
         }
         return 0
     }
 
     get current() {
-        if(this.ended()) return null
+        if (this.ended()) return null
         const coll = this._collection
-        return Array.isArray(coll) ? coll[this.idx] 
-            : coll instanceof Vector ?  coll.getValueFrom([this.idx])
-            : coll[this.idx] 
+        return Array.isArray(coll) ? coll[this.idx] :
+            coll instanceof Vector ? coll.getValueFrom([this.idx]) :
+            typeof coll === 'string' ? coll.charAt(this.idx) :
+            coll[this.idx]
     }
 }
 

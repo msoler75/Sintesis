@@ -1,0 +1,47 @@
+imp "Número de elementos"
+imp "1. " + number ([1,2,3])           // alternativas: num, numero
+imp "2. " + longitud([1,2,3])          // alternativas: lon, long, longitud
+
+imp "\nLongitud de texto"
+imp "1. " + number("hola")  
+imp "2. " + longitud("hola")
+
+imp "\nBuscar (Retorna -1 o la posición donde encontró)"
+imp "1. " + buscar("hola", "o")        // alternativas: bus, buscar
+imp "2. " + buscar("hola", "x")  
+imp "3. " + buscar([1,2,3], 2)
+imp "4. " + buscar([1,2,3], 0)
+
+imp "\nConvertir valores"
+imp "1. " + convert(2, "texto")         // segundo argumento: t, texto
+imp "2. " + convert("2.5", "entero")    // segundo argumento: e, ent, entero
+imp "3. " + convert("2.5", "decimal")   // segundo argumento: d, dec, decimal
+
+imp "\nsubparte de un texto o un array"
+imp "1. " + sub("hola", 1)
+imp "2. " + sub("hola", 1, 3)
+imp "3. " + sub([1,2,3,4], 1)
+imp "4. " + sub([1,2,3,4], 1, 2)
+
+imp "\nPasar a mayúsculas o mínusculas"
+imp "1. " + mayúsculas("HoLa, ¿Qué TaL?")   // alternativas: mayuscula, mayúscula, mayusculas, mayúsculas
+imp "2. " + minúsculas("HoLa, ¿Qué TaL?")   // alternativas: minuscula, minúscula, minusculas, minúsculas
+
+imp "\nValor máximo o mínimo de un conjunto de números"
+imp "1. " + max(1)
+imp "2. " + max(1, 2, 3)
+imp "3. " + min(1, 2, 3)
+imp "4. " + min(9, 5, 4, 1, 6)
+
+imp "\nGenerador de valores aleatorios, pudiendo indicar el valor máximo y opcionalmente el mínimo"
+imp "1. " + aleatorio()    // de 0 a 1 en formato decimal
+imp "2. " + aleatorio(7)   // valor entero de 0 a 7
+imp "3. " + aleatorio(3, 7)   // valor entero de 3 a 7
+
+imp "\nConvertir de caracteres a su valor numérico ASCII o al revés"
+imp "1. " + ord("a")
+imp "2. " + chr(97)
+
+imp "\nEntrada de datos por teclado"
+nombre = teclado("introduce tu nombre: ")   // alternativas: teclado, entrada, preguntar
+imp nombre

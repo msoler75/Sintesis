@@ -12,7 +12,7 @@ const prompt = promptSync();
 
 const paramNumber = ['n', 'num', 'number', 'número', 'numero']
 const paramInteger = ['i', 'e', 'int', 'ent', 'entero']
-const paramFloat = ['f', 'd', 'float', 'decimal']
+const paramFloat = ['f', 'd', 'dec', 'float', 'decimal']
 const paramText = ['s', 't', 'string', 'str', 'text', 'texto']
 
 export default class SintesisEval extends SintesisParserVisitor {
@@ -248,8 +248,8 @@ export default class SintesisEval extends SintesisParserVisitor {
 
   // Visit a parse tree produced by SintesisParser#expOp.
   visitExpOp(ctx) {
-    let e1 = this.visit(ctx.e1);
-    let e2 = this.visit(ctx.e2);
+    let e1 = this.visit(ctx.e1)
+    let e2 = this.visit(ctx.e2)
     switch (ctx.op.text) {
       case '**':
         return e1 ** e2;
@@ -293,7 +293,21 @@ export default class SintesisEval extends SintesisParserVisitor {
     return 0
   }
 
+   // Visit a parse tree produced by SintesisParser#expConcat.
+   /* visitExpConcat(ctx) {
+    let e1 = this.visit(ctx.e1)
+    let e2 = this.visit(ctx.e2)
+    return e1 + ' ' + e2
+  } */
 
+  // Visit a parse tree produced by SintesisParser#expMath.
+  visitExpMath(ctx) {
+    const funcname = ctx.fn.text
+    const args = this.visit(ctx.args).values
+    if(!(funcname in Math))
+    throw new SintesisError(ctx.fn, "No existe esta función")
+    return Math[funcname].apply(this, args)
+  }
 
   // Visit a parse tree produced by SintesisParser#ifStatement.
   visitIfStatement(ctx) {
@@ -333,25 +347,18 @@ export default class SintesisEval extends SintesisParserVisitor {
       this.visit(ctx.stmt)
   }
 
-  // Visit a parse tree produced by SintesisParser#forFromToStatement.
-  visitForFromToStatement(ctx) {
-    const id = ctx.id.text
-    const start = this.visit(ctx.start)
-    const to = this.visit(ctx.to)
-    this.symbols.pushLevel()
-    let it = this.symbols.addVar(id, new Variable(start))
-    while (it.value <= to) {
-      this.visit(ctx.stmt)
-      it.value++
-    }
-    this.symbols.popLevel()
+  
+  // Visit a parse tree produced by SintesisParser#forEachInCollectionStatement.
+  visitForEachInCollectionStatement(ctx) {
+   
   }
 
 
-
-  // Visit a parse tree produced by SintesisParser#forEachInCollectionStatement.
-  visitForEachInCollectionStatement(ctx) {
-    const item_id = ctx.id.text
+  // Visit a parse tree produced by SintesisParser#forEachStatement.
+  visitForEachStatement(ctx) {
+    
+    const iter=ctx.iter
+    const index_id = iter.opiter.id
     const collection = this.visit(ctx.coll)
     if (!Array.isArray(collection) && !(collection instanceof Vector) && (typeof collection !== 'object'))
       throw new SintesisError(ctx.dest, `El valor no es iterable`)
@@ -368,15 +375,23 @@ export default class SintesisEval extends SintesisParserVisitor {
       }
       this.symbols.popLevel()
     }
+
   }
+
+
+  // Visit a parse tree produced by SintesisParser#forEachStatement2.
+  visitForEachStatement2(ctx) {
+    return this.visitChildren(ctx);
+  }
+
 
 
   // Visit a parse tree produced by SintesisParser#forEachOfCollectionStatement.
   visitForEachOfCollectionStatement(ctx) {
     const item_id = ctx.id.text
     const collection = this.visit(ctx.coll)
-    if (!Array.isArray(collection) && !(collection instanceof Vector) && (typeof collection !== 'object'))
-      throw new SintesisError(ctx.dest, `El valor no es iterable`)
+    if (!Array.isArray(collection) && !(collection instanceof Vector) && (typeof collection !== 'object') && (typeof collection !== 'string'))
+      throw new SintesisError(ctx.coll, `El valor no es iterable`)
 
     let iterator = new Iterator(collection)
 
@@ -482,7 +497,7 @@ export default class SintesisEval extends SintesisParserVisitor {
           if (t0 === 'number')
             return 1.0 * a0
           if (t0 === 'string')
-            return a0.indexOf('.') >= 0 ? parseFloat(a0) : 1.0 * parseInt(a0) 
+            return a0.indexOf('.') >= 0 ? parseFloat(a0) : 1.0 * parseInt(a0)
         }
         if (paramNumber.includes(a1.toLowerCase())) {
           if (t0 === 'number')
@@ -649,15 +664,19 @@ export default class SintesisEval extends SintesisParserVisitor {
 
   // Visit a parse tree produced by SintesisParser#printStatement.
   visitPrintStatement(ctx) {
-    let r = this.visit(ctx.exp);
-    if (Array.isArray(r))
+    let args = this.visit(ctx.exp).filter(x=>x!==undefined)
+    let result = []
+    for(let r of args) {
+      if (Array.isArray(r))
       r = new Vector(r)
-    else if (typeof r === 'object')
+      else if (typeof r === 'object')
       r = new Map(r)
-    if (r instanceof Variable)
+      if (r instanceof Variable)
       r = r.text()
-    r = '' + r
-    this.output += r.replace(/\\n/g, '\n') + '\n'
+      r = '' + r
+      result.push(r)
+    }
+    this.output += result.join(" ").replace(/\\n/g, '\n') + '\n'
     // console.log('PRINTING', r);
   }
 

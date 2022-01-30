@@ -40,23 +40,21 @@ stepStatement
     ;
 
 printStatement
-    : Print exp=expression
+    : Print exp=expressionSequence
     ;
 
 expression 
     :    Vector idx=vectorIndexes args=arguments?                       #expVectorDeclaration
     |    Map args=arguments                                             #expMapDeclaration
     |    fn=basicFunction args=arguments                                #expBasicFunction
-    |    src=expression '.' method=Identifier args=arguments            #expMemberMethod
-    |    src=expression '.' attr=Identifier                             #expMemberAttribute
+    |    Math'.'fn=(Identifier|Min|Max|Random) args=arguments                            #expMath
+    |    src=expression '.' method=Identifier args=arguments            #tODO______expMemberMethod
+    |    src=expression '.' attr=Identifier                             #tODO______expMemberAttribute
+    |    id=Identifier InstanceOf is=Identifier                         #tODO______expInstanceOf
+    |    Attributes'.'id=Identifier                                     #tODO______expAttribute
+    |    Methods'.'id=Identifier  args=arguments                        #tODO______expMethodCall
+    |    Super args=arguments                                           #tODO______expSuperExpression
     |    id=Identifier idx=vectorIndexes                                #expVector
-    |    id=Identifier '.' Get '(' exp=expression ')'                   #expDictionaryGet
-    |    id=Identifier '.' Set '(' key=StringLiteral ',' expression ')' #expDictionarySet
-    |    id=Identifier '.' Delete '(' key=StringLiteral ')'             #expDictionaryDelete
-    |    id=Identifier InstanceOf is=Identifier                         #expInstanceOf
-    |    Attributes '.' id=Identifier                                   #expAttribute
-    |    Methods '.' id=Identifier  args=arguments                      #expMethodCall
-    |    Super args=arguments                                           #expSuperExpression
     |    id=Identifier args=arguments                                   #expFunctionCall
     |    dest=assignable op=(PlusPlus|MinusMinus)                       #expPostIncrement
     |    op=(PlusPlus | MinusMinus) dest=assignable                     #expPreIncrement
@@ -145,13 +143,19 @@ elseStatement
     : Else statement
     ;
 
+iteratorIndexes
+    : id=Identifier op=In coll=expression
+    | id=Identifier op=Of coll=expression
+    | id1=Identifier ',' id2=Identifier op=(In|Of) coll=expression
+    ;
+
 iterationStatement
     : Repeat exp=expression Times? stmt=statement                 #repeatStatement
     | (Repeat|Do) stmt=statement While exp=expression             #repeatWhileStatement
     | Repeat? While exp=expression (Repeat|Do)? stmt=statement    #whileRepeatStatement
     | For '('? id=Identifier (Assign|In) start=expression To to=expression ')'? Repeat? stmt=statement #forFromToStatement
-    | (For Each?|ForEach) '('? id=Identifier In coll=expression ')'? (Repeat|Do)? stmt=statement                      #forEachInCollectionStatement
-    | (For Each?|ForEach) '('? id=Identifier Of coll=expression ')'? (Repeat|Do)? stmt=statement                      #forEachOfCollectionStatement
+    | (For Each?|ForEach) iter=iteratorIndexes (Repeat|Do)? stmt=statement                              #forEachStatement
+    | (For Each?|ForEach) '(' iter=iteratorIndexes ')' (Repeat|Do)? stmt=statement                      #forEachStatement2
     ;
 
 returnStatement
