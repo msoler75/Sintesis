@@ -96,7 +96,7 @@ export default class SintesisEval extends SintesisParserVisitor {
 
     default: {
       let variable = this.symbols.findVar(id)
-      if (variable === null) {
+      if (ctx.dest.var || variable === null) {
         variable = Array.isArray(value) ? new Vector(value, 0) : typeof value === 'object' ? new Map(value) : new Variable(value)
         this.symbols.addVar(id, variable)
       } else

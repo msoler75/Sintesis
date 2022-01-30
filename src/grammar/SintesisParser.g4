@@ -26,7 +26,6 @@ statement
     | ifStatement
     | iterationStatement
     | returnStatement
-    | varDeclaration
     | classDeclaration
     | functionDeclaration
     | expression
@@ -128,12 +127,6 @@ returnStatement
     : Return exp=expression
     ;
 
-varDeclaration
-    : Var id=Identifier Assign Vector? idx=vectorIndexes   #vectorDeclaration
-    | Var id=Identifier Assign Map? arg=arguments          #mapDeclaration
-    | Var id=Identifier Assign exp=expression              #varSingleDeclaration
-    ;
-
 functionDeclaration
     : Function_ id=Identifier '(' pl=formalParameterList? ')' stmt=functionBody
     ;
@@ -210,7 +203,7 @@ assignmentOperator
 assignable
     : Attributes '.' id=Identifier      #assignableAttribute
     | id=Identifier idx=vectorIndexes   #assignableMapOrVector
-    | id=Identifier                     #assignableId
+    | var=Var? id=Identifier                #assignableId
     ;
 
 reservedWord

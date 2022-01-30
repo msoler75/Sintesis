@@ -27,7 +27,7 @@ test('Funciones-2', () => {
     fun s(a,b) ret a+b
     fun m(a,b) ret a*b
     print s(7, m(2, 3))
-`)).toContainText(`12 24`)
+`)).toContainText(`24 13`)
 })
 
 

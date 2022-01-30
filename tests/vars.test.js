@@ -33,3 +33,15 @@ test('Variables-2', () => {
     imprimir a
 `)).toContainText('1 2 2 3 2')
 })
+
+
+test('Variables-3', () => {
+    expect(exec(`
+    a = 3
+    {
+        var a = [1,2,3]
+        imprimir a
+    }
+    imprimir a
+`)).toContainText('[1, 2, 3] 3')
+})

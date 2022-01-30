@@ -276,24 +276,6 @@ export default class SintesisParserVisitor extends antlr4.tree.ParseTreeVisitor 
 	}
 
 
-	// Visit a parse tree produced by SintesisParser#vectorDeclaration.
-	visitVectorDeclaration(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by SintesisParser#mapDeclaration.
-	visitMapDeclaration(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by SintesisParser#varSingleDeclaration.
-	visitVarSingleDeclaration(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
 	// Visit a parse tree produced by SintesisParser#functionDeclaration.
 	visitFunctionDeclaration(ctx) {
 	  return this.visitChildren(ctx);

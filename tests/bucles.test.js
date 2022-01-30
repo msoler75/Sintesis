@@ -147,12 +147,11 @@ test('Bucles-9 for each in', () => {
     `)).toContainText(`3 z`)
 })
 
-
-test('Bucles-10 uninitialized and negative', () => {
+test('Bucles-10 negative values', () => {
     expect(exec(`
-    while a>-4 imp a--    
+    a = 0 while a>-4 imp a--    
 
-    rep 4 imp b--    
+    b = 0 rep 4 imp b--    
     `)).toContainText(`0 -1 -2 -3 0 -1 -2 -3`)
 
 })
