@@ -6,16 +6,26 @@ class Class {
         this.methods = methods
     }
 
-    findAttribute(name) {
-        this.attributes
+    hasAttribute(name) {
+        return name in this.attributes
     }
 
-    setAttribute(name, value) {
-
+    hasMethod(name) {
+        return name in this.methods
     }
 
-    getAttribute(name) {
-        findAttribute
+    setAttr(name, value) {
+        if(!this.hasAttribute(name)) return false
+        this.attributes[name] = value
+        return true
+    }
+
+    getAttr(name) {
+        return this.attributes[name]
+    }
+
+    getMethod(name) {
+        return this.methods[name]
     }
 }
 

@@ -273,14 +273,30 @@ NumberOf
               |     'tamano'
               |     'tama\u00F1o'
               |     'size'
-              |     'length'
-              |     'len'
+              |     'count'
               |     'tam'
               |     'dimensione'
               |     'dim'
               |     'taille'
               |     'tamanho'
               |     'longueur'
+              |     'length'
+              |     'longitud'
+              |     'len'
+              |     'lon'
+              ;
+
+IndexOf 
+              :     'indexOf'
+              |     'search'
+              |     'buscar'
+              ;
+
+SubString
+              :     'substring'
+              |     'substr'
+              |     'recortar'
+              |     'recorta'
               ;
 
 New_            
@@ -351,7 +367,7 @@ Set
               |     'est'
               ;
 
-Var
+Var_
               :      'var'
               ;
 

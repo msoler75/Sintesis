@@ -54,6 +54,12 @@ export default class SintesisParserVisitor extends antlr4.tree.ParseTreeVisitor 
 	}
 
 
+	// Visit a parse tree produced by SintesisParser#expBasicFunction.
+	visitExpBasicFunction(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
 	// Visit a parse tree produced by SintesisParser#expMapDeclaration.
 	visitExpMapDeclaration(ctx) {
 	  return this.visitChildren(ctx);
@@ -66,8 +72,20 @@ export default class SintesisParserVisitor extends antlr4.tree.ParseTreeVisitor 
 	}
 
 
+	// Visit a parse tree produced by SintesisParser#expTernary.
+	visitExpTernary(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
 	// Visit a parse tree produced by SintesisParser#expPostIncrement.
 	visitExpPostIncrement(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by SintesisParser#expBasicFunctionMember.
+	visitExpBasicFunctionMember(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -168,14 +186,14 @@ export default class SintesisParserVisitor extends antlr4.tree.ParseTreeVisitor 
 	}
 
 
-	// Visit a parse tree produced by SintesisParser#expMemberAttribute.
-	visitExpMemberAttribute(ctx) {
+	// Visit a parse tree produced by SintesisParser#expVectorDeclaration.
+	visitExpVectorDeclaration(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by SintesisParser#expVectorDeclaration.
-	visitExpVectorDeclaration(ctx) {
+	// Visit a parse tree produced by SintesisParser#expMemberAttribute.
+	visitExpMemberAttribute(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -198,8 +216,26 @@ export default class SintesisParserVisitor extends antlr4.tree.ParseTreeVisitor 
 	}
 
 
-	// Visit a parse tree produced by SintesisParser#expNumberOf.
-	visitExpNumberOf(ctx) {
+	// Visit a parse tree produced by SintesisParser#numberOf.
+	visitNumberOf(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by SintesisParser#indexOf.
+	visitIndexOf(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by SintesisParser#substring.
+	visitSubstring(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by SintesisParser#basicFunction.
+	visitBasicFunction(ctx) {
 	  return this.visitChildren(ctx);
 	}
 

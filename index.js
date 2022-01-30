@@ -38,7 +38,8 @@ if (input) {
     console.log(exec(input))
   } catch (err) {
     if (err instanceof SyntaxError) {
-      mostrarError('Error de sintaxis:', err)
+      const data = JSON.parse(err.message)
+      mostrarError('Error de sintaxis:', data)
     } else if (err instanceof SintesisError) {
       //SintesisError
       mostrarError('Error en la ejecución:', err)

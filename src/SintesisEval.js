@@ -96,7 +96,7 @@ export default class SintesisEval extends SintesisParserVisitor {
 
     default: {
       let variable = this.symbols.findVar(id)
-      if (ctx.dest.var || variable === null) {
+      if (ctx.dest.vvar || variable === null) {
         variable = Array.isArray(value) ? new Vector(value, 0) : typeof value === 'object' ? new Map(value) : new Variable(value)
         this.symbols.addVar(id, variable)
       } else
@@ -417,7 +417,6 @@ export default class SintesisEval extends SintesisParserVisitor {
     return r
   }
 
-
   // Visit a parse tree produced by SintesisParser#returnStatement.
   visitReturnStatement(ctx) {
     const r = this.visit(ctx.exp)
@@ -443,6 +442,35 @@ export default class SintesisEval extends SintesisParserVisitor {
     // console.log('statement', ctx.getText())
     return ctx.children.length ? this.visit(ctx.children[0]) : null
     //return this.visitChildren(ctx);
+  }
+
+
+  // Visit a parse tree produced by SintesisParser#expBasicFunction.
+  visitExpBasicFunction(ctx) {
+    const value = this.visit(ctx.exp)
+    const t = typeof value
+    const fn = ctx.fn.children[0].constructor.name
+    console.log(fn)
+    switch (fn) {
+      case 'NumberOfContext':
+        return t === 'string' || t === 'object' ? value.length : 0
+      case 'IndexOfContext':
+        return t === 'string' || t === 'object' ? value.length : 0
+    }
+    return null
+  }
+
+  // Visit a parse tree produced by SintesisParser#expBasicFunctionMember.
+  visitExpBasicFunctionMember(ctx) {
+    return this.visitExpBasicFunction(ctx);
+  }
+
+
+  // Visit a parse tree produced by SintesisParser#expTernary.
+  visitExpTernary(ctx) {
+    let cond = this.visit(ctx.cond)
+    if (cond) return this.visit(ctx.ok)
+    return this.visit(ctx.no)
   }
 
 
@@ -478,7 +506,7 @@ export default class SintesisEval extends SintesisParserVisitor {
     let variable = this.symbols.findVar(id)
     if (variable === null)
       throw new SintesisError(ctx.id, `La variable ${id} no existe`)
-      //return 0
+    //return 0
     return variable.value
   }
 

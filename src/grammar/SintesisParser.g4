@@ -44,8 +44,11 @@ printStatement
     ;
 
 expression 
-    :    id=Identifier idx=vectorIndexes                                #expVector
-    |    id=Identifier args=arguments                                   #expFunctionCall
+    :    Vector idx=vectorIndexes args=arguments?                       #expVectorDeclaration
+    |    Map args=arguments                                             #expMapDeclaration
+    |    fn=basicFunction args=arguments                                #expBasicFunction
+    |    exp=expression'.'fn=basicFunction1                             #expBasicFunctionMember
+    |    id=Identifier idx=vectorIndexes                                #expVector
     |    id=Identifier '.' Get '(' exp=expression ')'                   #expDictionaryGet
     |    id=Identifier '.' Set '(' key=StringLiteral ',' expression ')' #expDictionarySet
     |    id=Identifier '.' Delete '(' key=StringLiteral ')'             #expDictionaryDelete
@@ -54,7 +57,9 @@ expression
     |    id=Identifier InstanceOf is=Identifier                         #expInstanceOf
     |    Attributes '.' id=Identifier                                   #expAttribute
     |    Methods '.' id=Identifier  args=arguments                      #expMethodCall
-    |    Super  args=arguments                                          #expSuperExpression
+    |    Super args=arguments                                           #expSuperExpression
+    |    id=Identifier args=arguments                                   #expFunctionCall
+    |    dest=assignable op=(PlusPlus|MinusMinus)                       #expPostIncrement
     |    op=(PlusPlus | MinusMinus) dest=assignable                     #expPreIncrement
     |    Plus exp=expression                                            #expUnaryPlus
     |    Minus exp=expression                                           #expUnaryMinus
@@ -79,10 +84,7 @@ expression
     |    e1=expression op=NotEquals e2=expression                       #expOp
     |    e1=expression op=And e2=expression                             #expOp
     |    e1=expression op=Or e2=expression                              #expOp
-    |    NumberOf '(' exp=expression ')'                                #expNumberOf
-    |    dest=assignable op=(PlusPlus|MinusMinus)                       #expPostIncrement
-    |    Vector idx=vectorIndexes  args=arguments?                      #expVectorDeclaration
-    |    Map args=arguments                                             #expMapDeclaration
+    |    cond=expression '?' ok=expression ':' no=expression            #expTernary
     |    <assoc=right> dest=assignable Assign exp=expression            #expAssignment
     |    <assoc=right> dest=assignable op=assignmentOperator exp=expression    #expAssignmentOperator
     |    id=Identifier                                                  #expIdentifier
@@ -92,7 +94,24 @@ expression
     ;
 
 
+basicFunction1
+    : NumberOf                      #numberOf
+    ;
 
+
+basicFunction2
+    : IndexOf                       #indexOf
+    ;
+    
+basicFunction3
+    : SubString                     #substring
+    ;
+
+basicFunction
+    : basicFunction1
+    | basicFunction2
+    | basicFunction3
+    ;
 
 expressionSequence
     : expression (',' expression)*
@@ -203,7 +222,7 @@ assignmentOperator
 assignable
     : Attributes '.' id=Identifier      #assignableAttribute
     | id=Identifier idx=vectorIndexes   #assignableMapOrVector
-    | var=Var? id=Identifier                #assignableId
+    | vvar=Var_? id=Identifier           #assignableId
     ;
 
 reservedWord
@@ -247,4 +266,6 @@ keyword
     | Function_
     | If
     | Vector
+    | Map
+    | Var_
     ;
