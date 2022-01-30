@@ -292,11 +292,56 @@ IndexOf
               |     'buscar'
               ;
 
-SubString
-              :     'substring'
-              |     'substr'
-              |     'recortar'
-              |     'recorta'
+Sub
+              :     'sub'
+              ;
+
+Lower
+              :     'lower'
+              |     'min'[u\u00FA]'scula''s'?
+              ;
+
+Upper
+              :     'upper'
+              |     'may'[u\u00FA]'scula''s'?
+              ;
+
+
+Min         
+              :     'min'
+              |     'm'[i\u00ED]'nimo'
+              ;
+
+Max         
+              :     'max'
+              |     'm'[a\u00C1]'ximo'
+              ;
+
+Random        
+              :     'random'
+              |     'aleatorio'
+              ;
+
+Chr
+              :     'chr'
+              ;
+
+Ord
+              :     'ord'
+              ;
+
+Prompt
+              :     'prompt'
+              |     'keyboard'
+              |     'input'
+              |     'preguntar'
+              |     'entrada'
+              |     'teclado'
+              ;
+
+Convert
+              :     'convert'
+              |     'convertir'
               ;
 
 New_            

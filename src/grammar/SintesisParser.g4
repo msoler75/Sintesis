@@ -47,13 +47,12 @@ expression
     :    Vector idx=vectorIndexes args=arguments?                       #expVectorDeclaration
     |    Map args=arguments                                             #expMapDeclaration
     |    fn=basicFunction args=arguments                                #expBasicFunction
-    |    exp=expression'.'fn=basicFunction1                             #expBasicFunctionMember
+    |    src=expression '.' method=Identifier args=arguments            #expMemberMethod
+    |    src=expression '.' attr=Identifier                             #expMemberAttribute
     |    id=Identifier idx=vectorIndexes                                #expVector
     |    id=Identifier '.' Get '(' exp=expression ')'                   #expDictionaryGet
     |    id=Identifier '.' Set '(' key=StringLiteral ',' expression ')' #expDictionarySet
     |    id=Identifier '.' Delete '(' key=StringLiteral ')'             #expDictionaryDelete
-    |    id=Identifier '.' method=Identifier args=arguments             #expMemberMethod
-    |    id=Identifier '.' attr=Identifier                              #expMemberAttribute
     |    id=Identifier InstanceOf is=Identifier                         #expInstanceOf
     |    Attributes '.' id=Identifier                                   #expAttribute
     |    Methods '.' id=Identifier  args=arguments                      #expMethodCall
@@ -94,21 +93,34 @@ expression
     ;
 
 
+basicFunction0
+    : Random                        #random
+    ;
+
 basicFunction1
     : NumberOf                      #numberOf
+    | Lower                         #lower
+    | Upper                         #upper
+    | Max                           #max
+    | Min                           #min
+    | Ord                           #ord
+    | Chr                           #chr
+    | Prompt                        #prompt
     ;
 
 
 basicFunction2
     : IndexOf                       #indexOf
+    | Convert                       #convert
     ;
     
 basicFunction3
-    : SubString                     #substring
+    : Sub                           #sub
     ;
 
 basicFunction
-    : basicFunction1
+    : basicFunction0
+    | basicFunction1
     | basicFunction2
     | basicFunction3
     ;

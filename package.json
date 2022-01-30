@@ -25,14 +25,17 @@
   "dependencies": {
     "antlr4": "^4.9.3",
     "fs": "^0.0.1-security",
-    "jest": "^27.4.7"
+    "jest": "^27.4.7",
+    "prompt-sync": "^4.2.0"
   },
   "jest": {
     "verbose": true,
     "transformIgnorePatterns": [
       "node_modules/(?!variables/.*)"
     ],
-    "setupFilesAfterEnv": ["./setupJest.js"]
+    "setupFilesAfterEnv": [
+      "./setupJest.js"
+    ]
   },
   "devDependencies": {
     "@babel/core": "^7.16.12",

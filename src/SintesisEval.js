@@ -7,6 +7,13 @@ import Iterator from './internals/Iterator.js'
 import SintesisError from './SintesisError.js'
 import SymbolContexts from './internals/SymbolContexts.js'
 import SintesisParserVisitor from './lib/SintesisParserVisitor.js'
+import promptSync from 'prompt-sync';
+const prompt = promptSync();
+
+const paramNumber = ['n', 'num', 'number', 'número', 'numero']
+const paramInteger = ['i', 'e', 'int', 'ent', 'entero']
+const paramFloat = ['f', 'd', 'float', 'decimal']
+const paramText = ['s', 't', 'string', 'str', 'text', 'texto']
 
 export default class SintesisEval extends SintesisParserVisitor {
 
@@ -447,23 +454,137 @@ export default class SintesisEval extends SintesisParserVisitor {
 
   // Visit a parse tree produced by SintesisParser#expBasicFunction.
   visitExpBasicFunction(ctx) {
-    const value = this.visit(ctx.exp)
-    const t = typeof value
+    const args = this.visit(ctx.args).values
+    const t0 = typeof args[0]
+    const t1 = typeof args[1]
+    const a0 = args[0]
+    const a1 = args[1]
     const fn = ctx.fn.children[0].constructor.name
-    console.log(fn)
     switch (fn) {
       case 'NumberOfContext':
-        return t === 'string' || t === 'object' ? value.length : 0
+        if (args.length < 1) throw new SintesisError(ctx.args, "Debe especificar un argumento")
+        if (t0 !== 'string' & t0 !== 'object') throw new SintesisError(ctx.args.children[1], "Tipo incorrecto")
+        return a0.length
       case 'IndexOfContext':
-        return t === 'string' || t === 'object' ? value.length : 0
+        if (args.length < 2) throw new SintesisError(ctx.args, "Debe especificar dos argumentos")
+        if (t0 !== 'string' && !Array.isArray(a0)) throw new SintesisError(ctx.args.children[1], "Tipo incorrecto")
+        return a0.indexOf(a1)
+      case 'ConvertContext':
+        if (args.length < 2) throw new SintesisError(ctx.args, "Debe especificar dos argumentos")
+        if (t1 !== 'string') throw new SintesisError(ctx.args.children[3], "Tipo incorrecto")
+        if (paramInteger.includes(a1.toLowerCase())) {
+          if (t0 === 'number')
+            return Math.floor(a0)
+          if (t0 === 'string')
+            return a0.indexOf('.') >= 0 ? Math.floor(parseFloat(a0)) : parseInt(a0)
+        }
+        if (paramFloat.includes(a1.toLowerCase())) {
+          if (t0 === 'number')
+            return 1.0 * a0
+          if (t0 === 'string')
+            return a0.indexOf('.') >= 0 ? parseFloat(a0) : 1.0 * parseInt(a0) 
+        }
+        if (paramNumber.includes(a1.toLowerCase())) {
+          if (t0 === 'number')
+            return a0
+          if (t0 === 'string')
+            return a0.indexOf('.') >= 0 ? parseFloat(a0) : parseInt(a0)
+        } else if (paramText.includes(a1.toLowerCase())) {
+          if (t0 === 'string')
+            return a0
+          if (t0 === 'number')
+            return '' + a0
+        } else throw new SintesisError(ctx.args.children[3], "Tipo incorrecto")
+        throw new SintesisError(ctx.args.children[1], "No se pudo convertir")
+
+      case 'SubContext':
+        if (args.length < 2) throw new SintesisError(ctx.args, "Debe especificar al menos dos argumentos")
+        if (t0 !== 'string' && !Array.isArray(a0)) throw new SintesisError(ctx.args.children[1], "Tipo incorrecto")
+        let start = a1
+        let end = args[2]
+        if (t1 !== 'number') throw new SintesisError(ctx.args.children[3], "Tipo incorrecto")
+        if (start < 0) throw new SintesisError(ctx.args.children[3], "No puede ser negativo")
+        if (end && typeof end !== 'number') throw new SintesisError(ctx.args.children[5], "Tipo incorrecto")
+        if (Array.isArray(a0))
+          return a0.slice(start, end)
+        return a0.substring(start, end)
+      case 'LowerContext':
+      case 'UpperContext':
+        if (args.length < 1) throw new SintesisError(ctx.args, "Debe especificar un argumento")
+        if (t0 !== 'string') throw new SintesisError(ctx.args.children[1], "Tipo incorrecto")
+        return fn == 'LowerContext' ? a0.toLowerCase() : a0.toUpperCase()
+      case 'MinContext':
+      case 'MaxContext':
+        if (args.length < 1) throw new SintesisError(ctx.args, "Debe especificar al menos un argumento")
+        for (var i in args) {
+          var arg = args[i]
+          if (typeof arg !== 'number') throw new SintesisError(ctx.args.children[1 + i * 2], "Tipo incorrecto")
+        }
+        const fz = fn === 'MaxContext' ? Math.max : Math.min
+        return fz.apply(this, args)
+      case 'RandomContext': {
+        if (args.length === 0) return Math.random()
+        let min = args.length === 2 ? a0 : 0
+        let max = args.length === 2 ? a1 : a0
+        // https://stackoverflow.com/questions/1527803/generating-random-whole-numbers-in-javascript-in-a-specific-range
+        min = Math.ceil(min);
+        max = Math.floor(max);
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+      }
+      case 'OrdContext': {
+        if (args.length < 1) throw new SintesisError(ctx.args, "Debe especificar un argumento")
+        if (t0 !== 'string') throw new SintesisError(ctx.args.children[1], "Tipo incorrecto")
+        // https://locutus.io/php/strings/ord/
+        const str = a0 + ''
+        const code = str.charCodeAt(0)
+        if (code >= 0xD800 && code <= 0xDBFF) {
+          const hi = code
+          if (str.length === 1) {
+            return code
+          }
+          const low = str.charCodeAt(1)
+          return ((hi - 0xD800) * 0x400) + (low - 0xDC00) + 0x10000
+        }
+        if (code >= 0xDC00 && code <= 0xDFFF) {
+          return code
+        }
+        return code
+      }
+      case 'ChrContext': {
+        if (args.length < 1) throw new SintesisError(ctx.args, "Debe especificar un argumento")
+        if (t0 !== 'number') throw new SintesisError(ctx.args.children[1], "Tipo incorrecto")
+        let n = a0
+        // https://stackoverflow.com/questions/37395989/javascript-equivalent-of-phps-chr-function
+        if (n < 128) {
+          return String.fromCharCode(n);
+        } else {
+          return "ÇüéâäàåçêëèïîìÄÅÉæÆôöòûùÿÖÜ¢£¥₧ƒáíóúñÑªº¿⌐¬½¼¡«»░▒▓│┤╡╢╖╕╣║╗╝╜╛┐└┴┬├─┼╞╟╚╔╩╦╠═╬╧╨╤╥╙╘╒╓╫╪┘┌█▄▌▐▀αßΓπΣσµτΦΘΩδ∞φε∩≡±≥≤⌠⌡÷≈°∙·√ⁿ²■ " [n - 128];
+        }
+      }
+      case 'PromptContext': {
+        let result = ''
+        if (typeof window === 'undefined')
+          // this is node
+          result = prompt(a0 || '');
+        else
+          // this is browser
+          result = window.prompt(a0, a1)
+        if (args.length > 1) {
+          if (paramInteger.includes(a1.toLowerCase())) {
+            result = parseInt(result)
+          }
+        }
+        return result
+      }
     }
     return null
   }
 
-  // Visit a parse tree produced by SintesisParser#expBasicFunctionMember.
-  visitExpBasicFunctionMember(ctx) {
-    return this.visitExpBasicFunction(ctx);
+  // Visit a parse tree produced by SintesisParser#expMemberMethod.
+  visitExpMemberMethod(ctx) {
+    return this.visitChildren(ctx);
   }
+
 
 
   // Visit a parse tree produced by SintesisParser#expTernary.
@@ -486,9 +607,10 @@ export default class SintesisEval extends SintesisParserVisitor {
   // Visit a parse tree produced by SintesisParser#arguments.
   visitArguments(ctx) {
     ctx.values = []
-    for (let i = 1; i < ctx.children.length; i++)
-      if (i % 2 == 1)
-        ctx.values.push(this.visit(ctx.children[i]))
+    if (ctx.children.length > 2)
+      for (let i = 1; i < ctx.children.length; i++)
+        if (i % 2 == 1)
+          ctx.values.push(this.visit(ctx.children[i]))
     return ctx;
   }
 

@@ -31,7 +31,11 @@ if (input) {
     let numline = 'Línea ' + err.line + ':   '
     console.log(numline + line)
     console.log(' '.repeat(numline.length + err.column) + '^'.repeat(err.stop - err.start + 1))
-    console.log(titulo, err.msg)
+    console.log(titulo, err.msg
+      .replace('extraneous', 'extraña')
+      .replace('input', 'entrada')
+      .replace('expecting', 'esperaba')
+      )
   }
 
   try {
