@@ -43,21 +43,14 @@ printStatement
     : Print exp=expressionSequence
     ;
 
-expression 
-    :    Vector idx=vectorIndexes args=arguments?                       #expVectorDeclaration
-    |    Map args=arguments                                             #expMapDeclaration
-    |    fn=basicFunction args=arguments                                #expBasicFunction
+expression     
+    :    fn=basicFunction args=arguments                                #expBasicFunction
     |    Math'.'fn=(Identifier|Min|Max|Random) args=arguments           #expMath
-    |    src=expression '.' method=Identifier args=arguments            #tODO______expMemberMethod
-    |    src=expression '.' attr=Identifier                             #tODO______expMemberAttribute
-    |    id=Identifier InstanceOf is=Identifier                         #tODO______expInstanceOf
-    |    Attributes'.'id=Identifier                                     #tODO______expAttribute
-    |    Methods'.'id=Identifier  args=arguments                        #tODO______expMethodCall
-    |    Super args=arguments                                           #tODO______expSuperExpression
-    |    id=Identifier idx=vectorIndexes                                #expVector
-    |    id=Identifier args=arguments                                   #expFunctionCall
-    |    dest=assignable op=(PlusPlus|MinusMinus)                       #expPostIncrement
-    |    op=(PlusPlus | MinusMinus) dest=assignable                     #expPreIncrement
+    |    exp=expression '[' idx=expression ']'                          #expMemberIndex
+    |    exp=expression'.'id=identifierName                             #expMemberDot
+    |    exp=expression args=arguments                                  #expMemberFunc
+    |    dest=expression op=(PlusPlus|MinusMinus)                       #expPostIncrement
+    |    op=(PlusPlus | MinusMinus) dest=expression                     #expPreIncrement
     |    Plus exp=expression                                            #expUnaryPlus
     |    Minus exp=expression                                           #expUnaryMinus
     |    BitNot exp=expression                                          #expBitNot
@@ -82,10 +75,10 @@ expression
     |    e1=expression op=And e2=expression                             #expOp
     |    e1=expression op=Or e2=expression                              #expOp
     |    cond=expression '?' ok=expression ':' no=expression            #expTernary
-    |    <assoc=right> dest=assignable Assign exp=expression            #expAssignment
-    |    <assoc=right> dest=assignable op=assignmentOperator exp=expression    #expAssignmentOperator
-    |    id=Identifier                                                  #expIdentifier
+    |    <assoc=right> dest=expression Assign exp=expression            #expAssignment
+    |    <assoc=right> dest=expression op=assignmentOperator exp=expression    #expAssignmentOperator
     |    literal                                                        #expLiteral
+    |    (atr=Attributes'.'|met=Methods'.'|vvar=Var_)? id=Identifier    #expIdentifier
     |    '(' exp=expression ')'                                         #expParenthesis
     |    SingleLineComment                                              #expComment
     ;
@@ -240,16 +233,18 @@ assignmentOperator
     ;
 
 
-assignable
-    : Attributes '.' id=Identifier      #assignableAttribute
-    | id=Identifier idx=vectorIndexes   #assignableMapOrVector
-    | vvar=Var_? id=Identifier           #assignableId
-    ;
-
 reservedWord
     : keyword
     | NullLiteral
     | BooleanLiteral
+    ;
+
+vectorDeclaration
+    : Vector idx=vectorIndexes args=arguments?
+    ;
+
+mapDeclaration
+    : Map args=arguments
     ;
 
 literal
@@ -257,7 +252,9 @@ literal
     | booleanLiteral    
     | stringLiteral     
     | numericLiteral
-    | vectorLiteral    
+    | vectorLiteral 
+    | vectorDeclaration
+    | mapDeclaration   
     ;
 
 

@@ -1,105 +1,105 @@
 import Variable from './Variable.js'
+import VariableCreate from './VariableCreate.js'
+import Class from './Class.js'
+import Map from './Map.js'
+
+function _checkIndex(index) {
+  if (typeof index === 'string' && index.match(/^\d+$/))
+    index = parseInt(index)
+  if (typeof index === 'string')
+    throw new Error('Los vectores solo aceptan índices numéricos')
+  return index
+}
 
 const _createEmptyArraySizes = function (sizes, idx, initialValue) {
   let r = []
   for (let i = 0; i < sizes[idx]; i++)
-    r[i] = idx + 1 < sizes.length ? _createEmptyArraySizes(sizes, idx + 1, initialValue) : initialValue
+    r[i] = idx + 1 < sizes.length ? _createEmptyArraySizes(sizes, idx + 1, initialValue) : new Variable(initialValue)
   return r
 }
 
 class Vector extends Variable {
 
   constructor(arr, defaultValue) {
-    super(!arr ? [] : arr instanceof Variable ? arr.value : arr)
-    this.defaultValue = defaultValue
-  }
-
-  // busca la referencia atravesando el data con los indices sucesivos de indexes
-  // devuelve la referencia al último array y el índice último para conseguir el acceso al dato, sea para leer o escribir o borrar
-  // si create es cierto, crea las posiciones del array o multi array necesarias para acceder al índice final
-  getRef(indexes, create) {
-    if (typeof indexes == 'number')
-      indexes = [indexes]
-    let ref = this.value
-    for (let i = 0; i < indexes.length - 1; i++) {
-      const index = indexes[i]
-      if (!(index in ref)) {
-        if (create)
-          for (let i = ref.length; i <= index; i++)
-            ref[i] = 0// _createEmptyArraySizes([index + 1], 0, this.defaultValue)
-        else
-          return [
-            [], 0
-          ]
-      }
-      let nextIndex = indexes[i + 1]
-      if (!Array.isArray(ref[index])) {
-        if (create)
-          ref[index] = _createEmptyArraySizes([nextIndex + 1], 0, this.defaultValue)
-        else
-          return [
-            [], 0
-          ]
-      }
-      ref = ref[index]
-    }
-    let lastIndex = indexes[indexes.length - 1]
-    if (!(lastIndex in ref)) {
-      if (create)
-        for (let i = ref.length; i <= lastIndex; i++)
-          ref[i] = this.defaultValue
+    super()
+    this._value = []
+    if (arr === undefined) arr = []
+    if (!Array.isArray(arr)) throw new Error('Valor inválido al inicializar un vector')
+    this.defaultValue = Variable.literalOf(defaultValue)
+    for (const i in arr) {
+      if (arr[i] instanceof Variable)
+        this.setVariable(i, arr[i])
+      else if (Array.isArray(arr[i]))
+        this.setVariable(i, new Vector(arr[i], defaultValue))
+      else if (typeof arr[i] === 'object')
+        this.setVariable(i, new Map(arr[i]))
       else
-        return [
-          [], 0
-        ]
+        this.setValue(i, arr[i])
     }
-    return [ref, lastIndex]
   }
 
-
-  getValueFrom(indexes) {
-    let [ref, idx] = this.getRef(indexes)
-    if (!ref) return null
-    return ref[idx] || this.defaultValue
+  getRef(index, create) {
+    index = _checkIndex(index)
+    if (!(index in this._value)) {
+      if (!create) return null
+      for (let i = this._value.length; i <= index; i++)
+        this._value[i] = Variable.create(this.defaultValue)
+    }
+    return this._value[index]
   }
 
-  setValueAt(indexes, value) {
-    let [ref, idx] = this.getRef(indexes, true)
-    if (typeof idx === 'string' && Array.isArray(ref)) {
-      let lastIndex = indexes.pop()
-      let [refPrev, idxPrev] = indexes.length ? this.getRef(indexes) : [this, '_value']
-      if (refPrev) {
-        // convertimos a objeto
-        refPrev[idxPrev] = {
-          ...refPrev[idxPrev]
-        }
-        refPrev[idxPrev][lastIndex] = value instanceof Variable ? value.value : value
-      }
-    } else
-      ref[idx] = value instanceof Variable ? value.value : value
+  setValue(index, value) {
+    if (value instanceof Variable)
+      throw new Error('setValue no permite asignar una Variable')
+    index = _checkIndex(index)
+    let ref = this.getRef(index, true)
+    if (ref) ref.value = value
   }
 
-  delete(indexes) {
-    let [ref, idx] = this.getRef(indexes)
-    if (ref && idx in ref)
-      delete ref[idx]
+  setVariable(index, vari) {
+    if (!(vari instanceof Variable))
+      throw new Error('setVariable exige una Variable')
+    index = _checkIndex(index)
+    this.getRef(index, true) // para expandir índices si acaso no existen
+    this._value[index] = vari
   }
+
+  delete(index) {
+    index = _checkIndex(index)
+    let len = this._value.length
+    if (len <= index)
+      return
+    if (len - 1 == index)
+      this._value.pop()
+    else {
+      delete this._value[index]
+      this._value[index] = Variable.create(this.defaultValue)
+    } 
+  }
+
+  /*
+  deleteAt(indexes) {
+    let ref = this.getRefAt(indexes, true)
+    if(ref)
+  }*/
 
   size() {
-    return this.value.length
+    return this._value.length
   }
 
 }
+
+
 
 Vector.createWithSizes = function (sizes, defaultValue) {
   const vec = new Vector([], defaultValue)
   if (!sizes) return vec
   if (typeof sizes == 'string')
-    vec.value = sizes.split('')
+    vec._value = sizes.split('')
   else {
     if (typeof sizes == 'number')
       sizes = [sizes]
-    vec.value = _createEmptyArraySizes(sizes, 0, vec.defaultValue)
+    vec._value = new Vector(_createEmptyArraySizes(sizes, 0, vec.defaultValue))
   }
   return vec
 }

@@ -1,0 +1,2 @@
+var a = new map()[3] = 'hola'
+imp a // debe ser 'hola', como en javascipt

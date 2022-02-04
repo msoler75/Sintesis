@@ -4,11 +4,26 @@ import Vector from './internals/Vector.js'
 import Variable from './internals/Variable.js'
 import Function from './internals/Function.js'
 import Iterator from './internals/Iterator.js'
+import MemoryRef from './internals/MemoryRef.js'
 import SintesisError from './SintesisError.js'
 import SymbolContexts from './internals/SymbolContexts.js'
 import SintesisParserVisitor from './lib/SintesisParserVisitor.js'
 import promptSync from 'prompt-sync';
 const prompt = promptSync();
+
+
+
+function getValueOf(obj) {
+  if (obj instanceof MemoryRef)
+    obj = obj.variable
+  if (obj instanceof Variable)
+    obj = obj.text()
+  else if (Array.isArray(obj))
+    obj = new Vector(obj)
+  else if (typeof obj === 'object')
+    obj = new Map(obj)
+  return obj
+}
 
 const paramNumber = ['n', 'num', 'number', 'número', 'numero']
 const paramInteger = ['i', 'e', 'int', 'ent', 'entero']
@@ -58,59 +73,32 @@ export default class SintesisEval extends SintesisParserVisitor {
   }
 
 
+  // Visit a parse tree produced by SintesisParser#expMemberIndex.
+  visitExpMemberIndex(ctx) {
+    const memoryref = this.visit(ctx.exp)
+    if (!memoryref || !(memoryref instanceof MemoryRef))
+      throw new SintesisError(ctx.exp, "Operador izquierdo inválido")
+    const index = this.visit(ctx.idx)
+    if (!memoryref.variable.getRef)
+      throw new SintesisError(ctx.exp, "Operador izquierdo no es un tipo válido")
+    let ref = memoryref.variable.getRef(index)
+    return ref?new MemoryRef(ref):null
+  }
+
+
+
   // Visit a parse tree produced by SintesisParser#expAssignment.
-
   visitExpAssignment(ctx) {
-    let value = this.visit(ctx.exp);
-    const id = ctx.dest.id.text
-    switch (ctx.dest.constructor.name) {
-      case 'AssignableAttributeContext': {
-        /*
-        let [context] = findContextVar(ctx, '#' + id)
-        if (!context)
-          throw new Error(`El atributo '${id}' no existe`)
-        context.vars['#' + id] = value
-        */
-      }
-      break
-
-    case 'AssignableMapOrVectorContext': {
-      let idx = this.visitChildren(ctx.dest.idx)
-      let obj = this.symbols.findVar(id)
-      if (!obj) {
-        if (value && typeof idx[0] === 'string')
-          obj = new Map()
-        else
-          obj = Vector.createWithSizes(idx.map(x => x + 1), 0)
-      }
-      // set value in vector
-      if (obj instanceof Map) {
-        if (!obj.set(idx, value))
-          throw new SintesisError(ctx.dest.idx, 'Índice no existe')
-      } else if (obj instanceof Vector) {
-        if (idx.length === 1 && typeof idx[0] === 'string') {
-          // auto-convert to Map ?
-          throw new SintesisError(ctx.dest, 'Índice no numérico en un vector')
-        } else
-          obj.setValueAt(idx, value)
-
-      } else if (obj instanceof Variable)
-        obj.value = value
-      this.symbols.varAssign(id, obj)
-      return obj.value
+    const memoryref = this.visit(ctx.dest)
+    if (!memoryref || !(memoryref instanceof MemoryRef)) {
+      throw new SintesisError(ctx.dest, 'El operador izquierdo de asignación es inválido')
     }
-
-
-    default: {
-      let variable = this.symbols.findVar(id)
-      if (ctx.dest.vvar || variable === null) {
-        variable = Array.isArray(value) ? new Vector(value, 0) : typeof value === 'object' ? new Map(value) : new Variable(value)
-        this.symbols.addVar(id, variable)
-      } else
-        variable.value = value
-    }
-    }
-    return value
+    let value = this.visit(ctx.exp)
+    if (value instanceof Variable)
+      memoryref.variable = value
+    else
+      memoryref.variable.value = value
+    return memoryref
   }
 
   // Visit a parse tree produced by SintesisParser#varSingleDeclaration.
@@ -120,7 +108,7 @@ export default class SintesisEval extends SintesisParserVisitor {
       throw new SintesisError(ctx.id, `La variable '${id}' ya fue declarada en este contexto`)
     let value = this.visit(ctx.exp);
     let variable = new Variable(value)
-    this.symbols.addVar(id, variable)
+    this.symbols.addVariable(id, variable)
   }
 
 
@@ -164,44 +152,18 @@ export default class SintesisEval extends SintesisParserVisitor {
   // Visit a parse tree produced by SintesisParser#vectorLiteral.
   visitVectorLiteral(ctx) {
     let values = ctx.children.filter(x => x.constructor.name !== 'TerminalNodeImpl').map(x => this.visit(x))
-    return new Vector(values).value
+    return new Vector(values)
   }
 
-
-  // Visit a parse tree produced by SintesisParser#expVectorDeclaration.
-  /*visitExpVectorDeclaration(ctx) {
-    const id = ctx.id.text
-    if (id in this.symbols.currentContext().variables)
-      throw new SintesisError(ctx.id, `La variable '${id}' ya fue declarada en este contexto`)
-    const idx = this.visitChildren(ctx.idx)
-    let vec = Vector.createWithSizes(idx.map(x => x + 1))
-    this.symbols.addVar(id, vec)
-  }*/
-
-  // Visit a parse tree produced by SintesisParser#expVector.
-  visitExpVector(ctx) {
-    const id = ctx.id.text
-    const idx = this.visitChildren(ctx.idx)
-    let vec = this.symbols.findVar(id)
-    if (!vec)
-      throw new SintesisError(ctx.id, `El vector ${id} no existe`)
-    if (!(vec instanceof Vector))
-      throw new SintesisError(ctx.id, `La variable ${id} no es un vector`)
-    return vec.getValueFrom(idx)
-  }
 
   // Visit a parse tree produced by SintesisParser#expAssignmentOperator.
   visitExpAssignmentOperator(ctx) {
-    let id = ctx.id.text;
+    let id = ctx.dest.text;
+    // TODO CALC??
     let e1 = this.visit(ctx.id)
     let e2 = this.visit(ctx.exp);
-    let variable = this.symbols.findVar(id)
-    /*let [context, fid] = findContextVar(ctx, id)
-    if (!context && !IAmInsideClass(ctx))
-      IAmInsideClass
-    if (!context)
-      context = findContextBlock(ctx)*/
-    if (!variable)
+    let mem_id = this.symbols.findVar(id)
+    if (!mem_id)
       throw new SintesisError(ctx.id, `No se ha encontrado ${id}`)
     let r = e1
     switch (ctx.op.text) {
@@ -368,11 +330,11 @@ export default class SintesisEval extends SintesisParserVisitor {
 
     if (iterator.size) {
       this.symbols.pushLevel()
-      let idx = index_id ? this.symbols.addVar(index_id, new Variable(iterator.idx)) : null
-      let item = this.symbols.addVar(value_id, new Variable(iterator.current))
+      let mem_idx = index_id ? this.symbols.addVariable(index_id, new Variable(iterator.idx)) : null
+      let mem_item = this.symbols.addVariable(value_id, new Variable(iterator.current))
       while (!iterator.ended()) {
-        item.value = iterator.current
-        if (idx) idx.value = iterator.idx
+        mem_item.variable.value = iterator.current
+        if (mem_idx) mem_idx.variable.value = iterator.idx
         this.visit(ctx.stmt)
         iterator.next()
       }
@@ -396,10 +358,10 @@ export default class SintesisEval extends SintesisParserVisitor {
     const id_iterator = iter.id.text
 
     this.symbols.pushLevel()
-    let index = this.symbols.addVar(id_iterator, new Variable(from)) 
-    while (index.value<=end) {
+    let mem_index = this.symbols.addVariable(id_iterator, new Variable(from))
+    while (mem_index.variable.value <= end) {
       this.visit(ctx.stmt)
-      index.value++
+      mem_index.variable.value++
     }
     this.symbols.popLevel()
   }
@@ -429,7 +391,7 @@ export default class SintesisEval extends SintesisParserVisitor {
     // pone en el contexto los parámetros de la función como si fueran variables, con los valores asignados desde la llamada con argumentos a la función
     for (let i = 0; i < params.length; i++) {
       let _id = params[i]
-      this.symbols.addVar(_id, new Variable(i in values ? values[i] : 0))
+      this.symbols.addVariable(_id, new Variable(i in values ? values[i] : 0))
     }
 
     // ejecutamos el cuerpo de la función
@@ -483,11 +445,11 @@ export default class SintesisEval extends SintesisParserVisitor {
         if (args.length < 1) throw new SintesisError(ctx.args, "Debe especificar un argumento")
         if (t0 !== 'string' & t0 !== 'object') throw new SintesisError(ctx.args.children[1], "Tipo incorrecto")
         const v = Array.isArray(a0) ? new Vector(a0) : t0 === 'object' ? new Map(a0) : a0
-        return v instanceof Variable?v.size():v.length
+        return v instanceof Variable ? v.size() : v.length
       case 'IndexOfContext':
         if (args.length < 2) throw new SintesisError(ctx.args, "Debe especificar dos argumentos")
-        if (t0 !== 'string' && !Array.isArray(a0) && t0!=='object') throw new SintesisError(ctx.args.children[1], "Tipo incorrecto")
-        return t0==='object'?new Map(a0).indexOf(a1):a0.indexOf(a1)
+        if (t0 !== 'string' && !Array.isArray(a0) && t0 !== 'object') throw new SintesisError(ctx.args.children[1], "Tipo incorrecto")
+        return t0 === 'object' ? new Map(a0).indexOf(a1) : a0.indexOf(a1)
       case 'ConvertContext':
         if (args.length < 2) throw new SintesisError(ctx.args, "Debe especificar dos argumentos")
         if (t1 !== 'string') throw new SintesisError(ctx.args.children[3], "Tipo incorrecto")
@@ -644,11 +606,11 @@ export default class SintesisEval extends SintesisParserVisitor {
   // Visit a parse tree produced by SintesisParser#expIdentifier.
   visitExpIdentifier(ctx) {
     const id = ctx.id.text
-    let variable = this.symbols.findVar(id)
-    if (variable === null)
-      throw new SintesisError(ctx.id, `La variable ${id} no existe`)
+    let mem_id = this.symbols.findVar(id)
+    if (mem_id === null)
+      mem_id = this.symbols.addVariable(id, new Variable())
     //return 0
-    return variable.value
+    return mem_id
   }
 
 
@@ -671,12 +633,7 @@ export default class SintesisEval extends SintesisParserVisitor {
     let args = this.visit(ctx.exp).filter(x => x !== undefined)
     let result = []
     for (let r of args) {
-      if (Array.isArray(r))
-        r = new Vector(r)
-      else if (typeof r === 'object')
-        r = new Map(r)
-      if (r instanceof Variable)
-        r = r.text()
+      r = getValueOf(r)
       r = '' + r
       result.push(r)
     }
@@ -740,74 +697,17 @@ export default class SintesisEval extends SintesisParserVisitor {
 
 
   visitExpIncrement(ctx, pre, inc) {
-    const id = ctx.dest.id.text
-    let value = 0
-    switch (ctx.dest.constructor.name) {
-      case 'AssignableAttributeContext': {
-        /*
-        let [context] = findContextVar(ctx, '#' + id)
-        if (!context)
-          throw new Error(`El atributo '${id}' no existe`)
-        context.vars['#' + id] = value
-        */
-      }
-      break
-
-    case 'AssignableMapOrVectorContext': {
-      let idx = this.visitChildren(ctx.dest.idx)
-      if (!idx.length)
-        throw new SintesisError(ctx.idx, `No se permite un índice vacío`)
-      let obj = this.symbols.findVar(id)
-      if (obj && !(obj instanceof Vector) && !(obj instanceof Map))
-        obj = null
-      if (!obj) {
-        throw new SintesisError(ctx.id, `El vector o mapa '${id}' no existe`)
-      }
-      if (obj instanceof Map) {
-        if (idx.length > 1)
-          throw new SintesisError(ctx.id, `Un mapa solo tiene un índice p.ej: '${id}[clave]'`)
-        if (pre) {
-          value = obj.get(idx[0]) + inc
-          if (!obj.set(idx, value))
-            throw new SintesisError(ctx.dest.idx, 'Índice no existe')
-        } else {
-          value = obj.get(idx[0])
-          if (!obj.set(idx, value + inc))
-            throw new SintesisError(ctx.dest.idx, 'Índice no existe')
-        }
-      } else {
-        // set value incremented/decremented in vector
-        if (pre) {
-          value = obj.getValueAt(idx) + inc
-          if (!obj.setValueAt(idx, value))
-            throw new SintesisError(ctx.dest.idx, 'Índice no existe')
-        } else {
-          value = obj.getValueAt(idx)
-          if (!obj.setValueAt(idx, value + inc))
-            throw new SintesisError(ctx.dest.idx, 'Índice no existe')
-        }
-      }
+    var dest = this.visit(ctx.dest)
+    if (!(dest instanceof Variable))
+      throw new SintesisError(ctx.dest, `Operador izquierdo de ${ctx.op.text} es inválido`)
+    if (pre) {
+      dest.value = dest.value + inc
+      return dest.value
+    } else {
+      let value = dest.value
+      dest.value = value + inc
+      return value
     }
-    break
-
-    default: {
-      let variable = this.symbols.findVar(id)
-      if (variable === null) {
-        // throw new SintesisError(ctx.id, `La variable '${id}' no existe`)
-        variable = this.symbols.addVar(id, new Variable(0))
-      }
-      if (variable instanceof Vector)
-        throw new SintesisError(ctx.id, `Tipo incorrecto`)
-      if (pre) {
-        value = variable.value + inc
-        variable.value = value
-      } else {
-        value = variable.value
-        variable.value = value + inc
-      }
-    }
-    }
-    return value
   }
 
   // Visit a parse tree produced by SintesisParser#expPreIncrement.
@@ -815,7 +715,6 @@ export default class SintesisEval extends SintesisParserVisitor {
     const inc = ctx.op.text == '++' ? 1 : -1
     return this.visitExpIncrement(ctx, true, inc)
   }
-
 
 
   // Visit a parse tree produced by SintesisParser#expPostIncrement.
@@ -829,7 +728,6 @@ export default class SintesisEval extends SintesisParserVisitor {
     const value = this.visit(ctx.exp);
     return -value
   }
-
 
   // Visit a parse tree produced by SintesisParser#expUnaryPlus.
   visitExpUnaryPlus(ctx) {

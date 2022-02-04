@@ -1,6 +1,12 @@
 class Variable {
     constructor(value) {
-        this.value = value
+        if (value instanceof Variable)
+            this.value = Variable.literalOf(value)
+        else if (Array.isArray(value))
+            throw new Error('Array inválido para crear una Variable. Se debe usar Vector')
+        else if (typeof value === 'object')
+            throw new Error('Objeto inválido para crear una Variable. Se debe usar Map')
+        else this.value = value
     }
 
     get value() {
@@ -9,40 +15,36 @@ class Variable {
 
     set value(value) {
         const t = typeof value
-        if (value === null || value === undefined || t === 'undefined') 
+        if (value === null || value === undefined || t === 'undefined')
             this._value = null
-        else if (Array.isArray(value)) {
-            this._value = [...value]
-        } else if (t === 'object') {
-            this._value = {
-                ...value
-            }
-        } else if (['number', 'string', 'boolean'].includes(t))
-            this._value = value
         else
-            try {
-                this._value = JSON.parse(JSON.stringify(value instanceof Variable ? value.value : value))
-            }
-        catch (err) {
-            console.error('Error JSON encoding/decoding', value)
-        }
-    }
-
-    toText(v) {
-        if (v === null) return 'null'
-        if (Array.isArray(v))
-            return '[' + v.map(x => this.toText(x)).join(', ') + ']'
-        if (typeof v === 'object') {
-            let values = []
-            Object.keys(v).forEach(k => values.push(k + ': ' + this.toText(v[k])))
-            return '{' + values.join(', ') + '}'
-        }
-        return v
+            this._value = value instanceof Variable ? value.value : value
     }
 
     text() {
-        return this.toText(this.value)
+        return toText(this.value)
     }
+}
+
+Variable.literalOf = function (src) {
+    return src instanceof Variable ? src.value : src
+}
+
+
+function toText(v) {
+    if (v instanceof Variable) return toText(v.value)
+    if (v === null) return 'null'
+    let cls = ''
+    if (v.constructor && v.constructor.name)
+        cls = v.constructor.name
+    if (Array.isArray(v))
+        return '[' + v.map(x => toText(x)).join(', ') + ']'
+    if (typeof v === 'object') {
+        let values = []
+        Object.keys(v).forEach(k => values.push(k + ': ' + toText(v[k])))
+        return '{' + values.join(', ') + '}'
+    }
+    return v
 }
 
 export default Variable

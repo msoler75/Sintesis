@@ -1,0 +1,6 @@
+a=1
+{
+    var a=2
+    imprimir a
+}
+imprimir a

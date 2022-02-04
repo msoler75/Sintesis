@@ -1,0 +1,3 @@
+a=map()
+a['x']=33
+imprimir a

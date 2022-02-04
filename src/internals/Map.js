@@ -1,45 +1,30 @@
 import Variable from './Variable.js'
 
-
 class Map extends Variable {
 
     constructor(obj) {
-        if(obj===undefined) obj = {}
-        super(obj)
+        super()
+        this._value = {}
+        for (const key in obj)
+            this.setValue(key, obj[key])
     }
 
-    get(key) {
+    getRef(key) {
+        if (!(key in this._value))
+            return null
         return this._value[key]
     }
 
-    set(key, value) {
-        if (Array.isArray(key)) {
-            if(key.length === 0) 
-            {
-                // no hace nada
-                ;
-            }
-            else if (key.length === 1)
-                this._value[key[0]] = value
-            else {
-                let ref = this._value
-                let i = 0
-                let index = key[0]
-                while (i < key.length - 1) {
-                    let index = key[i]
-                    if (!(index in ref))
-                        return false
-                    ref = ref[index]
-                    i++
-                }
-                index = key[key.length-1]
-                ref[index] = value
-            }
-        } else if (typeof key === 'object') {
-            // no hace nada
-        } else
-            this._value[key] = value
-        return true
+    setValue(key, value) {
+        if (value instanceof Variable)
+            throw new Error('setValue no permite asignar una Variable')
+        this._value[key] = Variable.create(value)
+    }
+
+    setVariable(key, vari) {
+        if (!(vari instanceof Variable))
+            throw new Error('setVariable exige una Variable')
+        this._value[key] = vari
     }
 
     delete(key) {
@@ -51,10 +36,11 @@ class Map extends Variable {
     }
 
     indexOf(v) {
-        for(const key in this._value)
-        {
-            if(v===this._value[key])
-            return key
+        if (v instanceof Variable)
+            v = v.value
+        for (const key in this._value) {
+            if (v === this._value[key].value)
+                return key
         }
         return null
     }

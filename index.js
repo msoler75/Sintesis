@@ -12,7 +12,7 @@ if (!file) {
 }
 
 let input
-if (file.match(/.*\.sint?(tesis)?$/) || fs.existsSync(file)) {
+if (file.match(/.*\.sin?(tesis)?$/) || fs.existsSync(file)) {
   try {
     input = fs.readFileSync(file, 'utf8')
   } catch (err) {
