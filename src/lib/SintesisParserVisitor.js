@@ -396,12 +396,6 @@ export default class SintesisParserVisitor extends antlr4.tree.ParseTreeVisitor 
 	}
 
 
-	// Visit a parse tree produced by SintesisParser#vectorLiteral.
-	visitVectorLiteral(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
 	// Visit a parse tree produced by SintesisParser#formalParameterArg.
 	visitFormalParameterArg(ctx) {
 	  return this.visitChildren(ctx);
@@ -434,6 +428,18 @@ export default class SintesisParserVisitor extends antlr4.tree.ParseTreeVisitor 
 
 	// Visit a parse tree produced by SintesisParser#mapDeclaration.
 	visitMapDeclaration(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by SintesisParser#vectorLiteral.
+	visitVectorLiteral(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by SintesisParser#objectLiteral.
+	visitObjectLiteral(ctx) {
 	  return this.visitChildren(ctx);
 	}
 

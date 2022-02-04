@@ -9,15 +9,19 @@ class Map extends Variable {
             this.setValue(key, obj[key])
     }
 
-    getRef(key) {
-        if (!(key in this._value))
-            return null
+    getRef(key, create) {
+        if (!(key in this._value)) {
+            if (!create)
+                return null
+            this._value[key] = Variable.create(null)
+        }
         return this._value[key]
     }
 
     setValue(key, value) {
         if (value instanceof Variable)
-            throw new Error('setValue no permite asignar una Variable')
+            // throw new Error('setValue no permite asignar una Variable')
+            return this.setVariable(key, value)
         this._value[key] = Variable.create(value)
     }
 

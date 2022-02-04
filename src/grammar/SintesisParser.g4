@@ -47,7 +47,7 @@ expression
     :    fn=basicFunction args=arguments                                #expBasicFunction
     |    Math'.'fn=(Identifier|Min|Max|Random) args=arguments           #expMath
     |    exp=expression '[' idx=expression ']'                          #expMemberIndex
-    |    exp=expression'.'id=identifierName                             #expMemberDot
+    |    exp=expression'.'idx=identifierName                            #expMemberDot
     |    exp=expression args=arguments                                  #expMemberFunc
     |    dest=expression op=(PlusPlus|MinusMinus)                       #expPostIncrement
     |    op=(PlusPlus | MinusMinus) dest=expression                     #expPreIncrement
@@ -203,10 +203,6 @@ vectorIndexes
     : vectorIndex+
     ;
 
-vectorLiteral
-    : '[' (expression (',' expression)*)? ']'
-    ;
-
 formalParameterArg
     : Identifier (Assign expression)?      
     ;
@@ -247,12 +243,23 @@ mapDeclaration
     : Map args=arguments
     ;
 
+
+vectorLiteral
+    : '[' (expression (',' expression)*)? ']'
+    ;
+
+objectLiteral
+    : '{' (identifierName ':' expression (',' identifierName ':' expression)*)? '}'
+    ;
+
+
 literal
     : nullLiteral       
     | booleanLiteral    
     | stringLiteral     
     | numericLiteral
     | vectorLiteral 
+    | objectLiteral
     | vectorDeclaration
     | mapDeclaration   
     ;

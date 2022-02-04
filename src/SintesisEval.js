@@ -11,24 +11,26 @@ import SintesisParserVisitor from './lib/SintesisParserVisitor.js'
 import promptSync from 'prompt-sync';
 const prompt = promptSync();
 
-
-
-function getValueOf(obj) {
-  if (obj instanceof MemoryRef)
-    obj = obj.variable
-  if (obj instanceof Variable)
-    obj = obj.text()
-  else if (Array.isArray(obj))
-    obj = new Vector(obj)
-  else if (typeof obj === 'object')
-    obj = new Map(obj)
-  return obj
-}
-
 const paramNumber = ['n', 'num', 'number', 'número', 'numero']
 const paramInteger = ['i', 'e', 'int', 'ent', 'entero']
 const paramFloat = ['f', 'd', 'dec', 'float', 'decimal']
 const paramText = ['s', 't', 'string', 'str', 'text', 'texto']
+
+
+
+function getDisplayValueOf (obj) {
+  if (obj instanceof MemoryRef)
+      obj = obj.variable
+  if (obj instanceof Variable)
+      obj = obj.text()
+  else if (Array.isArray(obj))
+      obj = new Vector(obj)
+  else if (typeof obj === 'object')
+      obj = new Map(obj)
+  return obj
+}
+
+
 
 export default class SintesisEval extends SintesisParserVisitor {
 
@@ -81,15 +83,21 @@ export default class SintesisEval extends SintesisParserVisitor {
     const index = this.visit(ctx.idx)
     if (!memoryref.variable.getRef)
       throw new SintesisError(ctx.exp, "Operador izquierdo no es un tipo válido")
-    let ref = memoryref.variable.getRef(index)
-    return ref?new MemoryRef(ref):null
+    let ref = memoryref.variable.getRef(index, this.forCreate)
+    return ref?new MemoryRef(memoryref.variable, index):null
   }
 
-
+   // Visit a parse tree produced by SintesisParser#expMemberDot.
+   visitExpMemberDot(ctx) {
+     return this.visitExpMemberIndex(ctx)
+  }
 
   // Visit a parse tree produced by SintesisParser#expAssignment.
   visitExpAssignment(ctx) {
+    this.forCreate = true
+    console.log('assigning to', ctx.dest.getText())
     const memoryref = this.visit(ctx.dest)
+    this.forCreate = false
     if (!memoryref || !(memoryref instanceof MemoryRef)) {
       throw new SintesisError(ctx.dest, 'El operador izquierdo de asignación es inválido')
     }
@@ -144,9 +152,14 @@ export default class SintesisEval extends SintesisParserVisitor {
   }
 
 
-  visitExpMapDeclaration(ctx) {
-    return new Map().value
-  }
+  // Visit a parse tree produced by SintesisParser#mapDeclaration.
+	visitMapDeclaration(ctx) {
+    let args = []
+    if (ctx.args) {
+      args = this.visit(ctx.args).values
+    }
+    return args[0] && args[0] instanceof Map?args[0]:new Map()
+	}
 
 
   // Visit a parse tree produced by SintesisParser#vectorLiteral.
@@ -155,6 +168,20 @@ export default class SintesisEval extends SintesisParserVisitor {
     return new Vector(values)
   }
 
+  // Visit a parse tree produced by SintesisParser#objectLiteral.
+  visitObjectLiteral(ctx) {
+    var m = new Map()
+    var key = ''
+	  ctx.children.filter(x => x.constructor.name !== 'TerminalNodeImpl')
+    .map(x => {
+      switch(x.constructor.name)
+      {
+        case 'IdentifierNameContext': key=x.getText(); break
+        default: m.setValue(key, this.visit(x)); break
+      }
+    })
+    return m;
+	}
 
   // Visit a parse tree produced by SintesisParser#expAssignmentOperator.
   visitExpAssignmentOperator(ctx) {
@@ -322,7 +349,7 @@ export default class SintesisEval extends SintesisParserVisitor {
     const iter = ctx.iter
     const value_id = iter.idv ? iter.idv.text : null
     const index_id = iter.idk ? iter.idk.text : null
-    const collection = this.visit(iter.coll)
+    const collection = this.visit(iter.coll)    
     if (!Iterator.iterable(collection))
       throw new SintesisError(ctx.dest, `El valor no es iterable`)
 
@@ -420,7 +447,10 @@ export default class SintesisEval extends SintesisParserVisitor {
     let callContext = this.symbols.getFuncContext()
     let i = 0
     while ((!callContext || !callContext.functionEnded) && i < ctx.children.length)
+    {
+      console.log(ctx.children[i].getText())
       this.visit(ctx.children[i++])
+    }
     return callContext ? (callContext.functionResult || null) : null
   }
 
@@ -596,13 +626,6 @@ export default class SintesisEval extends SintesisParserVisitor {
   }
 
 
-  // Visit a parse tree produced by SintesisParser#anonymousFunction.
-  visitAnonymousFunction(ctx) {
-    // TO-DO
-    return this.visitChildren(ctx);
-  }
-
-
   // Visit a parse tree produced by SintesisParser#expIdentifier.
   visitExpIdentifier(ctx) {
     const id = ctx.id.text
@@ -612,6 +635,11 @@ export default class SintesisEval extends SintesisParserVisitor {
     //return 0
     return mem_id
   }
+
+  // Visit a parse tree produced by SintesisParser#identifierName.
+	visitIdentifierName(ctx) {
+	  return ctx.children[0].getText()
+	}
 
 
   // Visit a parse tree produced by SintesisParser#block.
@@ -633,7 +661,7 @@ export default class SintesisEval extends SintesisParserVisitor {
     let args = this.visit(ctx.exp).filter(x => x !== undefined)
     let result = []
     for (let r of args) {
-      r = getValueOf(r)
+      r = getDisplayValueOf(r)
       r = '' + r
       result.push(r)
     }
@@ -697,15 +725,15 @@ export default class SintesisEval extends SintesisParserVisitor {
 
 
   visitExpIncrement(ctx, pre, inc) {
-    var dest = this.visit(ctx.dest)
-    if (!(dest instanceof Variable))
+    var memoryref = this.visit(ctx.dest)
+    if (!memoryref || !(memoryref instanceof MemoryRef))
       throw new SintesisError(ctx.dest, `Operador izquierdo de ${ctx.op.text} es inválido`)
     if (pre) {
-      dest.value = dest.value + inc
-      return dest.value
+      memoryref.variable.value = memoryref.variable.value + inc
+      return memoryref.variable.value
     } else {
-      let value = dest.value
-      dest.value = value + inc
+      let value = memoryref.variable.value
+      memoryref.variable.value = value + inc
       return value
     }
   }
