@@ -19,6 +19,9 @@ const paramText = ['s', 't', 'string', 'str', 'text', 'texto']
 
 
 function getDisplayValueOf(obj) {
+  if (obj === null) return 'nulo'
+  if (obj === true) return 'cierto'
+  if (obj === false) return 'falso'
   while (obj instanceof MemoryRef)
     obj = obj.variable
   if (obj instanceof Variable)
@@ -29,9 +32,6 @@ function getDisplayValueOf(obj) {
     obj = new Vector(obj)
   else if (typeof obj === 'object')
     obj = new Map(obj)
-  if (obj === null) return 'nulo'
-  if (obj === true) return 'cierto'
-  if (obj === false) return 'falso'
   return obj
 }
 
@@ -475,10 +475,12 @@ export default class SintesisEval extends SintesisParserVisitor {
   // Visit a parse tree produced by SintesisParser#expBasicFunction.
   visitExpBasicFunction(ctx) {
     const args = this.visit(ctx.args).values
-    const t0 = typeof args[0]
-    const t1 = typeof args[1]
-    const a0 = args[0]
-    const a1 = args[1]
+    const a0 = MemoryRef.literalOf(args[0])
+    const a1 = MemoryRef.literalOf(args[1])
+    const a2 = MemoryRef.literalOf(args[2])
+    const t0 = typeof a0
+    const t1 = typeof a1
+    const t2 = typeof a2
     const fn = ctx.fn.children[0].constructor.name
     switch (fn) {
       case 'NumberOfContext':
@@ -522,7 +524,7 @@ export default class SintesisEval extends SintesisParserVisitor {
         if (args.length < 2) throw new SintesisError(ctx.args, "Debe especificar al menos dos argumentos")
         if (t0 !== 'string' && !Array.isArray(a0)) throw new SintesisError(ctx.args.children[1], "Tipo incorrecto")
         let start = a1
-        let end = args[2]
+        let end = a2
         if (t1 !== 'number') throw new SintesisError(ctx.args.children[3], "Tipo incorrecto")
         if (start < 0) throw new SintesisError(ctx.args.children[3], "No puede ser negativo")
         if (end && typeof end !== 'number') throw new SintesisError(ctx.args.children[5], "Tipo incorrecto")
@@ -538,7 +540,7 @@ export default class SintesisEval extends SintesisParserVisitor {
       case 'MaxContext':
         if (args.length < 1) throw new SintesisError(ctx.args, "Debe especificar al menos un argumento")
         for (var i in args) {
-          var arg = args[i]
+          var arg = MemoryRef.literalOf(args[i])
           if (typeof arg !== 'number') throw new SintesisError(ctx.args.children[1 + i * 2], "Tipo incorrecto")
         }
         const fz = fn === 'MaxContext' ? Math.max : Math.min
@@ -639,7 +641,7 @@ export default class SintesisEval extends SintesisParserVisitor {
   // Visit a parse tree produced by SintesisParser#expIdentifier.
   visitExpIdentifier(ctx) {
     const id = ctx.id.text
-    let mem_id = this.symbols.findSymbol(id)
+    let mem_id = ctx.vvar?this.symbols.addVariable(id, new Variable()):this.symbols.findSymbol(id)
     if (mem_id === null && this.forCreate)
       mem_id = this.symbols.addVariable(id, new Variable())
     //return 0
@@ -724,12 +726,12 @@ export default class SintesisEval extends SintesisParserVisitor {
 
   // Visit a parse tree produced by SintesisParser#expNot.
   visitExpNot(ctx) {
-    return !this.visit(ctx.exp);
+    return !MemoryRef.literalOf(this.visit(ctx.exp))
   }
 
   // Visit a parse tree produced by SintesisParser#expBitNot.
   visitExpBitNot(ctx) {
-    return ~this.visit(ctx.exp);
+    return ~MemoryRef.literalOf(this.visit(ctx.exp))
   }
 
 
