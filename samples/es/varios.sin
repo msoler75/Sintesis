@@ -5,9 +5,9 @@ eliminar a[3]
 sumar([3])
 a[4] = "amor"
 a["pepe"] = "javier"
-b=nuevo Diccionario()
-b.establecer('123','Jorge')
-print b.get('123')
+// b=nuevo Diccionario()
+// b.establecer('123','Jorge')
+// print b.get('123')
 print a
 c = nuevo Cliente(123, 'Jorge', 'García')
 si(c es Persona) 

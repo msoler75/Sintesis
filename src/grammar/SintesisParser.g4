@@ -132,9 +132,9 @@ elseStatement
     ;
 
 iteratorIndexes
-    : idv=Identifier op=(In|Of) coll=expression                      #aer
-    | idv=Identifier ',' idk=Identifier op=(In|Of) coll=expression  #ewfewq
-    | idk=Identifier ARROW idv=Identifier op=(In|Of) coll=expression #qxeeq
+    : idv=Identifier op=(In|Of) coll=expression                      
+    | idv=Identifier ',' idk=Identifier op=(In|Of) coll=expression  
+    | idk=Identifier ARROW idv=Identifier op=(In|Of) coll=expression 
     ;
 
 iteratorRange

@@ -1,6 +1,4 @@
 import Variable from './Variable.js'
-import VariableCreate from './VariableCreate.js'
-import Class from './Class.js'
 import Map from './Map.js'
 
 function _checkIndex(index) {

@@ -1,114 +1,36 @@
-clase Persona {
+contador = 1
 
-  atributos: nombre, apellidos
+clase Figura {
+    atributos: {id}
 
-  metodos: 
+    metodos:
 
-    constructor (nombre, apellidos) {
-      asignaNombre (nombre)
-      asignaApellidos(apellidos)
+    constructor() {
+        id = contador++
     }
 
-    asignaNombre(nombre) {
-      atributos.nombre=nombre
+    area () {
+        ret 'No aplicable'
     }
-
-    asignaApellidos(apellidos) {
-      atributos.apellidos = apellidos
-    }
-
-    texto() {
-      retorna 'Persona (nombre:'+nombre+', apellidos: '+apellidos+')'
-    }  
 }
 
+clase Cuadrado extiende Figura {
+    atributos: ancho alto
 
+    métodos: {
+        constructor(ancho, alto) {
+            atributos.ancho = ancho
+            atributos.alto = alto
+        }
 
-clase Cliente extiende Persona {
-
-  atributos : {
-    dni
-    // además hereda los atributos del padre
-    // nombre
-    // apellidos
-  }
-
-  metodos: {
-
-    constructor (dni, nombre, apellidos) {
-      padre(nombre, apellidos)
-      asignaDNI(dni)
+        area() {
+            ret ancho*alto    
+        }
     }
-
-    asignaDNI(dni) {
-      atributos.dni = dni
-    }
-
-    texto() {
-      retorna 'Cliente (dni: '+dni+', '+'nombre:'+nombre+', apellidos: '+apellidos+')'
-    }
-    
-    // además hereda los métodos del padre (clase Persona)
-    // asignaNombre(nombre) ...
-    // asignaApellidos(apellidos) ...
-  }
 }
 
+f = nueva Figura()
+c = nuevo Cuadrado(2, 3)
 
-
-// persona
-
-p = nueva Persona ('Andrés', 'Pérez')
-imprimir p.texto()
-
-p.asignaNombre('Laura')
-p.asignaApellidos('Gutierrez')
-
-imprimir p.texto()
-
-imprimir p.atributos.nombre
-imprimir p.atributos.apellidos
-
-imprimir p.nombre
-imprimir p.apellidos
-
-si(p es Persona) 
-  print "es persona"
-
-si(p es Cliente) 
-  print "es cliente"
-
-si(p es NoExiste) 
-  print "no existe"
-
-// cliente
-
-c = nuevo Cliente(777, 'Jorge', 'García')
-imprimir c.texto()
-
-c.asignaDNI(1234567)
-c.asignaNombre('María')
-c.asignaApellidos('López')
-
-imprimir c.texto()
-
-c.metodos.asignaNombre('Marcel')
-c.metodos.asignaApellidos('Soler')
-c.metodos.asignaDNI('987654321')
-
-imprimir c.texto()
-
-imprimir c.atributos.nombre
-imprimir c.atributos.apellidos
-imprimir c.atributos.DNI
-
-imprimir c.nombre
-imprimir c.apellidos
-imprimir c.DNI
-
-si(c es Persona) 
-  print "es persona"
-
-si(c es Cliente) 
-  print "es cliente"
-
+imprimir "Figura " f.id + " tiene area "+f.area()
+imprimir "Figura " c.id + " tiene area "+c.area()
