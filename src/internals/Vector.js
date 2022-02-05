@@ -38,10 +38,16 @@ class Vector extends Variable {
     }
   }
 
+  defineDefault() {
+    if(this.defaultValue !== undefined) return
+    // this.defaultValue = 0
+  }
+
   getRef(index, create) {
     index = _checkIndex(index)
     if (!(index in this._value)) {
       if (!create) return null
+      this.defineDefault()
       for (let i = this._value.length; i <= index; i++)
         this._value[i] = Variable.create(this.defaultValue)
     }
@@ -50,7 +56,8 @@ class Vector extends Variable {
 
   setValue(index, value) {
     if (value instanceof Variable)
-      throw new Error('setValue no permite asignar una Variable')
+      return this.setVariable(index, value)
+      //throw new Error('setValue no permite asignar una Variable')
     index = _checkIndex(index)
     let ref = this.getRef(index, true)
     if (ref) ref.value = value
@@ -73,6 +80,7 @@ class Vector extends Variable {
       this._value.pop()
     else {
       delete this._value[index]
+      this.defineDefault()
       this._value[index] = Variable.create(this.defaultValue)
     } 
   }

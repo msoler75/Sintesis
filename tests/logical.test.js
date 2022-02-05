@@ -8,7 +8,7 @@ test('logical-1', () => {
         imp f || c
         imp c || f
         imp c || c`
-    )).toContainText(`false true true true`)
+    )).toContainText(`falso cierto cierto cierto`)
 
     expect(exec(
         `c = cierto
@@ -17,7 +17,7 @@ test('logical-1', () => {
         imp f && c
         imp c && f
         imp c && c`
-    )).toContainText(`false false false true`)
+    )).toContainText(`falso falso falso cierto`)
 
     expect(exec(
         `c = cierto
@@ -26,7 +26,7 @@ test('logical-1', () => {
         imp !(f || c)
         imp !(c || f)
         imp !(c || c)`
-    )).toContainText(`true false false false`)
+    )).toContainText(`cierto falso falso falso`)
 
     expect(exec(
         `c = cierto
@@ -35,7 +35,7 @@ test('logical-1', () => {
         imp !(f && c)
         imp !(c && f)
         imp !(c && c)`
-    )).toContainText(`true true true false`)
+    )).toContainText(`cierto cierto cierto falso`)
 
     expect(exec(
         `c = cierto
@@ -44,7 +44,7 @@ test('logical-1', () => {
         imp !f || !c
         imp !c || !f
         imp !c || !c`
-    )).toContainText(`true true true false`)
+    )).toContainText(`cierto cierto cierto falso`)
 
     expect(exec(
         `c = cierto
@@ -53,6 +53,6 @@ test('logical-1', () => {
         imp !f && !c
         imp !c && !f
         imp !c && !c`
-    )).toContainText(`true false false false`)
+    )).toContainText(`cierto falso falso falso`)
 
 })

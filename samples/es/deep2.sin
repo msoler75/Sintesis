@@ -1,0 +1,11 @@
+a=vector[2][2](-1)
+
+imprimir a
+
+a[0] = 1
+
+imprimir a
+
+a[1][1] = 1
+
+imprimir a

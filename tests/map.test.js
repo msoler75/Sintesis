@@ -27,5 +27,5 @@ test('map-3', () => {
     a['jorge'] = 33
     a['jaime'] = 77
     imprimir buscar(a, 77), buscar(a, 99)
-    `)).toContainText(`jaime null`)
+    `)).toContainText(`jaime nulo`)
 })

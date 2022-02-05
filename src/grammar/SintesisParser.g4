@@ -160,12 +160,12 @@ returnStatement
     : Return exp=expression
     ;
 
-functionDeclaration
-    : Function_ id=Identifier '(' pl=formalParameterList? ')' stmt=functionBody
-    ;
-
 formalParameterList
     : formalParameterArg (',' formalParameterArg)* 
+    ;
+
+functionDeclaration
+    : Function_ id=Identifier '(' pl=formalParameterList? ')' stmt=functionBody
     ;
 
 arguments

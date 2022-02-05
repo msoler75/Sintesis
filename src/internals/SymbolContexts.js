@@ -39,7 +39,7 @@ class MemoryRefContexts {
     return this.getContext(this.current)
   }
 
-  findMemoryRefIndex(id) {
+  findSymbolIndex(id) {
     let i = this.current
     while (i >= 0) {
       let context = this.contexts[i]
@@ -50,21 +50,26 @@ class MemoryRefContexts {
     return -1
   }
 
+  findSymbol(id) {
+    let i = this.findSymbolIndex(id)
+    return i<0?null:this.contexts[i].memory[id]
+  }
+
   findVarIndex(id) {
-    let i = this.findMemoryRefIndex(id)
+    let i = this.findSymbol(id)
     if (i < 0) return -1
     return this.contexts[i].memory[id].variable instanceof Variable?i:-1
   }
 
 
   findFuncIndex(id) {
-    let i = this.findMemoryRefIndex(id)
+    let i = this.findSymbol(id)
     if (i < 0) return -1
     return this.contexts[i].memory[id].variable instanceof Function?i:-1
   }
 
   findClassIndex(id) {
-    let i = this.findMemoryRefIndex(id)
+    let i = this.findSymbol(id)
     if (i < 0) return -1
     return this.contexts[i].memory[id].variable instanceof Class?i:-1
   }
@@ -111,7 +116,7 @@ class MemoryRefContexts {
   // añade una variable al contexto actual
   addVariable(id, value) {
     if (!(value instanceof Variable))
-      throw new Error('addMemoryRef exige una clase Variable')
+      throw new Error('addVariable exige una clase Variable')
     let context = this.contexts[this.current]
     context.memory[id] = new MemoryRef(value)
     return context.memory[id]
