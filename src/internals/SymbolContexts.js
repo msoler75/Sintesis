@@ -15,11 +15,12 @@ class MemoryRefContexts {
   }
 
   // los contextos de símbolos son jerárquicos, tienen hijos y padres
-  pushLevel(inFunction) {
+  pushLevel(inFunction, className) {
     this.contexts.push({
       parent: this.current,
       memory: {},
       inFunction: !!inFunction, // para señalar que estamos dentro de un nuevo contexto de función
+      className: className, // para señalar que estamos dentro de un nuevo contexto de clase
       functionEnded: false, // para contextos de función, cuando se ejecuta 'return' el bloque o contexto entero se marca como 'terminado'
       functionResult: null // para contextos de función, cuando se retorna un resultado se guarda en esta variable
     })
@@ -56,20 +57,20 @@ class MemoryRefContexts {
   }
 
   findVarIndex(id) {
-    let i = this.findSymbol(id)
+    let i = this.findSymbolIndex(id)
     if (i < 0) return -1
     return this.contexts[i].memory[id].variable instanceof Variable?i:-1
   }
 
 
   findFuncIndex(id) {
-    let i = this.findSymbol(id)
+    let i = this.findSymbolIndex(id)
     if (i < 0) return -1
     return this.contexts[i].memory[id].variable instanceof Function?i:-1
   }
 
   findClassIndex(id) {
-    let i = this.findSymbol(id)
+    let i = this.findSymbolIndex(id)
     if (i < 0) return -1
     return this.contexts[i].memory[id].variable instanceof Class?i:-1
   }
@@ -108,6 +109,24 @@ class MemoryRefContexts {
 
   getFuncContext() {
     let i = this.getFuncContextIndex()
+    if (i >= 0) return this.getContext(i)
+    return null
+  }
+
+
+  getClassContextIndex() {
+    let i = this.current
+    while (i >= 0) {
+      let context = this.contexts[i]
+      if (context.className)
+        return i
+      i = context.parent
+    }
+    return -1
+  }
+
+  getClassContext() {
+    let i = this.getClassContextIndex()
     if (i >= 0) return this.getContext(i)
     return null
   }

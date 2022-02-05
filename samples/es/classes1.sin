@@ -1,0 +1,20 @@
+class Saludo {
+
+    atributos: nombre
+
+    métodos: 
+
+    hola(nombre) {
+        imprimir "Hola " + nombre + "!"
+    }
+
+    adios(nombre) {
+        imprimir "Adiós " + atributos.nombre + "!"
+    }
+    
+}
+
+s=nuevo Saludo()
+s.nombre="Juan"
+s.hola("Jorge")
+s.adios("Jorge")

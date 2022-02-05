@@ -165,3 +165,32 @@ test('Bucles-11', () => {
     para cada letra, posicion de 'jor' imp posicion, letra
     `)).toContainText(`j o r 0 j 1 o 2 r 0 j 1 o 2 r `)
 })
+
+
+test('Bucles-12-foreach', () => {
+    expect(exec(`
+    diccionario['casa'] = 11
+    diccionario['pub'] = 22
+    diccionario['local'] = 33
+
+    imprimir diccionario
+
+    imprimir '\ntipos de habitáculos:'
+    para cada (codigo, indice en diccionario) imprimir '- '+indice
+
+    imprimir '\ncódigos de habitáculos:'
+    para cada (código de diccionario) imprimir '- '+código
+    `)).toContainText(`
+    {casa: 11, pub: 22, local: 33}
+
+    tipos de habitáculos:
+    - casa
+    - pub
+    - local
+    
+    códigos de habitáculos:
+    - 11
+    - 22
+    - 33`)
+})
+

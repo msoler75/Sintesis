@@ -6,10 +6,10 @@ imprimir a-b
 imprimir b*c
 imprimir c/b
 imprimir a+b*c
-imprimir a*b+c
+imprimir (a+b)*c
 imprimir a*(b+c)
 imprimir (a*(b+c))+4
 imprimir c**2
 imprimir (a+b)**3
 imprimir 11%3
-imprimir ((12%7**2)-1)/(4+4%4)
+imprimir (((12%7)**2)-1)/(4+(4%4))

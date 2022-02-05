@@ -58,12 +58,16 @@ export default class SintesisEval extends SintesisParserVisitor {
     return fn
   }
 
+  // Visit a parse tree produced by SintesisParser#methodDeclaration.
+  visitMethodDeclaration(ctx) {
+    return null //this.visitChildren(ctx);
+  }
 
   // Visit a parse tree produced by SintesisParser#classDeclaration.
   visitClassDeclaration(ctx) {
     const id = ctx.id.text;
     const extend = ctx.ext ? this.visitChildren(ctx.ext) : null
-    const attributes = ctx.atrs ? ctx.atrs.children.map(x => x.getText()).filter(x => x != ',') : {}
+    const attributes = ctx.atrs ? ctx.atrs.children.map(x => x.getText()).filter(x => !x.match(/[,{}]/)) : {}
     // const attributes = ctx.atrs? ctx.atrs.children.filter(x=>x.constructor.name!=='TerminalNodeImpl').map(x => x.getText())
     const methodList = ctx.methods ? ctx.methods.children.map(x => new Function(x, ctx)) : {}
     let methods = {}
@@ -77,6 +81,18 @@ export default class SintesisEval extends SintesisParserVisitor {
     const cls = new Class(id, extend, attributes, methods)
     this.symbols.addClass(id, cls)
     return this.visitChildren(ctx)
+  }
+
+
+  // Visit a parse tree produced by SintesisParser#expNew.
+  visitExpNew(ctx) {
+    const id = ctx.id.text
+    let memoryref = this.symbols.findClass(id)
+    if (!memoryref)
+      throw new SintesisError(ctx.id, 'No existe la clase ${id}')
+    if (!(memoryref.variable instanceof Class))
+      throw new SintesisError(ctx.id, 'No es una clase ${id}')
+    return Class.newInstance(memoryref.variable)
   }
 
 
@@ -113,23 +129,49 @@ export default class SintesisEval extends SintesisParserVisitor {
     if (!(memoryref.variable instanceof Function))
       throw new SintesisError(ctx.exp, "No es una función")
 
+    const fn = memoryref.variable
+
     // obtenemos los argumentos o parámetros de la función y los valores
-    let params = memoryref.variable.context.pl ? this.visit(memoryref.variable.context.pl).params : []
+    let params = fn.context.pl ? this.visit(fn.context.pl).params : []
     let values = ctx.args ? this.visit(ctx.args).values : []
+    let cls = null
+
+    // si es una función (método) de clase...
+    if (fn.classContext) {
+      // obtenemos la referencia al objeto o instancia de clase
+      cls = memoryref._variable
+
+      // creamos un nuevo contexto
+      this.symbols.pushLevel(false, cls.name)
+
+      // añadimos los atributos y métodos en la tabla de símbolos
+      for (const id in cls.attributes) {
+        this.symbols.addVariable(id, cls.attributes[id])
+      }
+
+      for (const id in cls.methods) {
+        this.symbols.addFunction(id, cls.methods[id])
+      }
+    }
 
     // creamos un nuevo contexto de símbolos de un contexto de función
     this.symbols.pushLevel(true)
 
     // pone en el contexto los parámetros de la función como si fueran variables, con los valores asignados desde la llamada con argumentos a la función
     for (let i = 0; i < params.length; i++) {
-      let _id = params[i]
-      this.symbols.addVariable(_id, Variable.create(i in values ? MemoryRef.literalOf(values[i]) : 0))
+      let id = params[i]
+      this.symbols.addVariable(id, Variable.create(i in values ? MemoryRef.literalOf(values[i]) : 0))
     }
 
     // ejecutamos el cuerpo de la función
-    memoryref.variable.context.stmt ? this.visit(memoryref.variable.context.stmt) : null
+    fn.context.stmt ? this.visit(fn.context.stmt) : null
 
     const r = this.symbols.currentContext().functionResult
+
+    if (fn.classContext) {
+      // restauramos el contexto de símbolos anterior
+      this.symbols.popLevel()
+    }
 
     // restauramos el contexto de símbolos anterior
     this.symbols.popLevel()
@@ -158,7 +200,7 @@ export default class SintesisEval extends SintesisParserVisitor {
       throw new SintesisError(ctx.dest, 'El operador izquierdo de asignación es inválido')
     }
     let value = this.visit(ctx.exp)
-    if (value instanceof Variable)
+    if (value instanceof Variable || value instanceof Function || value instanceof Class)
       memoryref.variable = value
     else
       memoryref.variable.value = value
@@ -191,8 +233,6 @@ export default class SintesisEval extends SintesisParserVisitor {
     }
     return Vector.createWithSizes(indexes, defaultValue).value
   }
-
-
 
   visitExpNumberOf(ctx) {
     var value = this.visit(ctx.exp)
@@ -610,6 +650,7 @@ export default class SintesisEval extends SintesisParserVisitor {
 
 
 
+
   // Visit a parse tree produced by SintesisParser#expTernary.
   visitExpTernary(ctx) {
     let cond = this.visit(ctx.cond)
@@ -641,10 +682,22 @@ export default class SintesisEval extends SintesisParserVisitor {
   // Visit a parse tree produced by SintesisParser#expIdentifier.
   visitExpIdentifier(ctx) {
     const id = ctx.id.text
-    let mem_id = ctx.vvar?this.symbols.addVariable(id, new Variable()):this.symbols.findSymbol(id)
+    let mem_id
+    if (ctx.atr || ctx.met) {
+      let symbols_ctx = this.symbols.getClassContext()
+      if (!symbols_ctx)
+        throw new SintesisError(ctx.atr ? ctx.atr : ctx.met, `Referencia fuera de Clase`)
+      if (!(id in symbols_ctx.memory))
+        throw new SintesisError(ctx.id, `El método o atributo ${id} no se encuentra en la clase ${symbols_ctx.className}`)
+      mem_id = symbols_ctx.memory[id]
+      if (ctx.met && !(mem_id.variable instanceof Function))
+        throw new SintesisError(ctx.id, `${symbols_ctx.className}.${id} no es un método`)
+      if (ctx.atr && (mem_id.variable instanceof Function))
+        throw new SintesisError(ctx.id, `${symbols_ctx.className}.${id} no es un atributo`)
+    } else
+      mem_id = ctx.vvar ? this.symbols.addVariable(id, new Variable()) : this.symbols.findSymbol(id)
     if (mem_id === null && this.forCreate)
       mem_id = this.symbols.addVariable(id, new Variable())
-    //return 0
     return mem_id
   }
 
@@ -682,9 +735,7 @@ export default class SintesisEval extends SintesisParserVisitor {
   }
 
   visitStepStatement(ctx) {
-    let r = ctx.exp.text;
-    console.log('STEP', r);
-    return r
+    return null
   }
 
   // Visit a parse tree produced by SintesisParser#expLiteral.
@@ -788,5 +839,6 @@ export default class SintesisEval extends SintesisParserVisitor {
   visitExpParenthesis(ctx) {
     return this.visit(ctx.exp);
   }
+
 
 }

@@ -5,7 +5,7 @@ diccionario['local'] = 33
 imprimir diccionario
 
 imprimir '\ntipos de habitáculos:'
-para cada (indice en diccionario) imprimir '-'+indice
+para cada (codigo, indice en diccionario) imprimir '- '+indice
 
 imprimir '\ncódigos de habitáculos:'
-para cada (código de diccionario) imprimir '-'+código
+para cada (código de diccionario) imprimir '- '+código
