@@ -5,7 +5,10 @@ class Class {
         this.name = name
         this.superClass = superClass
         this.attributes = attributes
-        this.methods = methods
+        this.methods = methods || {}
+        if(this.methods)
+        for(const i in this.methods)
+            this.methods[i]._class = this
     }
 
     /*

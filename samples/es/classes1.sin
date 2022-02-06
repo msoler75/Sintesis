@@ -5,11 +5,11 @@ class Saludo {
     métodos: 
 
     hola(nombre) {
-        imprimir "Hola " + nombre + "!"
+        imprimir "¡Hola " + nombre + "!"
     }
 
     adios(nombre) {
-        imprimir "Adiós " + atributos.nombre + "!"
+        imprimir "¡Adiós " + atributos.nombre + "!"
     }
     
 }

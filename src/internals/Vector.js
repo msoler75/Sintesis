@@ -1,4 +1,5 @@
 import Variable from './Variable.js'
+import VariableCreate from './VariableCreate.js'
 import Map from './Map.js'
 
 function _checkIndex(index) {
@@ -47,7 +48,7 @@ class Vector extends Variable {
       if (!create) return null
       this.defineDefault()
       for (let i = this._value.length; i <= index; i++)
-        this._value[i] = Variable.create(this.defaultValue)
+        this._value[i] = VariableCreate(this.defaultValue)
     }
     return this._value[index]
   }
@@ -79,7 +80,7 @@ class Vector extends Variable {
     else {
       delete this._value[index]
       this.defineDefault()
-      this._value[index] = Variable.create(this.defaultValue)
+      this._value[index] = VariableCreate(this.defaultValue)
     } 
   }
 

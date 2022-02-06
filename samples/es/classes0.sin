@@ -1,0 +1,12 @@
+clase Basica {
+    atributos: contador
+
+    metodos: 
+    
+    constructor() {
+        contador = 2
+    }
+}
+
+a = nueva Basica()
+imprimir a.contador

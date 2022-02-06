@@ -28,6 +28,8 @@ function getDisplayValueOf(obj) {
     obj = obj.variable
   if (obj instanceof Variable)
     obj = obj.text()
+  if (obj instanceof Instance)
+    obj = obj.text()
   if (obj instanceof Function)
     return 'función()'
   else if (Array.isArray(obj))
@@ -68,7 +70,7 @@ export default class SintesisEval extends SintesisParserVisitor {
   // Visit a parse tree produced by SintesisParser#classDeclaration.
   visitClassDeclaration(ctx) {
     const id = ctx.id.text;
-    const extend = ctx.ext ? ctx.ext.text : null
+    let extend = ctx.ext ? ctx.ext.text : null
     const attributes = ctx.atrs ? ctx.atrs.children.map(x => x.getText()).filter(x => !x.match(/[,{}]/)) : {}
     // const attributes = ctx.atrs? ctx.atrs.children.filter(x=>x.constructor.name!=='TerminalNodeImpl').map(x => x.getText())
     const methodList = ctx.methods ? ctx.methods.children.map(x => new Function(x, ctx)) : {}
@@ -106,7 +108,7 @@ export default class SintesisEval extends SintesisParserVisitor {
     let values = ctx.args ? this.visit(ctx.args).values : []
     let constructor = obj.getConstructor(values.length)
     if (constructor)
-      this.callToFunction(new MemoryRef(constructor), values)
+      this.callToFunction(new MemoryRef(obj, 'constructor'), values)
     return obj
   }
 
@@ -136,29 +138,40 @@ export default class SintesisEval extends SintesisParserVisitor {
   }
 
 
-  callToFunction(memoryref, values) {
+  callToFunction(memoryref, values, obj) {
     const fn = memoryref.variable
 
     // obtenemos los argumentos o parámetros de la función y los valores
     let params = fn.context.pl ? this.visit(fn.context.pl).params : []
-    let cls = null
-
+    let classes = []
     // si es una función (método) de clase...
-    if (fn.classContext) {
+    if (fn._class) {
+
+      const obj = memoryref._variable
       // obtenemos la referencia al objeto o instancia de clase
-      cls = memoryref._variable
+      let cls = fn._class
+      do {
+        classes.unshift(cls)
+        cls = cls.superClass
+      } while (cls)
 
-      // creamos un nuevo contexto
-      this.symbols.pushLevel(false, cls._class.name)
+      for (const cls of classes) {
+        // creamos un nuevo contexto
+        this.symbols.pushLevel(false, cls.name)
 
-      // añadimos los atributos y métodos en la tabla de símbolos
-      for (const id in cls.attributes) {
-        this.symbols.addVariable(id, cls.attributes[id])
+        // añadimos los atributos y métodos en la tabla de símbolos
+        for (const id of cls.attributes) {
+          // vinculamos la variable de la instancia con la referencia del símbolo en la tabla de símbolos
+          //const vari = obj.getByClass(cls.name).attributes[id]
+          const vari = obj.getRef(id)
+          this.symbols.addVariable(id, vari)
+        }
+
+        for (const id in cls.methods) {
+          this.symbols.addFunction(id, cls.methods[id])
+        }
       }
 
-      for (const id in cls.methods) {
-        this.symbols.addFunction(id, cls.methods[id])
-      }
     }
 
     // creamos un nuevo contexto de símbolos de un contexto de función
@@ -181,7 +194,10 @@ export default class SintesisEval extends SintesisParserVisitor {
     }
 
     // restauramos el contexto de símbolos anterior
-    this.symbols.popLevel()
+    for (const cls of classes) {
+      this.symbols.popLevel()
+    }
+
     return r
   }
 
@@ -225,16 +241,18 @@ export default class SintesisEval extends SintesisParserVisitor {
     if (!memoryref || !(memoryref instanceof MemoryRef)) {
       throw new SintesisError(ctx.dest, 'El operador izquierdo de asignación es inválido')
     }
-    let value = this.visit(ctx.exp)
-    if (value instanceof Variable || value instanceof Function || value instanceof Instance)
-      memoryref.variable = value
-    else
-      memoryref.variable.value = value
+    let result = this.visit(ctx.exp)
+    let literal = MemoryRef.literalOf(result)
+    if ((typeof literal === 'object' && result instanceof Variable) || result instanceof Function || result instanceof Instance) {
+      memoryref.variable = result
+    } else {
+      memoryref.variable.value = literal
+    }
     return memoryref
   }
 
   // Visit a parse tree produced by SintesisParser#varSingleDeclaration.
-  visitVarSingleDeclaration(ctx) {
+  /* visitVarSingleDeclaration(ctx) {
     const id = ctx.id.text
     if (id in this.symbols.currentContext().memory)
       throw new SintesisError(ctx.id, `El símbolo '${id}' ya fue definido en este contexto`)
@@ -243,6 +261,7 @@ export default class SintesisEval extends SintesisParserVisitor {
     this.symbols.addVariable(id, variable)
   }
 
+  */
 
   // Visit a parse tree produced by SintesisParser#vectorIndex.
   visitVectorIndex(ctx) {

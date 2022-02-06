@@ -1,6 +1,19 @@
-a=1
-{
-    var a=2
-    imprimir a
-}
-imprimir a
+a = 1
+b = 2
+imprimir b
+a = 3
+imprimir b
+
+
+a = 1.1
+b = 2.2
+imprimir b
+a = 3.3
+imprimir b
+
+
+a="hola"
+b=a
+imprimir b
+a="adios"
+imprimir b

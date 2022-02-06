@@ -32,14 +32,11 @@ Variable.literalOf = function (src) {
 
 
 function toText(v) {
-    if(v===null) return 'nulo'
-    if(v===true) return 'cierto'
-    if(v===false) return 'falso'
+    if (v === null) return 'nulo'
+    if (v === true) return 'cierto'
+    if (v === false) return 'falso'
+    if (v.text && typeof v.text === 'function') return v.text()
     if (v instanceof Variable) return toText(v.value)
-    if (v === null) return 'null'
-    let cls = ''
-    if (v.constructor && v.constructor.name)
-        cls = v.constructor.name
     if (Array.isArray(v))
         return '[' + v.map(x => toText(x)).join(', ').replace(/\bnulo\b/g, '') + ']'
     if (typeof v === 'object') {

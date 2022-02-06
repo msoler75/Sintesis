@@ -1,0 +1,13 @@
+clase Usuario {
+    atributos: nombre
+
+    metodos: constructor(nombre) {
+        atributos.nombre = nombre
+    }
+}
+
+a=nuevo Usuario('Jorge')
+b=a
+imprimir b
+a.nombre = 'Jaime'
+imprimir b

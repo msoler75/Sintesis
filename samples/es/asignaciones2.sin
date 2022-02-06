@@ -1,3 +1,5 @@
-a=map()
-a['x']=33
-imprimir a
+a={r:1}
+b=a
+imprimir b
+a.r=3
+imprimir b

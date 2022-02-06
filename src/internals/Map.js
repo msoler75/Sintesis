@@ -1,4 +1,5 @@
 import Variable from './Variable.js'
+import VariableCreate from './VariableCreate.js'
 
 class Map extends Variable {
 
@@ -13,7 +14,7 @@ class Map extends Variable {
         if (!(key in this._value)) {
             if (!create)
                 return null
-            this._value[key] = Variable.create(null)
+            this._value[key] = VariableCreate(null)
         }
         return this._value[key]
     }
@@ -22,7 +23,7 @@ class Map extends Variable {
         if (value instanceof Variable)
             // throw new Error('setValue no permite asignar una Variable')
             return this.setVariable(key, value)
-        this._value[key] = Variable.create(value)
+        this._value[key] = VariableCreate(value)
     }
 
     setVariable(key, vari) {

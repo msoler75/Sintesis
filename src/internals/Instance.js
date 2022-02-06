@@ -25,29 +25,59 @@ class Instance {
     }
 
     getConstructor(numArgs) {
-        for(const name in this.methods)
-        {
-            // to do lang
-            if(name==='constructor') 
-            {
-                // elige el método constructor en base al número de argumentos
-                if(numArgs === this.methods[name].params.length)
-                    return this.methods[name]
+        let ref = this
+        do {
+            for (const name in ref.methods) {
+                // to do lang
+                if (name === 'constructor') {
+                    // elige el método constructor en base al número de argumentos
+                    if (numArgs === ref.methods[name].params.length)
+                        return ref.methods[name]
+                }
             }
-        }
+            ref = ref.superClass
+        } while (ref)
         return null
     }
 
     getRef(name) {
         let ref = this
         do {
-            if ((name in ref.attributes))
-                return ref.attributes[name]
-            if ((name in ref.methods))
-                return ref.methods[name]
+            for (const id in ref.attributes)
+                if (id === name)
+                    return ref.attributes[name]
+            for (const id in ref.methods)
+                if (id === name)
+                    return ref.methods[name]
             ref = ref.superClass
         } while (ref)
         return null
+    }
+
+    getByClass(classname) {
+        let ref = this
+        do {
+            if (ref._class.name === classname) return ref
+            ref = ref.superClass
+        } while (ref)
+        return null
+    }
+
+
+    text() {
+        let atr = []
+        let ref = this
+        do {
+            for (const name in ref.attributes) 
+                atr.push(name)
+            ref = ref.superClass
+        } while (ref)
+        let r = []
+        for(const a of atr)
+        {
+            r.push(`${a}: ${this.getRef(a).value}`)
+        }
+        return this._class.name + ' (' + r.join(', ') + ')'
     }
 
 }

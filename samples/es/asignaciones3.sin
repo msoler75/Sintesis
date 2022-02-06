@@ -1,2 +1,5 @@
-var a = mapa()[3] = 'hola'
-imp a // debe ser 'hola', como en javascipt
+a=[1,2]
+b=a
+imprimir b
+a[0]=33
+imprimir b

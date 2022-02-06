@@ -383,6 +383,11 @@ Methods
               |     'm\u00E9todos'
               ;
 
+Constructor
+              :     'constructor'
+              |     'construct'
+              ;
+
 Super
               :      'super'
               |      'padre'

@@ -3,9 +3,10 @@ class Function {
     this.context = ctx
     this.classContext = classContext
     this.params = []
-    for (let i = 0; i < ctx.children.length; i++)
+    if(ctx.pl)
+    for (let i = 0; i < ctx.pl.children.length; i++)
       if (i % 2 == 0)
-        this.params.push(ctx.children[i].getText())
+        this.params.push(ctx.pl.children[i].getText())
   }
 }
 
