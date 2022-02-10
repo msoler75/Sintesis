@@ -4,6 +4,11 @@ class Saludo {
 
     métodos: 
 
+    constructor(nombre) {
+        atributos.nombre = nombre
+        imprimir "Creando saludo con", nombre
+    }
+
     hola(nombre) {
         imprimir "¡Hola " + nombre + "!"
     }
@@ -14,7 +19,7 @@ class Saludo {
     
 }
 
-s=nuevo Saludo()
+s=nuevo Saludo("María")
 s.nombre="Juan"
 s.hola("Jorge")
 s.adios("Jorge")

@@ -6,10 +6,24 @@ class Class {
         this.superClass = superClass
         this.attributes = attributes
         this.methods = methods || {}
-        if(this.methods)
-        for(const i in this.methods)
-            this.methods[i]._class = this
+        if (this.methods)
+            for (const i in this.methods)
+                this.methods[i]._class = this
     }
+
+    getConstructor(numargs) {
+        for (const name in this.methods) {
+            const method = this.methods[name]
+            if (Class.isConstructorName(method.name) && method.params.length === numargs)
+                return method
+        }
+        return null
+    }
+
+    hasDefaultConstructor() {
+        return !!this.getConstructor(0)
+    }
+
 
     /*
     isInstanceOf(name) {
@@ -21,8 +35,13 @@ class Class {
         return false
     }
     */
-   
+
 }
 
+
+Class.isConstructorName = function (name) {
+    // to-do: lang
+    return ['constructor', 'construct'].includes(name)
+}
 
 export default Class

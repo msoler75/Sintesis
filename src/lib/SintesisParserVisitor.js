@@ -276,20 +276,8 @@ export default class SintesisParserVisitor extends antlr4.tree.ParseTreeVisitor 
 	}
 
 
-	// Visit a parse tree produced by SintesisParser#aer.
-	visitAer(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by SintesisParser#ewfewq.
-	visitEwfewq(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by SintesisParser#qxeeq.
-	visitQxeeq(ctx) {
+	// Visit a parse tree produced by SintesisParser#iteratorIndexes.
+	visitIteratorIndexes(ctx) {
 	  return this.visitChildren(ctx);
 	}
 

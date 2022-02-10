@@ -5,7 +5,7 @@ import SintesisParserVisitor from './SintesisParserVisitor.js';
 
 
 const serializedATN = ["\u0003\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786",
-    "\u5964\u0003u\u023c\u0004\u0002\t\u0002\u0004\u0003\t\u0003\u0004\u0004",
+    "\u5964\u0003v\u023c\u0004\u0002\t\u0002\u0004\u0003\t\u0003\u0004\u0004",
     "\t\u0004\u0004\u0005\t\u0005\u0004\u0006\t\u0006\u0004\u0007\t\u0007",
     "\u0004\b\t\b\u0004\t\t\t\u0004\n\t\n\u0004\u000b\t\u000b\u0004\f\t\f",
     "\u0004\r\t\r\u0004\u000e\t\u000e\u0004\u000f\t\u000f\u0004\u0010\t\u0010",
@@ -87,86 +87,86 @@ const serializedATN = ["\u0003\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786",
     "\n.\u0003/\u0003/\u0003/\u0003/\u0003/\u0003/\u0003/\u0003/\u0003/\u0003",
     "/\u0005/\u023a\n/\u0003/\u0002\u0003\u000e0\u0002\u0004\u0006\b\n\f",
     "\u000e\u0010\u0012\u0014\u0016\u0018\u001a\u001c\u001e \"$&(*,.0246",
-    "8:<>@BDFHJLNPRTVXZ\\\u0002\u0011\u0004\u0002<<rr\u0004\u0002`brr\u0003",
+    "8:<>@BDFHJLNPRTVXZ\\\u0002\u0012\u0004\u0002<<ss\u0004\u0002`bss\u0003",
     "\u0002\u0012\u0013\u0003\u0002\u0018\u001a\u0003\u0002\u0014\u0015\u0003",
     "\u0002\u001e \u0003\u0002\'(\u0003\u0002%&\u0003\u0002)+\u0003\u0002",
-    ",-\u0003\u0002OP\u0004\u0002\r\rOO\u0004\u0002IIKK\u0003\u0002.9\u0003",
-    "\u0002<@\u0002\u0287\u0002^\u0003\u0002\u0002\u0002\u0004b\u0003\u0002",
-    "\u0002\u0002\u0006o\u0003\u0002\u0002\u0002\bq\u0003\u0002\u0002\u0002",
-    "\nw\u0003\u0002\u0002\u0002\fz\u0003\u0002\u0002\u0002\u000e\u00a0\u0003",
-    "\u0002\u0002\u0002\u0010\u00e7\u0003\u0002\u0002\u0002\u0012\u00f1\u0003",
-    "\u0002\u0002\u0002\u0014\u00f5\u0003\u0002\u0002\u0002\u0016\u00f7\u0003",
-    "\u0002\u0002\u0002\u0018\u00fd\u0003\u0002\u0002\u0002\u001a\u00ff\u0003",
-    "\u0002\u0002\u0002\u001c\u0107\u0003\u0002\u0002\u0002\u001e\u0114\u0003",
-    "\u0002\u0002\u0002 \u0118\u0003\u0002\u0002\u0002\"\u011f\u0003\u0002",
-    "\u0002\u0002$\u012f\u0003\u0002\u0002\u0002&\u0131\u0003\u0002\u0002",
-    "\u0002(\u0179\u0003\u0002\u0002\u0002*\u017b\u0003\u0002\u0002\u0002",
-    ",\u017e\u0003\u0002\u0002\u0002.\u0186\u0003\u0002\u0002\u00020\u018f",
-    "\u0003\u0002\u0002\u00022\u019c\u0003\u0002\u0002\u00024\u01bf\u0003",
-    "\u0002\u0002\u00026\u01c4\u0003\u0002\u0002\u00028\u01cf\u0003\u0002",
-    "\u0002\u0002:\u01d3\u0003\u0002\u0002\u0002<\u01d7\u0003\u0002\u0002",
-    "\u0002>\u01de\u0003\u0002\u0002\u0002@\u01e2\u0003\u0002\u0002\u0002",
-    "B\u01e9\u0003\u0002\u0002\u0002D\u01eb\u0003\u0002\u0002\u0002F\u01f0",
-    "\u0003\u0002\u0002\u0002H\u01f2\u0003\u0002\u0002\u0002J\u01f7\u0003",
-    "\u0002\u0002\u0002L\u01fa\u0003\u0002\u0002\u0002N\u0207\u0003\u0002",
-    "\u0002\u0002P\u0221\u0003\u0002\u0002\u0002R\u0223\u0003\u0002\u0002",
-    "\u0002T\u0225\u0003\u0002\u0002\u0002V\u0227\u0003\u0002\u0002\u0002",
-    "X\u0229\u0003\u0002\u0002\u0002Z\u022d\u0003\u0002\u0002\u0002\\\u0239",
-    "\u0003\u0002\u0002\u0002^_\u0005\u0004\u0003\u0002_`\u0007\u0002\u0002",
-    "\u0003`\u0003\u0003\u0002\u0002\u0002ac\u0005\u0006\u0004\u0002ba\u0003",
-    "\u0002\u0002\u0002cd\u0003\u0002\u0002\u0002db\u0003\u0002\u0002\u0002",
-    "de\u0003\u0002\u0002\u0002e\u0005\u0003\u0002\u0002\u0002fp\u0005\b",
-    "\u0005\u0002gp\u0005\n\u0006\u0002hp\u0005\f\u0007\u0002ip\u0005\u001c",
-    "\u000f\u0002jp\u0005(\u0015\u0002kp\u0005*\u0016\u0002lp\u00052\u001a",
-    "\u0002mp\u0005.\u0018\u0002np\u0005\u000e\b\u0002of\u0003\u0002\u0002",
-    "\u0002og\u0003\u0002\u0002\u0002oh\u0003\u0002\u0002\u0002oi\u0003\u0002",
-    "\u0002\u0002oj\u0003\u0002\u0002\u0002ok\u0003\u0002\u0002\u0002ol\u0003",
-    "\u0002\u0002\u0002om\u0003\u0002\u0002\u0002on\u0003\u0002\u0002\u0002",
-    "p\u0007\u0003\u0002\u0002\u0002qs\u0007\t\u0002\u0002rt\u0005\u0004",
-    "\u0003\u0002sr\u0003\u0002\u0002\u0002st\u0003\u0002\u0002\u0002tu\u0003",
-    "\u0002\u0002\u0002uv\u0007\n\u0002\u0002v\t\u0003\u0002\u0002\u0002",
-    "wx\u0007F\u0002\u0002xy\t\u0002\u0002\u0002y\u000b\u0003\u0002\u0002",
-    "\u0002z{\u0007G\u0002\u0002{|\u0005\u001a\u000e\u0002|\r\u0003\u0002",
-    "\u0002\u0002}~\b\b\u0001\u0002~\u007f\u0005\u0018\r\u0002\u007f\u0080",
-    "\u00050\u0019\u0002\u0080\u00a1\u0003\u0002\u0002\u0002\u0081\u0082",
-    "\u0007_\u0002\u0002\u0082\u0083\u0007\u0011\u0002\u0002\u0083\u0084",
-    "\t\u0003\u0002\u0002\u0084\u00a1\u00050\u0019\u0002\u0085\u0086\u0007",
-    "g\u0002\u0002\u0086\u0087\u0007r\u0002\u0002\u0087\u00a1\u00050\u0019",
-    "\u0002\u0088\u0089\t\u0004\u0002\u0002\u0089\u00a1\u0005\u000e\b\u001b",
-    "\u008a\u008b\u0007\u0014\u0002\u0002\u008b\u00a1\u0005\u000e\b\u001a",
-    "\u008c\u008d\u0007\u0015\u0002\u0002\u008d\u00a1\u0005\u000e\b\u0019",
-    "\u008e\u008f\u0007\u0016\u0002\u0002\u008f\u00a1\u0005\u000e\b\u0018",
-    "\u0090\u0091\u0007\u0017\u0002\u0002\u0091\u00a1\u0005\u000e\b\u0017",
-    "\u0092\u00a1\u0005P)\u0002\u0093\u0094\u0007j\u0002\u0002\u0094\u0099",
-    "\u0007\u0011\u0002\u0002\u0095\u0096\u0007k\u0002\u0002\u0096\u0099",
-    "\u0007\u0011\u0002\u0002\u0097\u0099\u0007q\u0002\u0002\u0098\u0093",
-    "\u0003\u0002\u0002\u0002\u0098\u0095\u0003\u0002\u0002\u0002\u0098\u0097",
-    "\u0003\u0002\u0002\u0002\u0098\u0099\u0003\u0002\u0002\u0002\u0099\u009a",
-    "\u0003\u0002\u0002\u0002\u009a\u00a1\u0007r\u0002\u0002\u009b\u009c",
-    "\u0007\u0007\u0002\u0002\u009c\u009d\u0005\u000e\b\u0002\u009d\u009e",
-    "\u0007\b\u0002\u0002\u009e\u00a1\u0003\u0002\u0002\u0002\u009f\u00a1",
-    "\u0007l\u0002\u0002\u00a0}\u0003\u0002\u0002\u0002\u00a0\u0081\u0003",
-    "\u0002\u0002\u0002\u00a0\u0085\u0003\u0002\u0002\u0002\u00a0\u0088\u0003",
-    "\u0002\u0002\u0002\u00a0\u008a\u0003\u0002\u0002\u0002\u00a0\u008c\u0003",
-    "\u0002\u0002\u0002\u00a0\u008e\u0003\u0002\u0002\u0002\u00a0\u0090\u0003",
-    "\u0002\u0002\u0002\u00a0\u0092\u0003\u0002\u0002\u0002\u00a0\u0098\u0003",
-    "\u0002\u0002\u0002\u00a0\u009b\u0003\u0002\u0002\u0002\u00a0\u009f\u0003",
-    "\u0002\u0002\u0002\u00a1\u00e4\u0003\u0002\u0002\u0002\u00a2\u00a3\f",
-    "\u0016\u0002\u0002\u00a3\u00a4\t\u0005\u0002\u0002\u00a4\u00e3\u0005",
-    "\u000e\b\u0017\u00a5\u00a6\f\u0015\u0002\u0002\u00a6\u00a7\t\u0006\u0002",
-    "\u0002\u00a7\u00e3\u0005\u000e\b\u0016\u00a8\u00a9\f\u0014\u0002\u0002",
-    "\u00a9\u00aa\t\u0007\u0002\u0002\u00aa\u00e3\u0005\u000e\b\u0015\u00ab",
-    "\u00ac\f\u0013\u0002\u0002\u00ac\u00ad\u0007\u001b\u0002\u0002\u00ad",
-    "\u00e3\u0005\u000e\b\u0013\u00ae\u00af\f\u0012\u0002\u0002\u00af\u00b0",
-    "\u0007!\u0002\u0002\u00b0\u00e3\u0005\u000e\b\u0013\u00b1\u00b2\f\u0011",
-    "\u0002\u0002\u00b2\u00b3\u0007\"\u0002\u0002\u00b3\u00e3\u0005\u000e",
-    "\b\u0012\u00b4\u00b5\f\u0010\u0002\u0002\u00b5\u00b6\u0007#\u0002\u0002",
-    "\u00b6\u00e3\u0005\u000e\b\u0011\u00b7\u00b8\f\u000f\u0002\u0002\u00b8",
-    "\u00b9\u0007$\u0002\u0002\u00b9\u00e3\u0005\u000e\b\u0010\u00ba\u00bb",
-    "\f\r\u0002\u0002\u00bb\u00bc\t\b\u0002\u0002\u00bc\u00e3\u0005\u000e",
-    "\b\u000e\u00bd\u00be\f\f\u0002\u0002\u00be\u00bf\t\t\u0002\u0002\u00bf",
-    "\u00e3\u0005\u000e\b\r\u00c0\u00c1\f\u000b\u0002\u0002\u00c1\u00c2\t",
-    "\n\u0002\u0002\u00c2\u00e3\u0005\u000e\b\f\u00c3\u00c4\f\n\u0002\u0002",
+    ",-\u0003\u0002OP\u0004\u0002\r\rOO\u0004\u0002IIKK\u0004\u0002llss\u0003",
+    "\u0002.9\u0003\u0002<@\u0002\u0287\u0002^\u0003\u0002\u0002\u0002\u0004",
+    "b\u0003\u0002\u0002\u0002\u0006o\u0003\u0002\u0002\u0002\bq\u0003\u0002",
+    "\u0002\u0002\nw\u0003\u0002\u0002\u0002\fz\u0003\u0002\u0002\u0002\u000e",
+    "\u00a0\u0003\u0002\u0002\u0002\u0010\u00e7\u0003\u0002\u0002\u0002\u0012",
+    "\u00f1\u0003\u0002\u0002\u0002\u0014\u00f5\u0003\u0002\u0002\u0002\u0016",
+    "\u00f7\u0003\u0002\u0002\u0002\u0018\u00fd\u0003\u0002\u0002\u0002\u001a",
+    "\u00ff\u0003\u0002\u0002\u0002\u001c\u0107\u0003\u0002\u0002\u0002\u001e",
+    "\u0114\u0003\u0002\u0002\u0002 \u0118\u0003\u0002\u0002\u0002\"\u011f",
+    "\u0003\u0002\u0002\u0002$\u012f\u0003\u0002\u0002\u0002&\u0131\u0003",
+    "\u0002\u0002\u0002(\u0179\u0003\u0002\u0002\u0002*\u017b\u0003\u0002",
+    "\u0002\u0002,\u017e\u0003\u0002\u0002\u0002.\u0186\u0003\u0002\u0002",
+    "\u00020\u018f\u0003\u0002\u0002\u00022\u019c\u0003\u0002\u0002\u0002",
+    "4\u01bf\u0003\u0002\u0002\u00026\u01c4\u0003\u0002\u0002\u00028\u01cf",
+    "\u0003\u0002\u0002\u0002:\u01d3\u0003\u0002\u0002\u0002<\u01d7\u0003",
+    "\u0002\u0002\u0002>\u01de\u0003\u0002\u0002\u0002@\u01e2\u0003\u0002",
+    "\u0002\u0002B\u01e9\u0003\u0002\u0002\u0002D\u01eb\u0003\u0002\u0002",
+    "\u0002F\u01f0\u0003\u0002\u0002\u0002H\u01f2\u0003\u0002\u0002\u0002",
+    "J\u01f7\u0003\u0002\u0002\u0002L\u01fa\u0003\u0002\u0002\u0002N\u0207",
+    "\u0003\u0002\u0002\u0002P\u0221\u0003\u0002\u0002\u0002R\u0223\u0003",
+    "\u0002\u0002\u0002T\u0225\u0003\u0002\u0002\u0002V\u0227\u0003\u0002",
+    "\u0002\u0002X\u0229\u0003\u0002\u0002\u0002Z\u022d\u0003\u0002\u0002",
+    "\u0002\\\u0239\u0003\u0002\u0002\u0002^_\u0005\u0004\u0003\u0002_`\u0007",
+    "\u0002\u0002\u0003`\u0003\u0003\u0002\u0002\u0002ac\u0005\u0006\u0004",
+    "\u0002ba\u0003\u0002\u0002\u0002cd\u0003\u0002\u0002\u0002db\u0003\u0002",
+    "\u0002\u0002de\u0003\u0002\u0002\u0002e\u0005\u0003\u0002\u0002\u0002",
+    "fp\u0005\b\u0005\u0002gp\u0005\n\u0006\u0002hp\u0005\f\u0007\u0002i",
+    "p\u0005\u001c\u000f\u0002jp\u0005(\u0015\u0002kp\u0005*\u0016\u0002",
+    "lp\u00052\u001a\u0002mp\u0005.\u0018\u0002np\u0005\u000e\b\u0002of\u0003",
+    "\u0002\u0002\u0002og\u0003\u0002\u0002\u0002oh\u0003\u0002\u0002\u0002",
+    "oi\u0003\u0002\u0002\u0002oj\u0003\u0002\u0002\u0002ok\u0003\u0002\u0002",
+    "\u0002ol\u0003\u0002\u0002\u0002om\u0003\u0002\u0002\u0002on\u0003\u0002",
+    "\u0002\u0002p\u0007\u0003\u0002\u0002\u0002qs\u0007\t\u0002\u0002rt",
+    "\u0005\u0004\u0003\u0002sr\u0003\u0002\u0002\u0002st\u0003\u0002\u0002",
+    "\u0002tu\u0003\u0002\u0002\u0002uv\u0007\n\u0002\u0002v\t\u0003\u0002",
+    "\u0002\u0002wx\u0007F\u0002\u0002xy\t\u0002\u0002\u0002y\u000b\u0003",
+    "\u0002\u0002\u0002z{\u0007G\u0002\u0002{|\u0005\u001a\u000e\u0002|\r",
+    "\u0003\u0002\u0002\u0002}~\b\b\u0001\u0002~\u007f\u0005\u0018\r\u0002",
+    "\u007f\u0080\u00050\u0019\u0002\u0080\u00a1\u0003\u0002\u0002\u0002",
+    "\u0081\u0082\u0007_\u0002\u0002\u0082\u0083\u0007\u0011\u0002\u0002",
+    "\u0083\u0084\t\u0003\u0002\u0002\u0084\u00a1\u00050\u0019\u0002\u0085",
+    "\u0086\u0007g\u0002\u0002\u0086\u0087\u0007s\u0002\u0002\u0087\u00a1",
+    "\u00050\u0019\u0002\u0088\u0089\t\u0004\u0002\u0002\u0089\u00a1\u0005",
+    "\u000e\b\u001b\u008a\u008b\u0007\u0014\u0002\u0002\u008b\u00a1\u0005",
+    "\u000e\b\u001a\u008c\u008d\u0007\u0015\u0002\u0002\u008d\u00a1\u0005",
+    "\u000e\b\u0019\u008e\u008f\u0007\u0016\u0002\u0002\u008f\u00a1\u0005",
+    "\u000e\b\u0018\u0090\u0091\u0007\u0017\u0002\u0002\u0091\u00a1\u0005",
+    "\u000e\b\u0017\u0092\u00a1\u0005P)\u0002\u0093\u0094\u0007j\u0002\u0002",
+    "\u0094\u0099\u0007\u0011\u0002\u0002\u0095\u0096\u0007k\u0002\u0002",
+    "\u0096\u0099\u0007\u0011\u0002\u0002\u0097\u0099\u0007r\u0002\u0002",
+    "\u0098\u0093\u0003\u0002\u0002\u0002\u0098\u0095\u0003\u0002\u0002\u0002",
+    "\u0098\u0097\u0003\u0002\u0002\u0002\u0098\u0099\u0003\u0002\u0002\u0002",
+    "\u0099\u009a\u0003\u0002\u0002\u0002\u009a\u00a1\u0007s\u0002\u0002",
+    "\u009b\u009c\u0007\u0007\u0002\u0002\u009c\u009d\u0005\u000e\b\u0002",
+    "\u009d\u009e\u0007\b\u0002\u0002\u009e\u00a1\u0003\u0002\u0002\u0002",
+    "\u009f\u00a1\u0007m\u0002\u0002\u00a0}\u0003\u0002\u0002\u0002\u00a0",
+    "\u0081\u0003\u0002\u0002\u0002\u00a0\u0085\u0003\u0002\u0002\u0002\u00a0",
+    "\u0088\u0003\u0002\u0002\u0002\u00a0\u008a\u0003\u0002\u0002\u0002\u00a0",
+    "\u008c\u0003\u0002\u0002\u0002\u00a0\u008e\u0003\u0002\u0002\u0002\u00a0",
+    "\u0090\u0003\u0002\u0002\u0002\u00a0\u0092\u0003\u0002\u0002\u0002\u00a0",
+    "\u0098\u0003\u0002\u0002\u0002\u00a0\u009b\u0003\u0002\u0002\u0002\u00a0",
+    "\u009f\u0003\u0002\u0002\u0002\u00a1\u00e4\u0003\u0002\u0002\u0002\u00a2",
+    "\u00a3\f\u0016\u0002\u0002\u00a3\u00a4\t\u0005\u0002\u0002\u00a4\u00e3",
+    "\u0005\u000e\b\u0017\u00a5\u00a6\f\u0015\u0002\u0002\u00a6\u00a7\t\u0006",
+    "\u0002\u0002\u00a7\u00e3\u0005\u000e\b\u0016\u00a8\u00a9\f\u0014\u0002",
+    "\u0002\u00a9\u00aa\t\u0007\u0002\u0002\u00aa\u00e3\u0005\u000e\b\u0015",
+    "\u00ab\u00ac\f\u0013\u0002\u0002\u00ac\u00ad\u0007\u001b\u0002\u0002",
+    "\u00ad\u00e3\u0005\u000e\b\u0013\u00ae\u00af\f\u0012\u0002\u0002\u00af",
+    "\u00b0\u0007!\u0002\u0002\u00b0\u00e3\u0005\u000e\b\u0013\u00b1\u00b2",
+    "\f\u0011\u0002\u0002\u00b2\u00b3\u0007\"\u0002\u0002\u00b3\u00e3\u0005",
+    "\u000e\b\u0012\u00b4\u00b5\f\u0010\u0002\u0002\u00b5\u00b6\u0007#\u0002",
+    "\u0002\u00b6\u00e3\u0005\u000e\b\u0011\u00b7\u00b8\f\u000f\u0002\u0002",
+    "\u00b8\u00b9\u0007$\u0002\u0002\u00b9\u00e3\u0005\u000e\b\u0010\u00ba",
+    "\u00bb\f\r\u0002\u0002\u00bb\u00bc\t\b\u0002\u0002\u00bc\u00e3\u0005",
+    "\u000e\b\u000e\u00bd\u00be\f\f\u0002\u0002\u00be\u00bf\t\t\u0002\u0002",
+    "\u00bf\u00e3\u0005\u000e\b\r\u00c0\u00c1\f\u000b\u0002\u0002\u00c1\u00c2",
+    "\t\n\u0002\u0002\u00c2\u00e3\u0005\u000e\b\f\u00c3\u00c4\f\n\u0002\u0002",
     "\u00c4\u00c5\t\u000b\u0002\u0002\u00c5\u00e3\u0005\u000e\b\u000b\u00c6",
     "\u00c7\f\t\u0002\u0002\u00c7\u00c8\u0007\u000e\u0002\u0002\u00c8\u00c9",
     "\u0005\u000e\b\u0002\u00c9\u00ca\u0007\u000f\u0002\u0002\u00ca\u00cb",
@@ -180,7 +180,7 @@ const serializedATN = ["\u0003\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786",
     "\u0007\u0011\u0002\u0002\u00da\u00e3\u0005Z.\u0002\u00db\u00dc\f\u001d",
     "\u0002\u0002\u00dc\u00e3\u00050\u0019\u0002\u00dd\u00de\f\u001c\u0002",
     "\u0002\u00de\u00e3\t\u0004\u0002\u0002\u00df\u00e0\f\u000e\u0002\u0002",
-    "\u00e0\u00e1\u0007m\u0002\u0002\u00e1\u00e3\u0005Z.\u0002\u00e2\u00a2",
+    "\u00e0\u00e1\u0007n\u0002\u0002\u00e1\u00e3\u0005Z.\u0002\u00e2\u00a2",
     "\u0003\u0002\u0002\u0002\u00e2\u00a5\u0003\u0002\u0002\u0002\u00e2\u00a8",
     "\u0003\u0002\u0002\u0002\u00e2\u00ab\u0003\u0002\u0002\u0002\u00e2\u00ae",
     "\u0003\u0002\u0002\u0002\u00e2\u00b1\u0003\u0002\u0002\u0002\u00e2\u00b4",
@@ -230,15 +230,15 @@ const serializedATN = ["\u0003\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786",
     "\u0002\u0002\u011b\u011c\u0003\u0002\u0002\u0002\u011c\u011d\u0003\u0002",
     "\u0002\u0002\u011d\u011e\u0005\u0006\u0004\u0002\u011e!\u0003\u0002",
     "\u0002\u0002\u011f\u0120\u0007U\u0002\u0002\u0120\u0121\u0005\u0006",
-    "\u0004\u0002\u0121#\u0003\u0002\u0002\u0002\u0122\u0123\u0007r\u0002",
+    "\u0004\u0002\u0121#\u0003\u0002\u0002\u0002\u0122\u0123\u0007s\u0002",
     "\u0002\u0123\u0124\t\f\u0002\u0002\u0124\u0130\u0005\u000e\b\u0002\u0125",
-    "\u0126\u0007r\u0002\u0002\u0126\u0127\u0007\f\u0002\u0002\u0127\u0128",
-    "\u0007r\u0002\u0002\u0128\u0129\t\f\u0002\u0002\u0129\u0130\u0005\u000e",
-    "\b\u0002\u012a\u012b\u0007r\u0002\u0002\u012b\u012c\u0007:\u0002\u0002",
-    "\u012c\u012d\u0007r\u0002\u0002\u012d\u012e\t\f\u0002\u0002\u012e\u0130",
+    "\u0126\u0007s\u0002\u0002\u0126\u0127\u0007\f\u0002\u0002\u0127\u0128",
+    "\u0007s\u0002\u0002\u0128\u0129\t\f\u0002\u0002\u0129\u0130\u0005\u000e",
+    "\b\u0002\u012a\u012b\u0007s\u0002\u0002\u012b\u012c\u0007:\u0002\u0002",
+    "\u012c\u012d\u0007s\u0002\u0002\u012d\u012e\t\f\u0002\u0002\u012e\u0130",
     "\u0005\u000e\b\u0002\u012f\u0122\u0003\u0002\u0002\u0002\u012f\u0125",
     "\u0003\u0002\u0002\u0002\u012f\u012a\u0003\u0002\u0002\u0002\u0130%",
-    "\u0003\u0002\u0002\u0002\u0131\u0132\u0007r\u0002\u0002\u0132\u0133",
+    "\u0003\u0002\u0002\u0002\u0131\u0132\u0007s\u0002\u0002\u0132\u0133",
     "\t\r\u0002\u0002\u0133\u0134\u0005\u000e\b\u0002\u0134\u0135\u0007Q",
     "\u0002\u0002\u0135\u0136\u0005\u000e\b\u0002\u0136\'\u0003\u0002\u0002",
     "\u0002\u0137\u0138\u0007I\u0002\u0002\u0138\u013a\u0005\u000e\b\u0002",
@@ -289,7 +289,7 @@ const serializedATN = ["\u0003\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786",
     "\u0182\u0185\u0003\u0002\u0002\u0002\u0183\u0181\u0003\u0002\u0002\u0002",
     "\u0183\u0184\u0003\u0002\u0002\u0002\u0184-\u0003\u0002\u0002\u0002",
     "\u0185\u0183\u0003\u0002\u0002\u0002\u0186\u0187\u0007W\u0002\u0002",
-    "\u0187\u0188\u0007r\u0002\u0002\u0188\u018a\u0007\u0007\u0002\u0002",
+    "\u0187\u0188\u0007s\u0002\u0002\u0188\u018a\u0007\u0007\u0002\u0002",
     "\u0189\u018b\u0005,\u0017\u0002\u018a\u0189\u0003\u0002\u0002\u0002",
     "\u018a\u018b\u0003\u0002\u0002\u0002\u018b\u018c\u0003\u0002\u0002\u0002",
     "\u018c\u018d\u0007\b\u0002\u0002\u018d\u018e\u0005B\"\u0002\u018e/\u0003",
@@ -301,8 +301,8 @@ const serializedATN = ["\u0003\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786",
     "\u0002\u0002\u0198\u0190\u0003\u0002\u0002\u0002\u0198\u0199\u0003\u0002",
     "\u0002\u0002\u0199\u019a\u0003\u0002\u0002\u0002\u019a\u019b\u0007\b",
     "\u0002\u0002\u019b1\u0003\u0002\u0002\u0002\u019c\u019d\u0007h\u0002",
-    "\u0002\u019d\u01a0\u0007r\u0002\u0002\u019e\u019f\u0007i\u0002\u0002",
-    "\u019f\u01a1\u0007r\u0002\u0002\u01a0\u019e\u0003\u0002\u0002\u0002",
+    "\u0002\u019d\u01a0\u0007s\u0002\u0002\u019e\u019f\u0007i\u0002\u0002",
+    "\u019f\u01a1\u0007s\u0002\u0002\u01a0\u019e\u0003\u0002\u0002\u0002",
     "\u01a0\u01a1\u0003\u0002\u0002\u0002\u01a1\u01a2\u0003\u0002\u0002\u0002",
     "\u01a2\u01ac\u0007\t\u0002\u0002\u01a3\u01a4\u0007j\u0002\u0002\u01a4",
     "\u01aa\u0007\u000f\u0002\u0002\u01a5\u01a6\u0007\t\u0002\u0002\u01a6",
@@ -318,14 +318,14 @@ const serializedATN = ["\u0003\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786",
     "\u0002\u0002\u01b6\u01b8\u0003\u0002\u0002\u0002\u01b7\u01ae\u0003\u0002",
     "\u0002\u0002\u01b7\u01b8\u0003\u0002\u0002\u0002\u01b8\u01b9\u0003\u0002",
     "\u0002\u0002\u01b9\u01ba\u0007\n\u0002\u0002\u01ba3\u0003\u0002\u0002",
-    "\u0002\u01bb\u01bd\u0007r\u0002\u0002\u01bc\u01be\u0007\f\u0002\u0002",
+    "\u0002\u01bb\u01bd\u0007s\u0002\u0002\u01bc\u01be\u0007\f\u0002\u0002",
     "\u01bd\u01bc\u0003\u0002\u0002\u0002\u01bd\u01be\u0003\u0002\u0002\u0002",
     "\u01be\u01c0\u0003\u0002\u0002\u0002\u01bf\u01bb\u0003\u0002\u0002\u0002",
     "\u01c0\u01c1\u0003\u0002\u0002\u0002\u01c1\u01bf\u0003\u0002\u0002\u0002",
     "\u01c1\u01c2\u0003\u0002\u0002\u0002\u01c25\u0003\u0002\u0002\u0002",
     "\u01c3\u01c5\u0007W\u0002\u0002\u01c4\u01c3\u0003\u0002\u0002\u0002",
     "\u01c4\u01c5\u0003\u0002\u0002\u0002\u01c5\u01c6\u0003\u0002\u0002\u0002",
-    "\u01c6\u01c7\u0007r\u0002\u0002\u01c7\u01c9\u0007\u0007\u0002\u0002",
+    "\u01c6\u01c7\t\u000f\u0002\u0002\u01c7\u01c9\u0007\u0007\u0002\u0002",
     "\u01c8\u01ca\u0005,\u0017\u0002\u01c9\u01c8\u0003\u0002\u0002\u0002",
     "\u01c9\u01ca\u0003\u0002\u0002\u0002\u01ca\u01cb\u0003\u0002\u0002\u0002",
     "\u01cb\u01cc\u0007\b\u0002\u0002\u01cc\u01cd\u0005B\"\u0002\u01cd7\u0003",
@@ -333,27 +333,27 @@ const serializedATN = ["\u0003\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786",
     "\u0002\u0002\u0002\u01d0\u01d1\u0003\u0002\u0002\u0002\u01d1\u01cf\u0003",
     "\u0002\u0002\u0002\u01d1\u01d2\u0003\u0002\u0002\u0002\u01d29\u0003",
     "\u0002\u0002\u0002\u01d3\u01d4\u0007g\u0002\u0002\u01d4\u01d5\u0007",
-    "r\u0002\u0002\u01d5\u01d6\u00050\u0019\u0002\u01d6;\u0003\u0002\u0002",
+    "s\u0002\u0002\u01d5\u01d6\u00050\u0019\u0002\u01d6;\u0003\u0002\u0002",
     "\u0002\u01d7\u01d9\u0007\u0005\u0002\u0002\u01d8\u01da\u0005\u000e\b",
     "\u0002\u01d9\u01d8\u0003\u0002\u0002\u0002\u01d9\u01da\u0003\u0002\u0002",
     "\u0002\u01da\u01db\u0003\u0002\u0002\u0002\u01db\u01dc\u0007\u0006\u0002",
     "\u0002\u01dc=\u0003\u0002\u0002\u0002\u01dd\u01df\u0005<\u001f\u0002",
     "\u01de\u01dd\u0003\u0002\u0002\u0002\u01df\u01e0\u0003\u0002\u0002\u0002",
     "\u01e0\u01de\u0003\u0002\u0002\u0002\u01e0\u01e1\u0003\u0002\u0002\u0002",
-    "\u01e1?\u0003\u0002\u0002\u0002\u01e2\u01e5\u0007r\u0002\u0002\u01e3",
+    "\u01e1?\u0003\u0002\u0002\u0002\u01e2\u01e5\u0007s\u0002\u0002\u01e3",
     "\u01e4\u0007\r\u0002\u0002\u01e4\u01e6\u0005\u000e\b\u0002\u01e5\u01e3",
     "\u0003\u0002\u0002\u0002\u01e5\u01e6\u0003\u0002\u0002\u0002\u01e6A",
     "\u0003\u0002\u0002\u0002\u01e7\u01ea\u0005\b\u0005\u0002\u01e8\u01ea",
     "\u0005\u0006\u0004\u0002\u01e9\u01e7\u0003\u0002\u0002\u0002\u01e9\u01e8",
     "\u0003\u0002\u0002\u0002\u01eaC\u0003\u0002\u0002\u0002\u01eb\u01ec",
-    "\t\u000f\u0002\u0002\u01ecE\u0003\u0002\u0002\u0002\u01ed\u01f1\u0005",
+    "\t\u0010\u0002\u0002\u01ecE\u0003\u0002\u0002\u0002\u01ed\u01f1\u0005",
     "\\/\u0002\u01ee\u01f1\u0007;\u0002\u0002\u01ef\u01f1\u0007E\u0002\u0002",
     "\u01f0\u01ed\u0003\u0002\u0002\u0002\u01f0\u01ee\u0003\u0002\u0002\u0002",
     "\u01f0\u01ef\u0003\u0002\u0002\u0002\u01f1G\u0003\u0002\u0002\u0002",
     "\u01f2\u01f3\u0007X\u0002\u0002\u01f3\u01f5\u0005> \u0002\u01f4\u01f6",
     "\u00050\u0019\u0002\u01f5\u01f4\u0003\u0002\u0002\u0002\u01f5\u01f6",
     "\u0003\u0002\u0002\u0002\u01f6I\u0003\u0002\u0002\u0002\u01f7\u01f8",
-    "\u0007n\u0002\u0002\u01f8\u01f9\u00050\u0019\u0002\u01f9K\u0003\u0002",
+    "\u0007o\u0002\u0002\u01f8\u01f9\u00050\u0019\u0002\u01f9K\u0003\u0002",
     "\u0002\u0002\u01fa\u0203\u0007\u0005\u0002\u0002\u01fb\u0200\u0005\u000e",
     "\b\u0002\u01fc\u01fd\u0007\f\u0002\u0002\u01fd\u01ff\u0005\u000e\b\u0002",
     "\u01fe\u01fc\u0003\u0002\u0002\u0002\u01ff\u0202\u0003\u0002\u0002\u0002",
@@ -379,17 +379,17 @@ const serializedATN = ["\u0003\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786",
     "\u0002\u0002\u0221\u021d\u0003\u0002\u0002\u0002\u0221\u021e\u0003\u0002",
     "\u0002\u0002\u0221\u021f\u0003\u0002\u0002\u0002\u0221\u0220\u0003\u0002",
     "\u0002\u0002\u0222Q\u0003\u0002\u0002\u0002\u0223\u0224\u0007E\u0002",
-    "\u0002\u0224S\u0003\u0002\u0002\u0002\u0225\u0226\u0007s\u0002\u0002",
+    "\u0002\u0224S\u0003\u0002\u0002\u0002\u0225\u0226\u0007t\u0002\u0002",
     "\u0226U\u0003\u0002\u0002\u0002\u0227\u0228\u0007;\u0002\u0002\u0228",
-    "W\u0003\u0002\u0002\u0002\u0229\u022a\t\u0010\u0002\u0002\u022aY\u0003",
-    "\u0002\u0002\u0002\u022b\u022e\u0007r\u0002\u0002\u022c\u022e\u0005",
+    "W\u0003\u0002\u0002\u0002\u0229\u022a\t\u0011\u0002\u0002\u022aY\u0003",
+    "\u0002\u0002\u0002\u022b\u022e\u0007s\u0002\u0002\u022c\u022e\u0005",
     "F$\u0002\u022d\u022b\u0003\u0002\u0002\u0002\u022d\u022c\u0003\u0002",
     "\u0002\u0002\u022e[\u0003\u0002\u0002\u0002\u022f\u023a\u0003\u0002",
     "\u0002\u0002\u0230\u023a\u0007U\u0002\u0002\u0231\u023a\u0007S\u0002",
     "\u0002\u0232\u023a\u0007V\u0002\u0002\u0233\u023a\u0007H\u0002\u0002",
     "\u0234\u023a\u0007W\u0002\u0002\u0235\u023a\u0007R\u0002\u0002\u0236",
-    "\u023a\u0007X\u0002\u0002\u0237\u023a\u0007n\u0002\u0002\u0238\u023a",
-    "\u0007q\u0002\u0002\u0239\u022f\u0003\u0002\u0002\u0002\u0239\u0230",
+    "\u023a\u0007X\u0002\u0002\u0237\u023a\u0007o\u0002\u0002\u0238\u023a",
+    "\u0007r\u0002\u0002\u0239\u022f\u0003\u0002\u0002\u0002\u0239\u0230",
     "\u0003\u0002\u0002\u0002\u0239\u0231\u0003\u0002\u0002\u0002\u0239\u0232",
     "\u0003\u0002\u0002\u0002\u0239\u0233\u0003\u0002\u0002\u0002\u0239\u0234",
     "\u0003\u0002\u0002\u0002\u0239\u0235\u0003\u0002\u0002\u0002\u0239\u0236",
@@ -427,7 +427,7 @@ export default class SintesisParser extends antlr4.Parser {
                             null, null, "'sub'", null, null, null, null, 
                             null, null, "'chr'", "'ord'", null, null, null, 
                             null, null, null, null, null, null, null, null, 
-                            null, "'var'" ];
+                            null, null, "'var'" ];
     static symbolicNames = [ null, "MultiLineComment", "SingleLineComment", 
                              "OpenBracket", "CloseBracket", "OpenParen", 
                              "CloseParen", "OpenBrace", "CloseBrace", "SemiColon", 
@@ -456,9 +456,10 @@ export default class SintesisParser extends antlr4.Parser {
                              "NumberOf", "IndexOf", "Sub", "Lower", "Upper", 
                              "Math", "Min", "Max", "Random", "Chr", "Ord", 
                              "Prompt", "Convert", "New_", "Class_", "Extends", 
-                             "Attributes", "Methods", "Super", "InstanceOf", 
-                             "Map", "Get", "Set", "Var_", "Identifier", 
-                             "StringLiteral", "WhiteSpaces", "LineTerminator" ];
+                             "Attributes", "Methods", "Constructor", "Super", 
+                             "InstanceOf", "Map", "Get", "Set", "Var_", 
+                             "Identifier", "StringLiteral", "WhiteSpaces", 
+                             "LineTerminator" ];
     static ruleNames = [ "program", "statementList", "statement", "block", 
                          "stepStatement", "printStatement", "expression", 
                          "basicFunction0", "basicFunction1", "basicFunction2", 
@@ -965,7 +966,7 @@ export default class SintesisParser extends antlr4.Parser {
 	            this._ctx = localctx;
 	            _prevctx = localctx;
 	            this.state = 157;
-	            this.match(SintesisParser.Super);
+	            localctx.s = this.match(SintesisParser.Super);
 	            break;
 	        default:
 	            throw new antlr4.error.NoViableAltException(this);
@@ -1763,7 +1764,6 @@ export default class SintesisParser extends antlr4.Parser {
 	        var la_ = this._interp.adaptivePredict(this._input,16,this._ctx);
 	        switch(la_) {
 	        case 1:
-	            localctx = new AerContext(this, localctx);
 	            this.enterOuterAlt(localctx, 1);
 	            this.state = 288;
 	            localctx.idv = this.match(SintesisParser.Identifier);
@@ -1782,7 +1782,6 @@ export default class SintesisParser extends antlr4.Parser {
 	            break;
 
 	        case 2:
-	            localctx = new EwfewqContext(this, localctx);
 	            this.enterOuterAlt(localctx, 2);
 	            this.state = 291;
 	            localctx.idv = this.match(SintesisParser.Identifier);
@@ -1805,7 +1804,6 @@ export default class SintesisParser extends antlr4.Parser {
 	            break;
 
 	        case 3:
-	            localctx = new QxeeqContext(this, localctx);
 	            this.enterOuterAlt(localctx, 3);
 	            this.state = 296;
 	            localctx.idk = this.match(SintesisParser.Identifier);
@@ -2336,13 +2334,14 @@ export default class SintesisParser extends antlr4.Parser {
 	        _la = this._input.LA(1);
 	        if(_la===SintesisParser.Methods) {
 	            this.state = 428;
-	            this.match(SintesisParser.Methods);
+	            localctx.mdec = this.match(SintesisParser.Methods);
 	            this.state = 429;
 	            this.match(SintesisParser.Colon);
 	            this.state = 435;
 	            this._errHandler.sync(this);
 	            switch(this._input.LA(1)) {
 	            case SintesisParser.Function_:
+	            case SintesisParser.Constructor:
 	            case SintesisParser.Identifier:
 	                this.state = 430;
 	                localctx.methods = this.methodsList();
@@ -2433,7 +2432,15 @@ export default class SintesisParser extends antlr4.Parser {
 	        }
 
 	        this.state = 452;
-	        localctx.id = this.match(SintesisParser.Identifier);
+	        localctx.id = this._input.LT(1);
+	        _la = this._input.LA(1);
+	        if(!(_la===SintesisParser.Constructor || _la===SintesisParser.Identifier)) {
+	            localctx.id = this._errHandler.recoverInline(this);
+	        }
+	        else {
+	        	this._errHandler.reportMatch(this);
+	            this.consume();
+	        }
 	        this.state = 453;
 	        this.match(SintesisParser.OpenParen);
 	        this.state = 455;
@@ -2479,7 +2486,7 @@ export default class SintesisParser extends antlr4.Parser {
 	            this.state = 463; 
 	            this._errHandler.sync(this);
 	            _la = this._input.LA(1);
-	        } while(_la===SintesisParser.Function_ || _la===SintesisParser.Identifier);
+	        } while(((((_la - 85)) & ~0x1f) == 0 && ((1 << (_la - 85)) & ((1 << (SintesisParser.Function_ - 85)) | (1 << (SintesisParser.Constructor - 85)) | (1 << (SintesisParser.Identifier - 85)))) !== 0));
 	    } catch (re) {
 	    	if(re instanceof antlr4.error.RecognitionException) {
 		        localctx.exception = re;
@@ -2854,7 +2861,7 @@ export default class SintesisParser extends antlr4.Parser {
 	        this.state = 531;
 	        this._errHandler.sync(this);
 	        _la = this._input.LA(1);
-	        if(_la===SintesisParser.Colon || ((((_la - 57)) & ~0x1f) == 0 && ((1 << (_la - 57)) & ((1 << (SintesisParser.NullLiteral - 57)) | (1 << (SintesisParser.BooleanLiteral - 57)) | (1 << (SintesisParser.While - 57)) | (1 << (SintesisParser.If - 57)) | (1 << (SintesisParser.Then - 57)) | (1 << (SintesisParser.Else - 57)) | (1 << (SintesisParser.Return - 57)) | (1 << (SintesisParser.Function_ - 57)) | (1 << (SintesisParser.Vector - 57)))) !== 0) || ((((_la - 108)) & ~0x1f) == 0 && ((1 << (_la - 108)) & ((1 << (SintesisParser.Map - 108)) | (1 << (SintesisParser.Var_ - 108)) | (1 << (SintesisParser.Identifier - 108)))) !== 0)) {
+	        if(_la===SintesisParser.Colon || ((((_la - 57)) & ~0x1f) == 0 && ((1 << (_la - 57)) & ((1 << (SintesisParser.NullLiteral - 57)) | (1 << (SintesisParser.BooleanLiteral - 57)) | (1 << (SintesisParser.While - 57)) | (1 << (SintesisParser.If - 57)) | (1 << (SintesisParser.Then - 57)) | (1 << (SintesisParser.Else - 57)) | (1 << (SintesisParser.Return - 57)) | (1 << (SintesisParser.Function_ - 57)) | (1 << (SintesisParser.Vector - 57)))) !== 0) || ((((_la - 109)) & ~0x1f) == 0 && ((1 << (_la - 109)) & ((1 << (SintesisParser.Map - 109)) | (1 << (SintesisParser.Var_ - 109)) | (1 << (SintesisParser.Identifier - 109)))) !== 0)) {
 	            this.state = 518;
 	            this.identifierName();
 	            this.state = 519;
@@ -3295,16 +3302,17 @@ SintesisParser.Class_ = 102;
 SintesisParser.Extends = 103;
 SintesisParser.Attributes = 104;
 SintesisParser.Methods = 105;
-SintesisParser.Super = 106;
-SintesisParser.InstanceOf = 107;
-SintesisParser.Map = 108;
-SintesisParser.Get = 109;
-SintesisParser.Set = 110;
-SintesisParser.Var_ = 111;
-SintesisParser.Identifier = 112;
-SintesisParser.StringLiteral = 113;
-SintesisParser.WhiteSpaces = 114;
-SintesisParser.LineTerminator = 115;
+SintesisParser.Constructor = 106;
+SintesisParser.Super = 107;
+SintesisParser.InstanceOf = 108;
+SintesisParser.Map = 109;
+SintesisParser.Get = 110;
+SintesisParser.Set = 111;
+SintesisParser.Var_ = 112;
+SintesisParser.Identifier = 113;
+SintesisParser.StringLiteral = 114;
+SintesisParser.WhiteSpaces = 115;
+SintesisParser.LineTerminator = 116;
 
 SintesisParser.RULE_program = 0;
 SintesisParser.RULE_statementList = 1;
@@ -4160,6 +4168,7 @@ class ExpSuperContext extends ExpressionContext {
 
     constructor(parser, ctx) {
         super(parser);
+        this.s = null; // Token;
         super.copyFrom(ctx);
     }
 
@@ -5087,31 +5096,11 @@ class IteratorIndexesContext extends antlr4.ParserRuleContext {
         super(parent, invokingState);
         this.parser = parser;
         this.ruleIndex = SintesisParser.RULE_iteratorIndexes;
+        this.idv = null; // Token
+        this.op = null; // Token
+        this.coll = null; // ExpressionContext
+        this.idk = null; // Token
     }
-
-
-	 
-		copyFrom(ctx) {
-			super.copyFrom(ctx);
-		}
-
-}
-
-
-class QxeeqContext extends IteratorIndexesContext {
-
-    constructor(parser, ctx) {
-        super(parser);
-        this.idk = null; // Token;
-        this.idv = null; // Token;
-        this.op = null; // Token;
-        this.coll = null; // ExpressionContext;
-        super.copyFrom(ctx);
-    }
-
-	ARROW() {
-	    return this.getToken(SintesisParser.ARROW, 0);
-	};
 
 	Identifier = function(i) {
 		if(i===undefined) {
@@ -5136,62 +5125,18 @@ class QxeeqContext extends IteratorIndexesContext {
 	Of() {
 	    return this.getToken(SintesisParser.Of, 0);
 	};
-
-	accept(visitor) {
-	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return visitor.visitQxeeq(this);
-	    } else {
-	        return visitor.visitChildren(this);
-	    }
-	}
-
-
-}
-
-SintesisParser.QxeeqContext = QxeeqContext;
-
-class EwfewqContext extends IteratorIndexesContext {
-
-    constructor(parser, ctx) {
-        super(parser);
-        this.idv = null; // Token;
-        this.idk = null; // Token;
-        this.op = null; // Token;
-        this.coll = null; // ExpressionContext;
-        super.copyFrom(ctx);
-    }
 
 	Comma() {
 	    return this.getToken(SintesisParser.Comma, 0);
 	};
 
-	Identifier = function(i) {
-		if(i===undefined) {
-			i = null;
-		}
-	    if(i===null) {
-	        return this.getTokens(SintesisParser.Identifier);
-	    } else {
-	        return this.getToken(SintesisParser.Identifier, i);
-	    }
-	};
-
-
-	expression() {
-	    return this.getTypedRuleContext(ExpressionContext,0);
-	};
-
-	In() {
-	    return this.getToken(SintesisParser.In, 0);
-	};
-
-	Of() {
-	    return this.getToken(SintesisParser.Of, 0);
+	ARROW() {
+	    return this.getToken(SintesisParser.ARROW, 0);
 	};
 
 	accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return visitor.visitEwfewq(this);
+	        return visitor.visitIteratorIndexes(this);
 	    } else {
 	        return visitor.visitChildren(this);
 	    }
@@ -5200,46 +5145,7 @@ class EwfewqContext extends IteratorIndexesContext {
 
 }
 
-SintesisParser.EwfewqContext = EwfewqContext;
 
-class AerContext extends IteratorIndexesContext {
-
-    constructor(parser, ctx) {
-        super(parser);
-        this.idv = null; // Token;
-        this.op = null; // Token;
-        this.coll = null; // ExpressionContext;
-        super.copyFrom(ctx);
-    }
-
-	Identifier() {
-	    return this.getToken(SintesisParser.Identifier, 0);
-	};
-
-	expression() {
-	    return this.getTypedRuleContext(ExpressionContext,0);
-	};
-
-	In() {
-	    return this.getToken(SintesisParser.In, 0);
-	};
-
-	Of() {
-	    return this.getToken(SintesisParser.Of, 0);
-	};
-
-	accept(visitor) {
-	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return visitor.visitAer(this);
-	    } else {
-	        return visitor.visitChildren(this);
-	    }
-	}
-
-
-}
-
-SintesisParser.AerContext = AerContext;
 
 class IteratorRangeContext extends antlr4.ParserRuleContext {
 
@@ -5864,6 +5770,7 @@ class ClassDeclarationContext extends antlr4.ParserRuleContext {
         this.id = null; // Token
         this.ext = null; // Token
         this.atrs = null; // IdentifiersContext
+        this.mdec = null; // Token
         this.methods = null; // MethodsListContext
     }
 
@@ -6028,12 +5935,16 @@ class MethodDeclarationContext extends antlr4.ParserRuleContext {
 	    return this.getToken(SintesisParser.CloseParen, 0);
 	};
 
+	functionBody() {
+	    return this.getTypedRuleContext(FunctionBodyContext,0);
+	};
+
 	Identifier() {
 	    return this.getToken(SintesisParser.Identifier, 0);
 	};
 
-	functionBody() {
-	    return this.getTypedRuleContext(FunctionBodyContext,0);
+	Constructor() {
+	    return this.getToken(SintesisParser.Constructor, 0);
 	};
 
 	Function_() {

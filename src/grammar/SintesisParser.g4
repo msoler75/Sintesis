@@ -75,7 +75,7 @@ expression
     |    literal                                                        #expLiteral
     |    (atr=Attributes'.'|met=Methods'.'|vvar=Var_)? id=Identifier    #expIdentifier
     |    '(' exp=expression ')'                                         #expParenthesis
-    |    Super                                                          #expSuper
+    |    s=Super                                                        #expSuper
     ;
 
 
@@ -170,7 +170,7 @@ arguments
 classDeclaration
     : Class_ id=Identifier (Extends ext=Identifier)? '{' 
         (Attributes ':' ('{' atrs=identifiers '}' | atrs=identifiers ))?
-        (Methods ':' (methods=methodsList| '{' methods=methodsList '}'))?
+        (mdec=Methods ':' (methods=methodsList| '{' methods=methodsList '}'))?
         '}'
     ;
 
@@ -179,7 +179,7 @@ identifiers
     ;
 
 methodDeclaration
-    : Function_? id=Identifier '(' pl=formalParameterList? ')' stmt=functionBody
+    : Function_? id=(Identifier|Constructor) '(' pl=formalParameterList? ')' stmt=functionBody
     ;
 
 methodsList
