@@ -2,8 +2,9 @@ import Variable from './Variable.js'
 import Class from "./Class.js"
 import Map from "./Map.js"
 
-class Instance {
+class Instance extends Variable {
     constructor(clsBase, mode) {
+        super()
         if (!(clsBase instanceof Class))
             throw new Error('El parámetro de Instance debe ser del tipo Class');
         this._class = clsBase
@@ -57,8 +58,8 @@ class Instance {
     }
 
     getRef(name) {
-        if(Class.isMethodsName(name)) name = '__methods'
-        if(Class.isAttributesName(name)) name = '__attributes'
+        if (Class.isMethodsName(name)) name = '__methods'
+        if (Class.isAttributesName(name)) name = '__attributes'
         // si es un atributo o método lo busca entre la instancia actual y las padres
         let ref = this
         do {
@@ -93,7 +94,12 @@ class Instance {
         } while (ref)
         let r = []
         for (const a of atr) {
-            r.push(`${a}: ${this.getRef(a).value}`)
+            let lbl = a
+            if (Class.isMethodsName(a))
+                lbl = 'métodos'
+            if (Class.isAttributesName(a))
+                lbl = 'atributos'
+            r.push(`${lbl}: ${Variable.toText(this.getRef(a).value)}`)
         }
         return this._class.name + ' (' + r.join(', ') + ')'
     }

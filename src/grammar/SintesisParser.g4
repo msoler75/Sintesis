@@ -44,39 +44,56 @@ printStatement
     ;
 
 
+methodCall
+    : identifierWithKeywords arguments
+    | Super arguments
+    ;
+
+superSuffix
+    : arguments
+    | Dot identifierWithKeywords arguments?
+    ;
+
+member 
+    : Attributes                                                             #expAttributes
+    | Methods                                                                #expMethods
+    | Super                                                                  #expSuper
+    | New_ id=Identifier args=arguments                                      #expNew
+    | exp=member '.' idx=identifier  args=arguments                          #expMemberDot
+    | exp=member '.' idx=identifier                                          #expMemberDot
+    | exp=member '[' idx=expression ']'   args=arguments                     #expMemberIndex
+    | exp=member '[' idx=expression ']'                                      #expMemberIndex
+    | exp=member args=arguments                                              #expMemberFunc
+    | identifier                                                             #expIdentifier
+    ;
+
 expression     
-    :    fn=basicFunction args=arguments                                #expBasicFunction
-    |    Math'.'fn=(Identifier|Min|Max|Random) args=arguments           #expMath
-    |    exp=expression '[' idx=expression ']'                          #expMemberIndex
-    |    exp=expression'.'idx=identifierName                            #expMemberDot
-    |    New_ id=Identifier args=arguments                              #expNew
-    |    exp=expression args=arguments                                  #expMemberFunc
-    |    dest=expression op=(PlusPlus|MinusMinus)                       #expPostIncrement
-    |    op=(PlusPlus | MinusMinus) dest=expression                     #expPreIncrement
-    |    Plus exp=expression                                            #expUnaryPlus
-    |    Minus exp=expression                                           #expUnaryMinus
-    |    BitNot exp=expression                                          #expBitNot
-    |    Not exp=expression                                             #expNot
-    |    e1=expression op=(Modulus|Multiply|Divide) e2=expression       #expOp
-    |    e1=expression op=(Plus|Minus) e2=expression                    #expOp
-    |    e1=expression op=(RightShiftArithmetic|LeftShiftArithmetic|RightShiftLogical) e2=expression            #expOp
-    |    <assoc=right> e1=expression op=Power e2=expression             #expOp
-    |    e1=expression op=LessThan e2=expression                        #expOp
-    |    e1=expression op=MoreThan e2=expression                        #expOp
-    |    e1=expression op=LessThanEquals e2=expression                  #expOp
-    |    e1=expression op=GreaterThanEquals e2=expression               #expOp
-    |    e1=expression InstanceOf e2=identifierName                     #expInstanceOf
-    |    e1=expression op=(IdentityEquals|IdentityNotEquals) e2=expression          #expOp
-    |    e1=expression op=(Equals_|NotEquals) e2=expression                         #expOp
-    |    e1=expression op=(BitAnd|BitOr|BitXOr) e2=expression           #expOp
-    |    e1=expression op=(And|Or) e2=expression                        #expOp
-    |    cond=expression '?' ok=expression ':' no=expression            #expTernary
-    |    <assoc=right> dest=expression Assign exp=expression            #expAssignment
-    |    <assoc=right> dest=expression op=assignmentOperator exp=expression    #expAssignmentOperator
-    |    literal                                                        #expLiteral
-    |    (atr=Attributes'.'|met=Methods'.'|vvar=Var_)? id=Identifier    #expIdentifier
-    |    '(' exp=expression ')'                                         #expParenthesis
-    |    s=Super                                                        #expSuper
+    :    fn=basicFunction args=arguments                                     #expBasicFunction
+    |    Math Dot fn=(Identifier|Min|Max|Random) args=arguments              #expMath
+    |    dest=expression op=(PlusPlus|MinusMinus)                            #expPostIncrement
+    |    op=(PlusPlus | MinusMinus) dest=expression                          #expPreIncrement
+    |    Plus exp=expression                                                 #expUnaryPlus
+    |    Minus exp=expression                                                #expUnaryMinus
+    |    BitNot exp=expression                                               #expBitNot
+    |    Not exp=expression                                                  #expNot
+    |    e1=expression op=(Modulus|Multiply|Divide) e2=expression            #expOp
+    |    e1=expression op=('+'|'-') e2=expression                            #expOp
+    |    e1=expression op=('>>'|'<<'|'>>>') e2=expression                    #expOp
+    |    <assoc=right> e1=expression op=Power e2=expression                  #expOp
+    |    e1=expression op=('<'|'>') e2=expression                            #expOp
+    |    e1=expression op=LessThanEquals e2=expression                       #expOp
+    |    e1=expression op=GreaterThanEquals e2=expression                    #expOp
+    |    e1=expression InstanceOf e2=identifier                              #expInstanceOf
+    |    e1=expression op=(IdentityEquals|IdentityNotEquals) e2=expression   #expOp
+    |    e1=expression op=(Equals_|NotEquals) e2=expression                  #expOp
+    |    e1=expression op=(BitAnd|BitOr|BitXOr) e2=expression                #expOp
+    |    e1=expression op=(And|Or) e2=expression                             #expOp
+    |    cond=expression '?' ok=expression ':' no=expression                 #expTernary
+    |    <assoc=right> dest=expression Assign exp=expression                 #expAssignment
+    |    <assoc=right> dest=expression op=assignmentOperator exp=expression  #expAssignmentOperator
+    |    '(' exp=expression ')'                                              #expParenthesis
+    |    member                                                              #expMember
+    |    literal                                                             #expLiteral
     ;
 
 
@@ -245,7 +262,7 @@ vectorLiteral
     ;
 
 objectLiteral
-    : '{' (identifierName ':' expression (',' identifierName ':' expression)*)? '}'
+    : '{' (identifierWithKeywords ':' expression (',' identifierWithKeywords ':' expression)*)? '}'
     ;
 
 
@@ -272,10 +289,11 @@ numericLiteral
     | OctalIntegerLiteral2
     | BinaryIntegerLiteral
     ;
+identifier : Identifier;
 
-identifierName
-    : Identifier
-    | reservedWord
+identifierWithKeywords 
+    : Identifier     #id
+    | reservedWord   #keyw
     ;
 
 keyword

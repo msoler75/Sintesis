@@ -1,1 +1,2 @@
-a.b.c.d.e
+class p {x(){imp 'x' } }
+new p() . x()

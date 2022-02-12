@@ -50,12 +50,12 @@ Class.isConstructorName = function (name) {
 
 Class.isAttributesName = function (name) {
     // to-do: lang
-    return ['attributes', 'atributos'].includes(name)
+    return ['__attributes', 'attributes', 'atributos'].includes(name)
 }
 
 Class.isMethodsName = function (name) {
     // to-do: lang
-    return ['methods', 'metodos', 'métodos'].includes(name)
+    return ['__methods', 'methods', 'metodos', 'métodos'].includes(name)
 }
 
 export default Class

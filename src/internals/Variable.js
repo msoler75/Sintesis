@@ -22,7 +22,7 @@ class Variable {
     }
 
     text() {
-        return toText(this.value)
+        return Variable.toText(this.value)
     }
 }
 
@@ -31,17 +31,17 @@ Variable.literalOf = function (src) {
 }
 
 
-function toText(v) {
+Variable.toText = function (v) {
     if (v === null) return 'nulo'
     if (v === true) return 'cierto'
     if (v === false) return 'falso'
     if (v.text && typeof v.text === 'function') return v.text()
-    if (v instanceof Variable) return toText(v.value)
+    if (v instanceof Variable) return Variable.toText(v.value)
     if (Array.isArray(v))
-        return '[' + v.map(x => toText(x)).join(', ').replace(/\bnulo\b/g, '') + ']'
+        return '[' + v.map(x => Variable.toText(x)).join(', ').replace(/\bnulo\b/g, '') + ']'
     if (typeof v === 'object') {
         let values = []
-        Object.keys(v).forEach(k => values.push(k + ': ' + toText(v[k])))
+        Object.keys(v).forEach(k => values.push(k + ': ' + Variable.toText(v[k])))
         return '{' + values.join(', ') + '}'
     }
     return v
