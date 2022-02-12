@@ -1,36 +1,15 @@
-contador = 1
+// clase con un atributo y un método constructor
 
-clase Figura {
-    atributos: {id}
+clase Basica {
+    atributos: { contador }
 
-    metodos:
-
-    constructor() {
-        id = contador++
-    }
-
-    area () {
-        ret 'No aplicable'
-    }
-}
-
-clase Cuadrado extiende Figura {
-    atributos: ancho alto
-
-    métodos: {
-        constructor(ancho, alto) {
-            atributos.ancho = ancho
-            atributos.alto = alto
-        }
-
-        area() {
-            ret ancho*alto    
+    metodos: 
+    {
+        método constructor() {
+            contador = 2
         }
     }
 }
 
-f = nueva Figura()
-c = nuevo Cuadrado(2, 3)
-
-imprimir "Figura ", f.id , " tiene area "+f.area()
-imprimir "Figura ", c.id , " tiene area "+c.area()
+a = nueva Basica()
+imprimir a.contador

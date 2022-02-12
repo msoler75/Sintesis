@@ -1,0 +1,40 @@
+contador = 1
+
+clase Figura {
+    atributos: {id}
+
+    metodos:
+
+    constructor() {
+        id = contador++
+    }
+
+    dameId() { 
+        return id
+    }
+
+    area () {
+        ret 'No aplicable'
+    }
+}
+
+clase Cuadrado extiende Figura {
+    atributos: ancho alto
+
+    métodos: {
+        constructor(ancho, alto) {
+            atributos.ancho = ancho
+            atributos.alto = alto
+        }
+
+        area() {
+            ret ancho*alto    
+        }
+    }
+}
+
+f = nueva Figura()
+c = nuevo Cuadrado(2, 3)
+
+imprimir "Figura ", f.dameId() , " tiene area " + f.area()
+imprimir "Figura ", c.dameId() , " tiene area " + c.area()

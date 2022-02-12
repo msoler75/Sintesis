@@ -1,0 +1,11 @@
+clase Persona {
+  atributos: nombre
+  métodos: 
+  constructor(nombre) {
+    atributos.nombre = nombre
+  }
+}
+
+p = nueva Persona("jorge")
+imprimir p.atributos.nombre
+imprimir p.nombre

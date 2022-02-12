@@ -43,6 +43,7 @@ printStatement
     : Print exp=expressionSequence
     ;
 
+
 expression     
     :    fn=basicFunction args=arguments                                #expBasicFunction
     |    Math'.'fn=(Identifier|Min|Max|Random) args=arguments           #expMath
@@ -169,8 +170,8 @@ arguments
 
 classDeclaration
     : Class_ id=Identifier (Extends ext=Identifier)? '{' 
-        (Attributes ':' ('{' atrs=identifiers '}' | atrs=identifiers ))?
-        (mdec=Methods ':' (methods=methodsList| '{' methods=methodsList '}'))?
+        ((Attributes ':')? ('{' atrs=identifiers '}' | atrs=identifiers ))?
+        ((mdec=Methods ':')? (methods=methodsList| '{' methods=methodsList '}'))?
         '}'
     ;
 
@@ -179,7 +180,7 @@ identifiers
     ;
 
 methodDeclaration
-    : Function_? id=(Identifier|Constructor) '(' pl=formalParameterList? ')' stmt=functionBody
+    : (Method|Function_)? id=(Identifier|Constructor) '(' pl=formalParameterList? ')' stmt=functionBody
     ;
 
 methodsList
@@ -288,4 +289,6 @@ keyword
     | Vector
     | Map
     | Var_
+    | Methods
+    | Attributes
     ;

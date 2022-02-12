@@ -1,5 +1,7 @@
 import Variable from './Variable.js'
 import VariableCreate from './VariableCreate.js'
+import Instance from './Instance.js'
+import Function from './Function.js'
 
 class Map extends Variable {
 
@@ -20,15 +22,15 @@ class Map extends Variable {
     }
 
     setValue(key, value) {
-        if (value instanceof Variable)
+        if (value instanceof Variable || value instanceof Function || value instanceof Instance)
             // throw new Error('setValue no permite asignar una Variable')
             return this.setVariable(key, value)
         this._value[key] = VariableCreate(value)
     }
 
     setVariable(key, vari) {
-        if (!(vari instanceof Variable))
-            throw new Error('setVariable exige una Variable')
+        if (!(vari instanceof Variable)&&!(vari instanceof Function)&&!(vari instanceof Instance))
+            throw new Error('setVariable exige una Variable|Function|Instance')
         this._value[key] = vari
     }
 

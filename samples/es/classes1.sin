@@ -1,25 +1,19 @@
-class Saludo {
+// clase sencilla sin atributos
 
-    atributos: nombre
+clase animal {
 
-    métodos: 
+    métodos:
 
-    constructor(nombre) {
-        atributos.nombre = nombre
-        imprimir "Creando saludo con", nombre
+    método correr() { 
+        imprimir "corriendo..."
     }
 
-    hola(nombre) {
-        imprimir "¡Hola " + nombre + "!"
-    }
+    método saltar() {
+        imprimir "saltando..."
+    }                                                                                                           
 
-    adios(nombre) {
-        imprimir "¡Adiós " + atributos.nombre + "!"
-    }
-    
 }
 
-s=nuevo Saludo("María")
-s.nombre="Juan"
-s.hola("Jorge")
-s.adios("Jorge")
+a = nuevo animal()
+a.correr()
+a.saltar()

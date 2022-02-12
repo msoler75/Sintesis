@@ -11,6 +11,10 @@ class Class {
                 this.methods[i]._class = this
     }
 
+    addMethod(name) {
+        
+    }
+
     getConstructor(numargs) {
         for (const name in this.methods) {
             const method = this.methods[name]
@@ -42,6 +46,16 @@ class Class {
 Class.isConstructorName = function (name) {
     // to-do: lang
     return ['constructor', 'construct'].includes(name)
+}
+
+Class.isAttributesName = function (name) {
+    // to-do: lang
+    return ['attributes', 'atributos'].includes(name)
+}
+
+Class.isMethodsName = function (name) {
+    // to-do: lang
+    return ['methods', 'metodos', 'métodos'].includes(name)
 }
 
 export default Class

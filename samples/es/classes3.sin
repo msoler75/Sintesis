@@ -1,0 +1,20 @@
+// un atributo y un constructor con parámetro para inicializar ese atributo
+
+clase Persona {
+    atributos: nombre
+
+    metodos: 
+
+    función constructor(nombre) {
+        atributos.nombre = nombre
+    }
+
+    función texto() {
+        retornar "Mi nombre es: " + nombre 
+    }
+    
+}
+
+
+p = nueva Persona("Jorge")
+imprimir p.texto()

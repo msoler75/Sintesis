@@ -229,6 +229,12 @@ Return
               |    'ret'
               ;
 
+Method         
+              :    'method'
+              |    'metodo'
+              |    'm\u00E9todo'
+              ;
+
 Function_   
               :    'function'
               |    'funcion'
@@ -440,7 +446,7 @@ Var_
 
 /// Identifier Names and Identifiers
 
-Identifier:                     IdentifierStart IdentifierPart*;
+Identifier:                     [a-zA-Z$_][a-zA-Z0-9_]* ;
 
 // Strings
 
@@ -478,15 +484,3 @@ fragment ExponentPart
     ;
 
     
-fragment IdentifierPart
-    : IdentifierStart
-    | [\p{Mn}]
-    | [\p{Nd}]
-    | [\p{Pc}]
-    | '\u200C'
-    | '\u200D'
-    ;
-fragment IdentifierStart
-    : [\p{L}]
-    | [$_]
-    ;

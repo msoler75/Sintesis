@@ -110,12 +110,11 @@ export default class SintesisEval extends SintesisParserVisitor {
         const calls = this.find(body, 'ExpMemberFuncContext')
         for (const c of calls) {
           let s = this.find(c, 'ExpSuperContext')
-          if(s.length>0)
-          {
+          if (s.length > 0) {
             const a = this.find(s[0].parentCtx, 'ArgumentsContext')
-            var numargs = Math.ceil((a[0].children.length-2)/2)
-            if(!extend.getConstructor(numargs))
-              throw new SintesisError(a[0], `La clase padre no tiene ningún constructor `+(numargs>0?`con ${numargs} parámetros`:`sin parámetro${numargs>1?'s':''}`))
+            var numargs = Math.ceil((a[0].children.length - 2) / 2)
+            if (!extend.getConstructor(numargs))
+              throw new SintesisError(a[0], `La clase padre no tiene ningún constructor ` + (numargs > 0 ? `con ${numargs} parámetros` : `sin parámetro${numargs>1?'s':''}`))
             callingSuper = true
           }
         }
@@ -125,10 +124,22 @@ export default class SintesisEval extends SintesisParserVisitor {
       }
       methods[idm] = method
     }
-    // let k = Object.values(methods)
+    // let k = Object.values(methods)/
     if (attributes.length && !Object.values(methods).find(x => Class.isConstructorName(x.name)))
-      throw new SintesisError(ctx.mdec, "Se requiere un constructor para inicializar los atributos")
+      throw new SintesisError(ctx.mdec || ctx, "Se requiere un constructor para inicializar los atributos")
+
     const cls = new Class(id, extend, attributes, methods)
+
+
+    // si no tiene atributos no requiere constructor por defecto definido, pero lo necesitamos para que funcione
+    if (!attributes.length && !cls.hasDefaultConstructor())
+      // si no tiene un constructor por defecto definido, le creamos uno
+      cls.methods['constructor'] = new Function({
+        id: {
+          text: 'constructor'
+        }
+      }, ctx)
+
     this.symbols.addClass(id, cls)
     return this.visitChildren(ctx)
   }
@@ -148,7 +159,7 @@ export default class SintesisEval extends SintesisParserVisitor {
     let constructor = obj.getConstructor(values.length)
     if (!constructor)
       throw new SintesisError(ctx.args, `No existe un método constructor ` + (values.length ? `con ${values.length} parámetro${values.length!==1?'s':''}` : `sin parámetros`))
-      
+
     this.callToFunction(new MemoryRef(obj, 'constructor'), ctx.args)
     return obj
   }
@@ -182,7 +193,7 @@ export default class SintesisEval extends SintesisParserVisitor {
   callToFunction(memoryref, ctxArgs) {
     const fn = memoryref.variable
     const obj = memoryref._variable
-    const values = ctxArgs?ctxArgs.values:[]
+    const values = ctxArgs ? ctxArgs.values : []
 
     // obtenemos los argumentos o parámetros de la función y los valores
     let params = fn.context.pl ? this.visit(fn.context.pl).params : []
@@ -193,7 +204,7 @@ export default class SintesisEval extends SintesisParserVisitor {
     let classes = []
     // si es una función (método) de clase...
     // creamos para cada superclase una tabla de símbolos de todos sus atributos de clase
-    if (fn._class) {
+    if (fn._class && obj instanceof Instance) {
       // obtenemos la referencia al objeto o instancia de clase
       let cls = fn._class
       do {
@@ -206,9 +217,12 @@ export default class SintesisEval extends SintesisParserVisitor {
         this.symbols.pushLevel(false, cls.name)
 
         // añadimos los atributos y métodos en la tabla de símbolos
-        for (const id of cls.attributes) {
+        for (const id in obj.attributes) {
+          // const id = obj.attributes[i]
           // vinculamos la variable de la instancia con la referencia del símbolo en la tabla de símbolos
           //const vari = obj.getByClass(cls.name).attributes[id]
+          //if (!obj.getRef)
+          //throw new SintesisError(fn.context, "Se esperaba un atributo")
           const vari = obj.getRef(id)
           this.symbols.addVariable(id, vari)
         }
@@ -232,8 +246,8 @@ export default class SintesisEval extends SintesisParserVisitor {
     // si es un método constructor de una clase, que además tiene una clase padre, 
     // y no tiene explícitamente una llamada a la superclase...
     if (fn._class && obj.superClass && Class.isConstructorName(fn.name) && !fn.callingSuperClass) {
-        let fncon = obj.superClass._class.getConstructor(0)
-        this.callToFunction(new MemoryRef(obj.superClass, fncon.name))
+      let fncon = obj.superClass._class.getConstructor(0)
+      this.callToFunction(new MemoryRef(obj.superClass, fncon.name))
     }
 
 
@@ -599,7 +613,7 @@ export default class SintesisEval extends SintesisParserVisitor {
     let callContext = this.symbols.getFuncContext()
     let i = 0
     while ((!callContext || !callContext.functionEnded) && i < ctx.children.length) {
-      // console.log(ctx.children[i].getText())
+      console.log(ctx.children[i].getText())
       this.visit(ctx.children[i++])
     }
     return callContext ? (callContext.functionResult || null) : null
@@ -783,26 +797,27 @@ export default class SintesisEval extends SintesisParserVisitor {
   // Visit a parse tree produced by SintesisParser#expIdentifier.
   visitExpIdentifier(ctx) {
     const id = ctx.id.text
-    let mem_id
-    if (ctx.atr || ctx.met) {
-      let symbols_ctx = this.symbols.getClassContext()
-      if (!symbols_ctx)
-        throw new SintesisError(ctx.atr ? ctx.atr : ctx.met, `Referencia fuera de Clase`)
-      if (!(id in symbols_ctx.memory))
-        throw new SintesisError(ctx.id, `El método o atributo ${id} no se encuentra en la clase ${symbols_ctx.className}`)
-      mem_id = symbols_ctx.memory[id]
-      if (ctx.met && !(mem_id.variable instanceof Function))
-        throw new SintesisError(ctx.id, `${symbols_ctx.className}.${id} no es un método`)
-      if (ctx.atr && (mem_id.variable instanceof Function))
-        throw new SintesisError(ctx.id, `${symbols_ctx.className}.${id} no es un atributo`)
-    } else
-      mem_id = ctx.vvar ? this.symbols.addVariable(id, new Variable()) : this.symbols.findSymbol(id)
+    let mem_id = ctx.vvar ? this.symbols.addVariable(id, new Variable()) : this.symbols.findSymbol(id)
     if (mem_id === null && this.forCreate)
       mem_id = this.symbols.addVariable(id, new Variable())
     return mem_id
   }
 
-  
+  visitExpAttributes(ctx) {
+    //if (!this.symbols.insideClass())
+      //throw new SintesisError(ctx, `Referencia fuera de Clase`)
+    let mem_id = this.symbols.findSymbol('__attributes')
+    return mem_id
+  }
+
+  visitExpMethods(ctx) {
+    if (!this.symbols.insideClass())
+      throw new SintesisError(ctx, `Referencia fuera de Clase`)
+    let mem_id = this.symbols.findSymbol('__methods') 
+    return mem_id
+  }
+
+
   // Visit a parse tree produced by SintesisParser#expSuper.
   visitExpSuper(ctx) {
     const symbols_ctx = this.symbols.getClassContext()

@@ -1,17 +1,33 @@
 import Variable from './Variable.js'
 import Class from "./Class.js"
+import Map from "./Map.js"
 
 class Instance {
-    constructor(clsBase) {
+    constructor(clsBase, mode) {
         if (!(clsBase instanceof Class))
             throw new Error('El parámetro de Instance debe ser del tipo Class');
         this._class = clsBase
         this.attributes = {}
         this.superClass = clsBase.superClass ? new Instance(clsBase.superClass) : null
-        if (Symbol.iterator in Object(clsBase.attributes))
-            for (const a of clsBase.attributes)
-                this.attributes[a] = new Variable()
-        this.methods = clsBase.methods
+        if (mode != 'methods')
+            if (Symbol.iterator in Object(clsBase.attributes))
+                for (const a of clsBase.attributes)
+                    this.attributes[a] = new Variable()
+        if (mode != 'attributes')
+            this.methods = clsBase.methods
+
+        const atr = {}
+        const met = {}
+        let ref = this
+        do {
+            for (const i in ref.attributes)
+                atr[i] = ref.attributes[i]
+            for (const i in ref.methods)
+                met[i] = ref.methods[i]
+            ref = ref.superClass
+        } while (ref)
+        this.attributes['__attributes'] = new Map(atr)
+        this.attributes['__methods'] = new Map(met)
     }
 
     isInstanceOf(name) {
@@ -41,6 +57,9 @@ class Instance {
     }
 
     getRef(name) {
+        if(Class.isMethodsName(name)) name = '__methods'
+        if(Class.isAttributesName(name)) name = '__attributes'
+        // si es un atributo o método lo busca entre la instancia actual y las padres
         let ref = this
         do {
             for (const id in ref.attributes)
@@ -68,13 +87,12 @@ class Instance {
         let atr = []
         let ref = this
         do {
-            for (const name in ref.attributes) 
+            for (const name in ref.attributes)
                 atr.push(name)
             ref = ref.superClass
         } while (ref)
         let r = []
-        for(const a of atr)
-        {
+        for (const a of atr) {
             r.push(`${a}: ${this.getRef(a).value}`)
         }
         return this._class.name + ' (' + r.join(', ') + ')'

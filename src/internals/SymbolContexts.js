@@ -131,6 +131,10 @@ class MemoryRefContexts {
     return null
   }
 
+  insideClass() {
+    return !!this.getClassContext()
+  }
+
 
   // añade una variable al contexto actual
   addVariable(id, value) {
