@@ -1,0 +1,33 @@
+// https://codeforces.com/problemset/problem/1553/D
+
+fun backspace(s, t) {
+
+    var encontrado = falso
+
+    fun procesa(palabra, pos) {
+        imp "'"+palabra+"'", "=", t, "?", encontrado
+        si (encontrado) { ret }
+        si (palabra == t)  
+        { 
+            imp "ENCONTRADO!!!!!"
+            encontrado = cierto
+            ret
+        }
+
+        si pos> len(s) ret
+imp "go"
+        var letra = sub(s, pos, pos+1)
+
+        // posibilidad 1 : pulsa backspace
+        procesa(sub(palabra, 0, pos), pos+1)
+
+        // posibilidad 2 : pulsa letra
+        procesa(palabra+letra, pos+1)
+
+    }
+
+    procesa("", 0)
+    ret encontrado
+}
+
+imp backspace("mmmmmooooo", "mo")

@@ -11,5 +11,6 @@ clase Basica {
     }
 }
 
-a = nueva Basica()
-imprimir a.atributos
+a = nueva instancia de clase Basica()
+imprimir a.contador
+imprimir a

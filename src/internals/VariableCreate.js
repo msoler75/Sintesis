@@ -1,10 +1,17 @@
 import Variable from './Variable.js'
 import Map from './Map.js'
 import Vector from './Vector.js'
-import Instance from './Instance.js'
 
 const VariableCreate = function (src) {
-    return src === undefined || src === null ? new Variable() : src instanceof Instance|| src instanceof Variable?src:Array.isArray(src) ? new Vector(src, 0) : typeof src === 'object' ? new Map(src) : new Variable(src)
+    if (src instanceof Variable)
+        return src
+    if (src === undefined || src === null)
+        return new Variable()
+    if (Array.isArray(src))
+        return new Vector(src, 0)
+    if (typeof src === 'object')
+        return new Map(src)
+    return new Variable(src)
 }
 
 export default VariableCreate

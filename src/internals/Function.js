@@ -17,7 +17,7 @@ class Function extends Variable {
   }
 
   text() {
-    return '()'
+    return '('+this.params.join(', ')+')'
   }
 }
 

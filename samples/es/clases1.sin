@@ -1,0 +1,25 @@
+clase Persona {
+
+  atributos: {
+    nombre
+  }
+
+  métodos: {
+
+    constructor(nombre) {
+      atributos.nombre = nombre
+    }
+
+  }
+}
+
+// creamos una nueva instancia
+p = nueva instancia de Persona("Jorge")
+imprimir p.nombre
+
+// modificación de atributo
+p.nombre="Juan"
+imprimir p.nombre
+
+// mostramos toda la instancia 
+imprimir p

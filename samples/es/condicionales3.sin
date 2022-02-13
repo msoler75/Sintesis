@@ -1,0 +1,11 @@
+a = 1
+mientras a < 7 repetir {
+    
+    si a == 1 { imprimir "1" }
+    osi a == 2 imprimir "2"
+    o si a == 3 imprimir "3"
+    osi (a == 4) imprimir "4"
+    o imprimir ">4"
+
+    a++
+}

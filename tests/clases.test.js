@@ -1,33 +1,75 @@
 import exec from '../bin/exec.js'
 
-
-
-test('Class constructor', () => {
+test('Clases-1', () => {
     expect(exec(`
-    clase animal {
+    clase Persona {
 
-        métodos:
-    
-        método correr() { 
-            imprimir "corriendo..."
+        atributos: {
+          nombre
         }
-    
-        método saltar() {
-            imprimir "saltando..."
+      
+        métodos: {
+      
+          constructor(nombre) {
+            atributos.nombre = nombre
+          }
+      
         }
-    
     }
     
-    a = nuevo animal()
-    a.correr()
-    a.saltar()
-    imprimir a
-    imprimir a.atributos
-    `)).toContainText('corriendo... saltando... animal (atributos: {}, métodos: {correr: (), saltar: (), constructor: ()})')
+    // creamos una nueva instancia
+    p = nueva instancia de Persona("Jorge")
+    imprimir p.nombre
+    
+    // modificación de atributo
+    p.nombre="Juan"
+    imprimir p.nombre
+    
+    // mostramos toda la instancia 
+    imprimir p
+    `)).toContainText(`
+    Jorge
+    Juan
+    Persona (nombre: Juan, atributos: {nombre: Jorge}, métodos: {constructor: (nombre)})
+    `)
 })
 
 
-test('Class attributos.', () => {
+test('Clases-2', () => {
+    expect(exec(`
+    // clase sencilla sin atributos
+
+    clase animal {
+
+        método correr() { 
+            imprimir "corriendo..."
+        }
+
+        método saltar() {
+            retornar "saltando..."
+        }                                                                                                           
+
+    }
+
+    a = nuevo animal()
+    a.correr()
+    imprimir a.saltar()
+
+    // vemos la clase
+    imprimir a
+    imprimir a.atributos // no tiene atributos
+    imprimir a.métodos
+
+    `)).toContainText(`
+    corriendo...
+    saltando...
+    animal (atributos: {}, métodos: {correr: (), saltar: (), constructor: ()})
+    {}
+    {correr: (), saltar: (), constructor: ()}`)
+})
+
+
+test('Clases-3 con atributos y constructor', () => {
     expect(exec(`
     clase Basica {
         atributos: { contador }
@@ -40,15 +82,18 @@ test('Class attributos.', () => {
         }
     }
     
-    a = nueva Basica()
+    a = nueva instancia de clase Basica()
     imprimir a.contador
-    `)).toContainText(`2`)
+    imprimir a
+    `)).toContainText(`2 Basica (contador: 2, atributos: {contador: 2}, métodos: {constructor: ()})`)
 })
 
 
 
-test('Class constructor', () => {
+test('Clases-4 con constructor con parámetros', () => {
     expect(exec(`
+    // un atributo y un constructor con parámetro para inicializar ese atributo
+
     clase Persona {
         atributos: nombre
     
@@ -67,11 +112,12 @@ test('Class constructor', () => {
     
     p = nueva Persona("Jorge")
     imprimir p.texto()
-    `)).toContainText(`Mi nombre es: Jorge`)
+    imprimir p
+    `)).toContainText(`Mi nombre es: Jorge Persona (nombre: Jorge, atributos: {nombre: Jorge}, métodos: {constructor: (nombre), texto: ()})`)
 })
 
 
-test('Class constructor', () => {
+test('Clases-5 con modificación de atributo y diferenciando parámetros de atributos', () => {
     expect(exec(`
     class Saludo {
 
@@ -95,55 +141,60 @@ test('Class constructor', () => {
     }
     
     s=nuevo Saludo("María")
+    // modificamos atributo
     s.nombre="Juan"
     s.hola("Jorge")
     s.adios("Jorge")
+    imprimir s
     `)).toContainText(`
+    Creando saludo con María
     ¡Hola Jorge!
-    ¡Adiós Juan!`)
+    ¡Adiós Juan!
+    Saludo (nombre: Juan, atributos: {nombre: Juan}, métodos: {constructor: (nombre), hola: (nombre), adios: (nombre)})
+    `)
 })
 
 
-test('Class constructor', () => {
+test('Clases-6 con herencia y constructor base que usa contador global', () => {
     expect(exec(`
     contador = 1
 
     clase Figura {
         atributos: {id}
-
+    
         metodos:
-
+    
         constructor() {
             id = contador++
         }
-
+    
         dameId() { 
             return id
         }
-
+    
         area () {
             ret 'No aplicable'
         }
     }
-
+    
     clase Cuadrado extiende Figura {
         atributos: ancho alto
-
+    
         métodos: {
             constructor(ancho, alto) {
                 atributos.ancho = ancho
                 atributos.alto = alto
             }
-
+    
             area() {
                 ret ancho*alto    
             }
         }
     }
-
+    
     f = nueva Figura()
     c = nuevo Cuadrado(2, 3)
-
+    
     imprimir "Figura ", f.dameId() , " tiene area " + f.area()
     imprimir "Figura ", c.dameId() , " tiene area " + c.area()
     `)).toContainText(`
@@ -152,7 +203,7 @@ test('Class constructor', () => {
 })
 
 
-test('Class constructor', () => {
+test('Clases-7 constructor', () => {
     expect(exec(`
     clase Persona {
 
@@ -202,7 +253,7 @@ test('Class constructor', () => {
         // además hereda los métodos del padre (clase Persona)
         // asignaNombre(nombre) ...
         // asignaApellidos(apellidos) ...
-        }
+        
       }
       
       
@@ -263,4 +314,22 @@ test('Class constructor', () => {
       si(c es Cliente) 
         print "es cliente"
     `)).toContainText(`xxx`)
+})
+
+
+
+test('Clases-8 creación y uso dinámico', () => {
+    expect(exec(`
+    // clase sin atributos 
+
+    clase p 
+    {
+        x() {
+            imp 'funciona!' 
+        } 
+    }
+
+    // creación de clase y llamado dinámico
+    nuevo p().x()
+    `)).toContainText(`funciona!`)
 })

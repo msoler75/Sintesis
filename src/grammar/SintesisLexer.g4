@@ -201,7 +201,7 @@ Then
 
 ElseIf
               :    'else'[ \t\n]*'if'
-              |    'o'[ \t\n]+'si'
+              |    'o'[ \t\n]*'si'
               |    'ou'[ \t\n]+'se'[ \t\n]+'for'?
               |    'ou'[ \t\n]+'si'
               |    'o'[ \t\n]+'s\u00E8'
@@ -361,17 +361,21 @@ Convert
               |     'conv'
               ;
 
-New_           
-              :     'new' 'instance' 'of'
-              |     'nueva' 'instancia' 'de'
-              |     'new'
-              |     'nuevo'
-              |     'nueva'
-              ;
 
 Class_
               :     'class'
               |     'clase'
+              ;
+
+Instance
+              :     'instance'
+              |     'instancia'
+              ;
+
+New_           
+              :     'new'
+              |     'nuevo'
+              |     'nueva'
               ;
 
 Extends     
@@ -382,7 +386,7 @@ Extends
 Attributes  
               :     'attributes'
               |     'atributos'
-              |     'attrib'     
+              |     'attrib'    
               ;
 
 Methods

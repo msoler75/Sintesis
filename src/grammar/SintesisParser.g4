@@ -59,13 +59,20 @@ member
     : Attributes                                                             #expAttributes
     | Methods                                                                #expMethods
     | Super                                                                  #expSuper
-    | New_ id=Identifier args=arguments                                      #expNew
-    | exp=member '.' idx=identifier  args=arguments                          #expMemberDot
-    | exp=member '.' idx=identifier                                          #expMemberDot
+    | New_ Instance? (Of Class_?)? id=Identifier args=arguments              #expNew
+    | exp=member '.' idx=memberIdentifier  args=arguments                    #expMemberDot
+    | exp=member '.' idx=memberIdentifier                                    #expMemberDot
     | exp=member '[' idx=expression ']'   args=arguments                     #expMemberIndex
     | exp=member '[' idx=expression ']'                                      #expMemberIndex
     | exp=member args=arguments                                              #expMemberFunc
     | identifier                                                             #expIdentifier
+    ;
+
+memberIdentifier
+    : Attributes     
+    | Methods
+    | Constructor
+    | identifier
     ;
 
 expression     
@@ -172,7 +179,7 @@ iterationStatement
     ;
 
 returnStatement
-    : Return exp=expression
+    : Return exp=expression?
     ;
 
 formalParameterList
@@ -207,7 +214,7 @@ methodsList
     ;
 
 classExp
-    : New_ Identifier args=arguments
+    : New_ Instance? (Of Class_?)? Identifier args=arguments
     ;
 
 vectorIndex

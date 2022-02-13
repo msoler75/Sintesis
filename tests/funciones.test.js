@@ -56,3 +56,25 @@ test('Funciones-4', () => {
     `)).toContainText(`5`)
 })
 
+
+
+test('Funciones-5', () => {
+    expect(exec(`
+    fun negativo (x) {
+        si(x<0) ret cierto
+        o ret falso
+    }
+    
+    fun positivo (x) {
+        ret x>=0
+    }
+    
+    imp negativo(3)
+    imp negativo(-2)
+    imp negativo(0)
+    
+    imp positivo(3)
+    imp positivo(-2)
+    imp positivo(0)    
+`)).toContainText(`falso cierto falso cierto falso cierto`)
+})

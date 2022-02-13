@@ -35,6 +35,10 @@ if (input) {
       .replace('extraneous', 'extraña')
       .replace('input', 'entrada')
       .replace('expecting', 'esperaba')
+      .replace('mismatched', 'no coincide')
+      .replace('alternative', 'alternativa')
+      .replace(/\bat\b/, 'en')
+      .replace('no viable alternativa en entrada', 'no se esperaba')
       )
   }
 

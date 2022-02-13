@@ -1,6 +1,6 @@
 import exec from '../bin/exec.js'
 
-test('Asignaciones-tipos-simples', () => {
+test('Asignaciones-1 tipos simples', () => {
     expect(exec(`
     a = 1
     b = 2
@@ -31,7 +31,7 @@ test('Asignaciones-tipos-simples', () => {
 
 
 
-test('Asignaciones-map', () => {
+test('Asignaciones-2 map', () => {
     expect(exec(`
     a={r:1}
     b=a
@@ -45,7 +45,7 @@ test('Asignaciones-map', () => {
 })
 
 
-test('Asignaciones-vector', () => {
+test('Asignaciones-3 vector', () => {
     expect(exec(`
     a=[1,2]
     b=a
@@ -59,7 +59,7 @@ test('Asignaciones-vector', () => {
 })
 
 
-test('Asignaciones-clase', () => {
+test('Asignaciones-4 clase', () => {
     expect(exec(`
     clase Usuario {
         atributos: nombre
@@ -74,7 +74,7 @@ test('Asignaciones-clase', () => {
     a.nombre = 'Jaime'
     imprimir b
     `)).toContainText(`
-    Usuario (nombre: Jorge)
+    Usuario (atributos: nombre: Jorge)
     Usuario (nombre: Jaime)
     `)
 })

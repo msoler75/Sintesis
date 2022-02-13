@@ -1,0 +1,11 @@
+// clase sin atributos 
+
+clase p 
+{
+    x() {
+        imp 'funciona!' 
+    } 
+}
+
+// creación de clase y llamado dinámico
+nuevo p().x()

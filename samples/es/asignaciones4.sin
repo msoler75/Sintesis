@@ -1,7 +1,7 @@
 clase Usuario {
-    atributos: nombre
+    nombre
 
-    metodos: constructor(nombre) {
+    constructor(nombre) {
         atributos.nombre = nombre
     }
 }

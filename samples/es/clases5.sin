@@ -1,5 +1,3 @@
-// 
-
 class Saludo {
 
     atributos: nombre
@@ -22,6 +20,8 @@ class Saludo {
 }
 
 s=nuevo Saludo("María")
+// modificamos atributo
 s.nombre="Juan"
 s.hola("Jorge")
 s.adios("Jorge")
+imprimir s

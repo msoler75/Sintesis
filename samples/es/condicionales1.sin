@@ -1,0 +1,7 @@
+si ( falso ) {
+    imprimir "es cierto"
+}
+y si no {
+    imprimir "es falso"
+}
+

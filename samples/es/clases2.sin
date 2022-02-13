@@ -15,8 +15,10 @@ clase animal {
 }
 
 a = nuevo animal()
-a.atributos
 a.correr()
 imprimir a.saltar()
+
+// vemos la clase
 imprimir a
-imprimir a.metodos
+imprimir a.atributos // no tiene atributos
+imprimir a.métodos
