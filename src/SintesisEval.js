@@ -164,6 +164,10 @@ export default class SintesisEval extends SintesisParserVisitor {
 
   callToFunction(memoryref, ctxArgs) {
     const fn = memoryref.variable
+    
+    // caso de constructores vacíos
+    if(!fn.context.stmt) return
+
     const obj = memoryref._variable
     const values = ctxArgs ? ctxArgs.values : []
 
@@ -224,7 +228,7 @@ export default class SintesisEval extends SintesisParserVisitor {
 
 
     // ejecutamos el cuerpo de la función
-    fn.context.stmt ? this.visit(fn.context.stmt) : null
+    this.visit(fn.context.stmt)
 
     const r = this.symbols.currentContext().functionResult
 
@@ -260,7 +264,7 @@ export default class SintesisEval extends SintesisParserVisitor {
     }
     let ref = memoryref.variable.getRef(index, this.forCreate)
     ref = ref ? new MemoryRef(memoryref.variable, index) : null
-    if (!ctx.args||!ref)
+    if (!ctx.args || !ref)
       return ref
 
     if (!(ref.variable instanceof Function))
@@ -280,7 +284,7 @@ export default class SintesisEval extends SintesisParserVisitor {
 
   // Visit a parse tree produced by SintesisParser#expMemberFunc.
   visitExpMemberFunc(ctx) {
-    console.log(ctx.exp.getText())
+    // console.log(ctx.exp.getText())
     const memoryref = this.visit(ctx.exp)
     if (!memoryref)
       throw new SintesisError(ctx.exp, "Función no encontrada")
@@ -323,8 +327,8 @@ export default class SintesisEval extends SintesisParserVisitor {
     }
     let result = this.visit(ctx.exp)
     let literal = MemoryRef.literalOf(result)
-    if ((typeof literal === 'object' && result instanceof Variable) || result instanceof Function || result instanceof Instance) {
-      memoryref.variable = result
+    if (typeof literal === 'object' && result.variable instanceof Variable) {
+      memoryref.variable = result.variable
     } else {
       memoryref.variable.value = literal
     }
@@ -602,10 +606,13 @@ export default class SintesisEval extends SintesisParserVisitor {
     const id_iterator = iter.id.text
 
     this.symbols.pushLevel()
-    let mem_index = this.symbols.addVariable(id_iterator, new Variable(from))
-    while (mem_index.variable.value <= end) {
+    let mem_index = iter.vvar ? null : this.symbols.findSymbol(id_iterator)
+    if (!mem_index) mem_index = this.symbols.addVariable(id_iterator, new Variable())
+    mem_index.variable.value = from
+    while ((from < end && mem_index.variable.value <= end) ||
+      (from > end) && mem_index.variable.value >= end) {
       this.visit(ctx.stmt)
-      mem_index.variable.value++
+      mem_index.variable.value += from < end ? 1 : -1
     }
     this.symbols.popLevel()
   }
@@ -623,7 +630,7 @@ export default class SintesisEval extends SintesisParserVisitor {
     let callContext = this.symbols.getFuncContext()
     let i = 0
     while ((!callContext || !callContext.functionEnded) && i < ctx.children.length) {
-      console.log(ctx.children[i].getText())
+      // console.log(ctx.children[i].getText())
       this.visit(ctx.children[i++])
     }
     return callContext ? (callContext.functionResult || null) : null
@@ -813,16 +820,38 @@ export default class SintesisEval extends SintesisParserVisitor {
   // Visit a parse tree produced by SintesisParser#expIdentifier.
   visitExpIdentifier(ctx) {
     const id = this.visit(ctx.children[0])
-    let mem_id = ctx.vvar ? this.symbols.addVariable(id, new Variable()) : this.symbols.findSymbol(id)
+    let mem_id = this.symbols.findSymbol(id)
     if (mem_id === null && this.forCreate)
       mem_id = this.symbols.addVariable(id, new Variable())
     return mem_id
   }
 
+  // Visit a parse tree produced by SintesisParser#expVar.
+  visitExpVar(ctx) {
+    const id = this.visit(ctx.children[0])
+    let mem_id = this.symbols.addVariable(id, new Variable())
+    if (ctx.exp) {
+      let result = this.visit(ctx.exp)
+      let literal = MemoryRef.literalOf(result)
+      if ((typeof literal === 'object' && result instanceof Variable) || result instanceof Function || result instanceof Instance) {
+        mem_id.variable = result
+      } else {
+        mem_id.variable.value = literal
+      }
+    }
+    return mem_id
+  }
+
+  // Visit a parse tree produced by SintesisParser#variableDeclaration.
+  visitVariableDeclaration(ctx) {
+    return this.visitExpVar(ctx)
+  }
+
   visitExpAttributes(ctx) {
-    //if (!this.symbols.insideClass())
-    //throw new SintesisError(ctx, `Referencia fuera de Clase`)
-    let mem_id = this.symbols.findSymbol('__attributes')
+    const id = this.visit(ctx.children[0])
+    let mem_id = ctx.vvar ? this.symbols.addVariable(id, new Variable()) : this.symbols.findSymbol(id)
+    if (mem_id === null && this.forCreate)
+      mem_id = this.symbols.addVariable(id, new Variable())
     return mem_id
   }
 

@@ -9,11 +9,14 @@ clase animal {
     }
 
     método saltar() {
-        imprimir "saltando..."
+        retornar "saltando..."
     }                                                                                                           
 
 }
 
 a = nuevo animal()
+a.atributos
 a.correr()
-a.saltar()
+imprimir a.saltar()
+imprimir a
+imprimir a.metodos

@@ -361,8 +361,10 @@ Convert
               |     'conv'
               ;
 
-New_            
-              :     'new'
+New_           
+              :     'new' 'instance' 'of'
+              |     'nueva' 'instancia' 'de'
+              |     'new'
               |     'nuevo'
               |     'nueva'
               ;
@@ -436,6 +438,7 @@ Set
 
 Var_
               :      'var'
+              |      'let'
               ;
 
 /// Identifier Names and Identifiers

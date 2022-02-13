@@ -102,6 +102,12 @@ export default class SintesisParserVisitor extends antlr4.tree.ParseTreeVisitor 
 	}
 
 
+	// Visit a parse tree produced by SintesisParser#expVar.
+	visitExpVar(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
 	// Visit a parse tree produced by SintesisParser#expBitNot.
 	visitExpBitNot(ctx) {
 	  return this.visitChildren(ctx);
@@ -432,6 +438,24 @@ export default class SintesisParserVisitor extends antlr4.tree.ParseTreeVisitor 
 	}
 
 
+	// Visit a parse tree produced by SintesisParser#variableStatement.
+	visitVariableStatement(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by SintesisParser#variableDeclarationList.
+	visitVariableDeclarationList(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by SintesisParser#variableDeclaration.
+	visitVariableDeclaration(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
 	// Visit a parse tree produced by SintesisParser#functionBody.
 	visitFunctionBody(ctx) {
 	  return this.visitChildren(ctx);
@@ -524,6 +548,12 @@ export default class SintesisParserVisitor extends antlr4.tree.ParseTreeVisitor 
 
 	// Visit a parse tree produced by SintesisParser#keyword.
 	visitKeyword(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by SintesisParser#eos.
+	visitEos(ctx) {
 	  return this.visitChildren(ctx);
 	}
 

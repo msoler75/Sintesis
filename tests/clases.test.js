@@ -21,7 +21,9 @@ test('Class constructor', () => {
     a = nuevo animal()
     a.correr()
     a.saltar()
-    `)).toContainText('corriendo... saltando...')
+    imprimir a
+    imprimir a.atributos
+    `)).toContainText('corriendo... saltando... animal (atributos: {}, métodos: {correr: (), saltar: (), constructor: ()})')
 })
 
 

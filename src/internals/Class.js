@@ -1,5 +1,3 @@
-import Variable from "./Variable.js"
-
 class Class {
     constructor(name, superClass, attributes, methods) {
         this.name = name

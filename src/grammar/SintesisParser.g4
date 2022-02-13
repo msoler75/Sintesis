@@ -28,6 +28,7 @@ statement
     | returnStatement
     | classDeclaration
     | functionDeclaration
+    | variableStatement
     | expression
     ;
 
@@ -91,6 +92,7 @@ expression
     |    cond=expression '?' ok=expression ':' no=expression                 #expTernary
     |    <assoc=right> dest=expression Assign exp=expression                 #expAssignment
     |    <assoc=right> dest=expression op=assignmentOperator exp=expression  #expAssignmentOperator
+    |    Var_ Identifier                                                     #expVar
     |    '(' exp=expression ')'                                              #expParenthesis
     |    member                                                              #expMember
     |    literal                                                             #expLiteral
@@ -156,7 +158,7 @@ iteratorIndexes
     ;
 
 iteratorRange
-    :  id=Identifier (Assign|In) start=expression To to=expression 
+    :  vvar=Var_? id=Identifier (Assign|In) start=expression To to=expression 
     ;
 
 iterationStatement
@@ -218,6 +220,18 @@ vectorIndexes
 
 formalParameterArg
     : Identifier (Assign expression)?      
+    ;
+
+variableStatement
+    : variableDeclarationList eos?
+    ;
+
+variableDeclarationList
+    : Var_ variableDeclaration (',' variableDeclaration)*
+    ;
+
+variableDeclaration
+    : id=identifier (Assign exp=expression)? 
     ;
 
 functionBody 
@@ -309,4 +323,9 @@ keyword
     | Var_
     | Methods
     | Attributes
+    ;
+
+eos
+    : SemiColon
+    | EOF
     ;
