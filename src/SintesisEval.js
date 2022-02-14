@@ -1,4 +1,4 @@
-const imprimirCadaLinea = 0
+const imprimirCadaLinea = 1
 
 import Map from './internals/Map.js'
 import Class from './internals/Class.js'
@@ -68,6 +68,7 @@ export default class SintesisEval extends SintesisParserVisitor {
       if (imprimirCadaLinea) console.log(ctx.children[i].getText())
       this.visit(ctx.children[i++])
     }
+    // console.log("LENGTH=", this.symbols.contexts.length)
     return callContext ? (callContext.functionResult || null) : null
   }
 
@@ -183,47 +184,43 @@ export default class SintesisEval extends SintesisParserVisitor {
 
   callToFunction(memoryref, ctxArgs) {
     const fn = memoryref.variable
-    // console.log(fn.context.getText())
+    
     // caso de constructores vacíos
     if (!fn.context.stmt) return
 
     const obj = memoryref._variable
     const values = ctxArgs ? ctxArgs.values : []
 
+    
     // obtenemos los argumentos o parámetros de la función y los valores
     let params = fn.context.pl ? this.visit(fn.context.pl).params : []
-
+    
     if (params.length !== values.length)
       throw new SintesisError(ctxArgs, (fn.isConstructor ? `El constructor ` : `La función ${fn.name} `) + (params.length ? `requiere ${params.length} parámetros` : `no tiene parámetros`))
 
-    let classes = []
+    let instances = []
     // si es una función (método) de clase...
     // creamos para cada superclase una tabla de símbolos de todos sus atributos de clase
     if (fn._class && obj instanceof Instance) {
       // obtenemos la referencia al objeto o instancia de clase
-      let cls = fn._class
+      let ref = obj
       do {
-        classes.unshift(cls)
-        cls = cls.superClass
-      } while (cls)
+        instances.unshift(ref)
+        ref = ref.superClass
+      } while (ref)
 
-      for (const cls of classes) {
+      for (const instance of instances) {
         // creamos un nuevo contexto
-        this.symbols.pushLevel(false, cls.name)
+        this.symbols.pushLevel(false, instance._class.name)
 
         // añadimos los atributos y métodos en la tabla de símbolos
-        for (const id in obj.attributes) {
-          // const id = obj.attributes[i]
-          // vinculamos la variable de la instancia con la referencia del símbolo en la tabla de símbolos
-          //const vari = obj.getByClass(cls.name).attributes[id]
-          //if (!obj.getRef)
-          //throw new SintesisError(fn.context, "Se esperaba un atributo")
-          const vari = obj.getRef(id)
+        for (const id in instance.attributes) {
+          const vari = instance.getRef(id)
           this.symbols.addVariable(id, vari)
         }
 
-        for (const id in cls.methods) {
-          this.symbols.addFunction(id, cls.methods[id])
+        for (const id in instance.methods) {
+          this.symbols.addFunction(id, instance.methods[id])
         }
       }
     }
@@ -234,7 +231,7 @@ export default class SintesisEval extends SintesisParserVisitor {
     // pone en el contexto los parámetros de la función como si fueran variables, con los valores asignados desde la llamada con argumentos a la función
     for (let i = 0; i < params.length; i++) {
       let id = params[i]
-      this.symbols.addVariable(id, VariableCreate(i in values ? MemoryRef.literalOf(values[i]) : 0))
+      this.symbols.addVariable(id, VariableCreate(i in values ? MemoryRef.literalOf(values[i]) : null))
     }
 
 
@@ -254,13 +251,8 @@ export default class SintesisEval extends SintesisParserVisitor {
     // restauramos el contexto de símbolos anterior a la llamada de función
     this.symbols.popLevel()
 
-    if (fn.classContext) {
-      // restauramos el contexto de símbolos anterior
-      this.symbols.popLevel()
-    }
-
     // restauramos el contexto de símbolos anterior
-    for (const cls of classes) {
+    for (const idx of instances) {
       this.symbols.popLevel()
     }
 
@@ -841,6 +833,8 @@ export default class SintesisEval extends SintesisParserVisitor {
     let mem_id = this.symbols.findSymbol(id)
     if (mem_id === null && this.createSymbol)
       mem_id = this.symbols.addVariable(id, new Variable())
+    if(!mem_id)
+      throw new SintesisError(ctx, `Símbolo no encontrado`)
     return mem_id
   }
 

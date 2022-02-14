@@ -1,5 +1,5 @@
 // imprime una variable no declarada
-imprimir a
+// imprimir a
 
 // asigna un valor a una variable, y como no existe, la crea
 a = 1
@@ -24,7 +24,7 @@ imprimir a
     a = 3
 
     // lo imprimimos
-    impimir a
+    imprimir a
 
     // cuando termina este contexto, la variable a de este contexto desaparece
 }

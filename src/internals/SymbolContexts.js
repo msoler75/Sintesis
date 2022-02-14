@@ -17,7 +17,7 @@ class MemoryRefContexts {
   // los contextos de símbolos son jerárquicos, tienen hijos y padres
   pushLevel(inFunction, className) {
     this.contexts.push({
-      parent: this.current,
+      parent: this.contexts.length - 1,
       memory: {},
       inFunction: !!inFunction, // para señalar que estamos dentro de un nuevo contexto de función
       className: className, // para señalar que estamos dentro de un nuevo contexto de clase
@@ -26,10 +26,12 @@ class MemoryRefContexts {
     })
     this.current = this.contexts.length - 1
   }
-
+ 
   popLevel() {
-    if (!this.current) return
-    this.current = this.contexts[this.current].parent
+    this.contexts.pop()
+    this.current = this.contexts.length - 1
+    // if(this.current==-1)
+    // this.reset()
   }
 
   getContext(index) {

@@ -35,6 +35,5 @@ clase Cuadrado extiende Figura {
 
 f = nueva Figura()
 c = nuevo Cuadrado(2, 3)
-
 imprimir "Figura ", f.dameId() , " tiene area " + f.area()
 imprimir "Figura ", c.dameId() , " tiene area " + c.area()
