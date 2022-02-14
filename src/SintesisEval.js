@@ -1,4 +1,4 @@
-const imprimirCadaLinea = 1
+const imprimirCadaLinea = 0
 
 import Map from './internals/Map.js'
 import Class from './internals/Class.js'

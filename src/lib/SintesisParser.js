@@ -187,7 +187,7 @@ const serializedATN = ["\u0003\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786",
     "\u0002\u00c9\u00ca\u0003\u0002\u0002\u0002\u00ca\u0013\u0003\u0002\u0002",
     "\u0002\u00cb\u00c9\u0003\u0002\u0002\u0002\u00cc\u00d1\u0007l\u0002",
     "\u0002\u00cd\u00d1\u0007m\u0002\u0002\u00ce\u00d1\u0007n\u0002\u0002",
-    "\u00cf\u00d1\u0005h5\u0002\u00d0\u00cc\u0003\u0002\u0002\u0002\u00d0",
+    "\u00cf\u00d1\u0005j6\u0002\u00d0\u00cc\u0003\u0002\u0002\u0002\u00d0",
     "\u00cd\u0003\u0002\u0002\u0002\u00d0\u00ce\u0003\u0002\u0002\u0002\u00d0",
     "\u00cf\u0003\u0002\u0002\u0002\u00d1\u0015\u0003\u0002\u0002\u0002\u00d2",
     "\u00d3\b\f\u0001\u0002\u00d3\u00d4\u0005 \u0011\u0002\u00d4\u00d5\u0005",
@@ -1171,29 +1171,32 @@ export default class SintesisParser extends antlr4.Parser {
 	    try {
 	        this.state = 206;
 	        this._errHandler.sync(this);
-	        switch(this._input.LA(1)) {
-	        case SintesisParser.Attributes:
+	        var la_ = this._interp.adaptivePredict(this._input,12,this._ctx);
+	        switch(la_) {
+	        case 1:
 	            this.enterOuterAlt(localctx, 1);
 	            this.state = 202;
 	            this.match(SintesisParser.Attributes);
 	            break;
-	        case SintesisParser.Methods:
+
+	        case 2:
 	            this.enterOuterAlt(localctx, 2);
 	            this.state = 203;
 	            this.match(SintesisParser.Methods);
 	            break;
-	        case SintesisParser.Constructor:
+
+	        case 3:
 	            this.enterOuterAlt(localctx, 3);
 	            this.state = 204;
 	            this.match(SintesisParser.Constructor);
 	            break;
-	        case SintesisParser.Identifier:
+
+	        case 4:
 	            this.enterOuterAlt(localctx, 4);
 	            this.state = 205;
-	            this.identifier();
+	            this.identifierWithKeywords();
 	            break;
-	        default:
-	            throw new antlr4.error.NoViableAltException(this);
+
 	        }
 	    } catch (re) {
 	    	if(re instanceof antlr4.error.RecognitionException) {
@@ -3232,37 +3235,26 @@ export default class SintesisParser extends antlr4.Parser {
 	    try {
 	        this.state = 592;
 	        this._errHandler.sync(this);
-	        switch(this._input.LA(1)) {
-	        case SintesisParser.EOF:
-	        case SintesisParser.OpenParen:
-	        case SintesisParser.Colon:
-	        case SintesisParser.While:
-	        case SintesisParser.If:
-	        case SintesisParser.Then:
-	        case SintesisParser.Else:
-	        case SintesisParser.Return:
-	        case SintesisParser.Function_:
-	        case SintesisParser.Vector:
-	        case SintesisParser.Attributes:
-	        case SintesisParser.Methods:
-	        case SintesisParser.Map:
-	        case SintesisParser.Var_:
+	        var la_ = this._interp.adaptivePredict(this._input,66,this._ctx);
+	        switch(la_) {
+	        case 1:
 	            this.enterOuterAlt(localctx, 1);
 	            this.state = 589;
 	            this.keyword();
 	            break;
-	        case SintesisParser.NullLiteral:
+
+	        case 2:
 	            this.enterOuterAlt(localctx, 2);
 	            this.state = 590;
 	            this.match(SintesisParser.NullLiteral);
 	            break;
-	        case SintesisParser.BooleanLiteral:
+
+	        case 3:
 	            this.enterOuterAlt(localctx, 3);
 	            this.state = 591;
 	            this.match(SintesisParser.BooleanLiteral);
 	            break;
-	        default:
-	            throw new antlr4.error.NoViableAltException(this);
+
 	        }
 	    } catch (re) {
 	    	if(re instanceof antlr4.error.RecognitionException) {
@@ -3637,36 +3629,22 @@ export default class SintesisParser extends antlr4.Parser {
 	    try {
 	        this.state = 655;
 	        this._errHandler.sync(this);
-	        switch(this._input.LA(1)) {
-	        case SintesisParser.Identifier:
+	        var la_ = this._interp.adaptivePredict(this._input,73,this._ctx);
+	        switch(la_) {
+	        case 1:
 	            localctx = new IdContext(this, localctx);
 	            this.enterOuterAlt(localctx, 1);
 	            this.state = 653;
 	            this.match(SintesisParser.Identifier);
 	            break;
-	        case SintesisParser.EOF:
-	        case SintesisParser.OpenParen:
-	        case SintesisParser.Colon:
-	        case SintesisParser.NullLiteral:
-	        case SintesisParser.BooleanLiteral:
-	        case SintesisParser.While:
-	        case SintesisParser.If:
-	        case SintesisParser.Then:
-	        case SintesisParser.Else:
-	        case SintesisParser.Return:
-	        case SintesisParser.Function_:
-	        case SintesisParser.Vector:
-	        case SintesisParser.Attributes:
-	        case SintesisParser.Methods:
-	        case SintesisParser.Map:
-	        case SintesisParser.Var_:
+
+	        case 2:
 	            localctx = new KeywContext(this, localctx);
 	            this.enterOuterAlt(localctx, 2);
 	            this.state = 654;
 	            this.reservedWord();
 	            break;
-	        default:
-	            throw new antlr4.error.NoViableAltException(this);
+
 	        }
 	    } catch (re) {
 	    	if(re instanceof antlr4.error.RecognitionException) {
@@ -3690,70 +3668,79 @@ export default class SintesisParser extends antlr4.Parser {
 	    try {
 	        this.state = 669;
 	        this._errHandler.sync(this);
-	        switch(this._input.LA(1)) {
-	        case SintesisParser.EOF:
-	        case SintesisParser.OpenParen:
-	        case SintesisParser.Colon:
+	        var la_ = this._interp.adaptivePredict(this._input,74,this._ctx);
+	        switch(la_) {
+	        case 1:
 	            this.enterOuterAlt(localctx, 1);
 
 	            break;
-	        case SintesisParser.Else:
+
+	        case 2:
 	            this.enterOuterAlt(localctx, 2);
 	            this.state = 658;
 	            this.match(SintesisParser.Else);
 	            break;
-	        case SintesisParser.Then:
+
+	        case 3:
 	            this.enterOuterAlt(localctx, 3);
 	            this.state = 659;
 	            this.match(SintesisParser.Then);
 	            break;
-	        case SintesisParser.Return:
+
+	        case 4:
 	            this.enterOuterAlt(localctx, 4);
 	            this.state = 660;
 	            this.match(SintesisParser.Return);
 	            break;
-	        case SintesisParser.While:
+
+	        case 5:
 	            this.enterOuterAlt(localctx, 5);
 	            this.state = 661;
 	            this.match(SintesisParser.While);
 	            break;
-	        case SintesisParser.Function_:
+
+	        case 6:
 	            this.enterOuterAlt(localctx, 6);
 	            this.state = 662;
 	            this.match(SintesisParser.Function_);
 	            break;
-	        case SintesisParser.If:
+
+	        case 7:
 	            this.enterOuterAlt(localctx, 7);
 	            this.state = 663;
 	            this.match(SintesisParser.If);
 	            break;
-	        case SintesisParser.Vector:
+
+	        case 8:
 	            this.enterOuterAlt(localctx, 8);
 	            this.state = 664;
 	            this.match(SintesisParser.Vector);
 	            break;
-	        case SintesisParser.Map:
+
+	        case 9:
 	            this.enterOuterAlt(localctx, 9);
 	            this.state = 665;
 	            this.match(SintesisParser.Map);
 	            break;
-	        case SintesisParser.Var_:
+
+	        case 10:
 	            this.enterOuterAlt(localctx, 10);
 	            this.state = 666;
 	            this.match(SintesisParser.Var_);
 	            break;
-	        case SintesisParser.Methods:
+
+	        case 11:
 	            this.enterOuterAlt(localctx, 11);
 	            this.state = 667;
 	            this.match(SintesisParser.Methods);
 	            break;
-	        case SintesisParser.Attributes:
+
+	        case 12:
 	            this.enterOuterAlt(localctx, 12);
 	            this.state = 668;
 	            this.match(SintesisParser.Attributes);
 	            break;
-	        default:
-	            throw new antlr4.error.NoViableAltException(this);
+
 	        }
 	    } catch (re) {
 	    	if(re instanceof antlr4.error.RecognitionException) {
@@ -4616,8 +4603,8 @@ class MemberIdentifierContext extends antlr4.ParserRuleContext {
 	    return this.getToken(SintesisParser.Constructor, 0);
 	};
 
-	identifier() {
-	    return this.getTypedRuleContext(IdentifierContext,0);
+	identifierWithKeywords() {
+	    return this.getTypedRuleContext(IdentifierWithKeywordsContext,0);
 	};
 
 	accept(visitor) {

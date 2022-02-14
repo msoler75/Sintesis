@@ -74,7 +74,7 @@ test('Asignaciones-4 clase', () => {
     a.nombre = 'Jaime'
     imprimir b
     `)).toContainText(`
-    Usuario (atributos: nombre: Jorge)
-    Usuario (nombre: Jaime)
+    Usuario (atributos: {nombre: Jorge}, métodos : { constructor : ( nombre )})
+    Usuario (atributos: {nombre: Jaime}, métodos : { constructor : ( nombre )})
     `)
 })

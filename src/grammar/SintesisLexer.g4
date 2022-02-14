@@ -119,6 +119,7 @@ Print
               |   'stampa'
               |   'imprimer' 
               |   'imp'
+              |   'impr'
               |   'prt'
               |   'prn'
               ;
@@ -417,6 +418,9 @@ Map
               |    'mapa'
               |    'carte'
               |    'mappa'
+              |    'diccionario'
+              |    'dic'
+              |    'dicc'
               ;
 
 Get  
@@ -453,7 +457,7 @@ Var_
 
 /// Identifier Names and Identifiers
 
-Identifier:                     [a-zA-Z$_][a-zA-Z0-9_]* ;
+Identifier:                     [a-zA-Z$_áéíóúÁÉÍÓÚàèìòùÀÈÌÒÙ][a-zA-Z$_áéíóúÁÉÍÓÚàèìòùÀÈÌÒÙ0-9]* ;
 
 // Strings
 

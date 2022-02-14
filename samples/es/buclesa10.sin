@@ -1,0 +1,7 @@
+a = 0 
+mientras a>-4 
+imp a--    
+
+b = 0 
+rep 4 
+imp b--    

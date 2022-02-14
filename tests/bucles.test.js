@@ -175,11 +175,11 @@ test('Bucles-12-foreach', () => {
 
     imprimir diccionario
 
-    imprimir '\ntipos de habitáculos:'
+    imprimir '\ntipos de habitaculos:'
     para cada (codigo, indice en diccionario) imprimir '- '+indice
 
-    imprimir '\ncódigos de habitáculos:'
-    para cada (código de diccionario) imprimir '- '+código
+    imprimir '\ncodigos de habitaculos:'
+    para cada (codigo de diccionario) imprimir '- '+codigo
     `)).toContainText(`
     {casa: 11, pub: 22, local: 33}
 

@@ -1,0 +1,3 @@
+para cada letra de 'jor' imp letra
+para cada (posicion =>  letra de 'jor') imp posicion, letra    
+para cada letra, posicion de 'jor' imp posicion, letra

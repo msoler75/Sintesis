@@ -72,7 +72,7 @@ memberIdentifier
     : Attributes     
     | Methods
     | Constructor
-    | identifier
+    | identifierWithKeywords
     ;
 
 expression     

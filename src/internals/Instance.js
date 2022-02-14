@@ -99,6 +99,7 @@ class Instance extends Variable {
                 lbl = 'métodos'
             if (Class.isAttributesName(a))
                 lbl = 'atributos'
+            if(!['métodos','atributos'].includes(lbl)) continue
             r.push(`${lbl}: ${Variable.toText(this.getRef(a).value)}`)
         }
         return this._class.name + ' (' + r.join(', ') + ')'

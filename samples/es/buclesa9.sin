@@ -1,0 +1,15 @@
+para cada (a in [7,8,9])
+    imp a
+
+paracada a in [7,8,9] do
+    imp a
+
+para (a in [1,2,3]) do
+    imp ++a
+
+a = dic() 
+a['z'] = 1
+a[3] = 99
+para x en a imp x
+para x de a imp x
+para x,i de a imp i, x
