@@ -111,3 +111,12 @@ test('Vector-12-w-map', () => {
     imp a
     `)).toContainText('[[0], , {z: hola}, [, , [a, b, c], , 99], [, [, , 777]], {x: 1}]')
 })
+
+
+test('Vector-13', () => {
+    expect(exec(`
+    a = [1,2]
+    b = [3,4]
+    imp a+b
+    `)).toContainText('[1, 2, 3, 4]')
+})

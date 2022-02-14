@@ -9,6 +9,7 @@ parser grammar SintesisParser;
 
 options {
     tokenVocab=SintesisLexer;
+    superClass=SintesisParserBase;
 }
 
 program
@@ -179,7 +180,7 @@ iterationStatement
     ;
 
 returnStatement
-    : Return exp=expression?
+    : Return exp=expression? eos
     ;
 
 formalParameterList
@@ -230,7 +231,7 @@ formalParameterArg
     ;
 
 variableStatement
-    : variableDeclarationList eos?
+    : variableDeclarationList 
     ;
 
 variableDeclarationList
@@ -335,4 +336,6 @@ keyword
 eos
     : SemiColon
     | EOF
+    | {this.lineTerminatorAhead()}?
+    | {this.closeBrace()}?
     ;

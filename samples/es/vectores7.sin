@@ -1,4 +1,11 @@
-a = vec[]
-// error: índice ha de ser numérico
-a['text'] = 123
-imp a
+b = vec[2][2]
+b[0]['x'] = 1
+prn b
+
+c = vec[2][2]
+c[0]['x'] = 1
+prn c
+
+d = vec[2][2][2]
+d[1]['x'] = 1
+prn d

@@ -1,2 +1,4 @@
-a[1][1] = 1
-imp a
+a=vector[3]
+a[1] = 1
+a[2] = vector[2]
+print a

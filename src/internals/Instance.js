@@ -1,3 +1,4 @@
+import printObject from './Print.js'
 import Variable from './Variable.js'
 import Class from "./Class.js"
 import Map from "./Map.js"
@@ -100,7 +101,7 @@ class Instance extends Variable {
             if (Class.isAttributesName(a))
                 lbl = 'atributos'
             if(!['métodos','atributos'].includes(lbl)) continue
-            r.push(`${lbl}: ${Variable.toText(this.getRef(a).value)}`)
+            r.push(`${lbl}: ${printObject(this.getRef(a).value)}`)
         }
         return this._class.name + ' (' + r.join(', ') + ')'
     }

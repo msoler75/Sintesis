@@ -1,6 +1,4 @@
 import Variable from './Variable.js'
-import Function from './Function.js'
-import Instance from './Instance.js'
 import Class from './Class.js'
 import Map from './Map.js'
 
@@ -20,7 +18,7 @@ class MemoryRef {
     set variable(vari) {
         if (!(vari instanceof Variable) && !(vari instanceof Class))
             throw new Error('Debe establecer un objeto Variable/Class en MemoryRef')
-        if (this._index !== undefined && this._variable.constructor.name===vari.constructor.name)
+        if (this._index !== undefined /*&& this._variable.constructor.name===vari.constructor.name*/)
             this._variable.setValue(this._index, vari)
         else
             this._variable = vari
@@ -30,6 +28,12 @@ class MemoryRef {
 
 
 MemoryRef.literalOf = function (obj) {
+    if(Array.isArray(obj)) {
+        const r = []
+        for(const v of obj)
+        r.push(MemoryRef.literalOf(v))
+        return r
+    }
     if (obj instanceof MemoryRef)
         obj = obj.variable
     if(obj instanceof Map) {
@@ -40,7 +44,7 @@ MemoryRef.literalOf = function (obj) {
         obj = r
     }
     else if (obj instanceof Variable)
-        obj = obj.value
+        obj = MemoryRef.literalOf(obj.value)
     return obj
 }
 

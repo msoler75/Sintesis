@@ -1,0 +1,4 @@
+a = vec[]
+// error: índice ha de ser numérico
+a['text'] = 123
+imp a

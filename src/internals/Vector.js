@@ -1,5 +1,5 @@
+import variableCreate from './Factory.js'
 import Variable from './Variable.js'
-import VariableCreate from './VariableCreate.js'
 import Map from './Map.js'
 
 function _checkIndex(index) {
@@ -24,7 +24,7 @@ class Vector extends Variable {
     this._value = []
     if (arr === undefined) arr = []
     if (!Array.isArray(arr)) throw new Error('Valor inválido al inicializar un vector')
-    this.defaultValue = Variable.literalOf(defaultValue)
+    this.defaultValue = Variable.valueOf(defaultValue)
     for (const i in arr) {
       if (arr[i] instanceof Variable)
         this.setVariable(i, arr[i])
@@ -38,28 +38,8 @@ class Vector extends Variable {
   }
 
   defineDefault() {
-    if(this.defaultValue !== undefined) return
+    if (this.defaultValue !== undefined) return
     // this.defaultValue = 0
-  }
-
-  getRef(index, create) {
-    index = _checkIndex(index)
-    if (!(index in this._value)) {
-      if (!create) return null
-      this.defineDefault()
-      for (let i = this._value.length; i <= index; i++)
-        this._value[i] = VariableCreate(this.defaultValue)
-    }
-    return this._value[index]
-  }
-
-  setValue(index, value) {
-    if (value instanceof Variable)
-      return this.setVariable(index, value)
-      //throw new Error('setValue no permite asignar una Variable')
-    index = _checkIndex(index)
-    let ref = this.getRef(index, true)
-    if (ref) ref.value = value
   }
 
   setVariable(index, vari) {
@@ -70,19 +50,7 @@ class Vector extends Variable {
     this._value[index] = vari
   }
 
-  delete(index) {
-    index = _checkIndex(index)
-    let len = this._value.length
-    if (len <= index)
-      return
-    if (len - 1 == index)
-      this._value.pop()
-    else {
-      delete this._value[index]
-      this.defineDefault()
-      this._value[index] = VariableCreate(this.defaultValue)
-    } 
-  }
+
 
   /*
   deleteAt(indexes) {
@@ -98,7 +66,7 @@ class Vector extends Variable {
 
 
 
-Vector.createWithSizes = function (sizes, defaultValue) {
+Vector.prototype.createWithSizes = function (sizes, defaultValue) {
   const vec = new Vector([], defaultValue)
   if (!sizes) return vec
   if (typeof sizes == 'string')
@@ -111,5 +79,40 @@ Vector.createWithSizes = function (sizes, defaultValue) {
   return vec
 }
 
+Vector.prototype.getRef = function (index, create) {
+  index = _checkIndex(index)
+  if (!(index in this._value)) {
+    if (!create) return null
+    this.defineDefault()
+    for (let i = this._value.length; i <= index; i++)
+      this._value[i] = variableCreate(this.defaultValue)
+  }
+  return this._value[index]
+}
+
+Vector.prototype.setValue = function (index, value) {
+  if (value instanceof Variable)
+    return this.setVariable(index, value)
+  //throw new Error('setValue no permite asignar una Variable')
+  index = _checkIndex(index)
+  let ref = this.getRef(index, true)
+  if (ref) ref.value = value
+}
+
+
+
+Vector.prototype.delete = function (index) {
+  index = _checkIndex(index)
+  let len = this._value.length
+  if (len <= index)
+    return
+  if (len - 1 == index)
+    this._value.pop()
+  else {
+    delete this._value[index]
+    this.defineDefault()
+    this._value[index] = variableCreate(this.defaultValue)
+  }
+}
 
 export default Vector

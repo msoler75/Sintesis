@@ -9,7 +9,7 @@
   },
   "scripts": {
     "test": "jest",
-    "generate": "java -Dfile.encoding=UTF-8 -cp D:/projects/juego-programacion/sintesis/antlr4/jar/antlr-4.9.3-complete.jar org.antlr.v4.Tool -Dlanguage=JavaScript -lib ./src ./src/grammar/SintesisLexer.g4 ./src/grammar/SintesisParser.g4 -o ./src/lib -no-listener -visitor",
+    "generate": "cp ./src/SintesisParserBase.js ./src/lib && java -Dfile.encoding=UTF-8 -cp D:/projects/juego-programacion/sintesis/antlr4/jar/antlr-4.9.3-complete.jar org.antlr.v4.Tool -Dlanguage=JavaScript -lib ./src ./src/grammar/SintesisLexer.g4 ./src/grammar/SintesisParser.g4 -o ./src/lib -no-listener -visitor",
     "eval": "node ./index.js",
     "generatejava": "java  -cp D:/projects/juego-programacion/sintesis/antlr4/jar/antlr-4.9.3-complete.jar org.antlr.v4.Tool -Dlanguage=Java -lib ./src ./src/grammar/SintesisLexer.g4 ./src/grammar/SintesisParser.g4 -o ./src/lib -no-listener -visitor",
     "javacompile": "javac  -cp D:/projects/juego-programacion/sintesis/antlr4/jar/antlr-4.9.3-complete.jar ./src/lib/*.java",

@@ -4,12 +4,13 @@ import Map from './internals/Map.js'
 import Class from './internals/Class.js'
 import Vector from './internals/Vector.js'
 import Variable from './internals/Variable.js'
-import VariableCreate from './internals/VariableCreate.js'
 import Function from './internals/Function.js'
 import Instance from './internals/Instance.js'
 import Iterator from './internals/Iterator.js'
 import MemoryRef from './internals/MemoryRef.js'
+import printObject from './internals/Print.js'
 import SintesisError from './SintesisError.js'
+import variableCreate from './internals/Factory.js'
 import SymbolContexts from './internals/SymbolContexts.js'
 import SintesisParserVisitor from './lib/SintesisParserVisitor.js'
 import promptSync from 'prompt-sync';
@@ -20,23 +21,6 @@ const paramNumber = ['n', 'num', 'number', 'número', 'numero']
 const paramInteger = ['i', 'e', 'int', 'ent', 'entero']
 const paramFloat = ['f', 'd', 'dec', 'float', 'decimal']
 const paramText = ['s', 't', 'string', 'str', 'text', 'texto']
-
-function getDisplayValueOf(obj) {
-  if (obj === undefined) return 'nulo'
-  if (obj === null) return 'nulo'
-  if (obj === true) return 'cierto'
-  if (obj === false) return 'falso'
-  while (obj instanceof MemoryRef)
-    obj = obj.variable
-  if (obj.text && typeof obj.text === 'function')
-    obj = obj.text()
-  else if (Array.isArray(obj))
-    obj = new Vector(obj)
-  else if (typeof obj === 'object')
-    obj = new Map(obj)
-  return obj
-}
-
 
 
 export default class SintesisEval extends SintesisParserVisitor {
@@ -184,17 +168,17 @@ export default class SintesisEval extends SintesisParserVisitor {
 
   callToFunction(memoryref, ctxArgs) {
     const fn = memoryref.variable
-    
+
     // caso de constructores vacíos
     if (!fn.context.stmt) return
 
     const obj = memoryref._variable
     const values = ctxArgs ? ctxArgs.values : []
 
-    
+
     // obtenemos los argumentos o parámetros de la función y los valores
     let params = fn.context.pl ? this.visit(fn.context.pl).params : []
-    
+
     if (params.length !== values.length)
       throw new SintesisError(ctxArgs, (fn.isConstructor ? `El constructor ` : `La función ${fn.name} `) + (params.length ? `requiere ${params.length} parámetros` : `no tiene parámetros`))
 
@@ -231,7 +215,7 @@ export default class SintesisEval extends SintesisParserVisitor {
     // pone en el contexto los parámetros de la función como si fueran variables, con los valores asignados desde la llamada con argumentos a la función
     for (let i = 0; i < params.length; i++) {
       let id = params[i]
-      this.symbols.addVariable(id, VariableCreate(i in values ? MemoryRef.literalOf(values[i]) : null))
+      this.symbols.addVariable(id, variableCreate(i in values ? MemoryRef.literalOf(values[i]) : null))
     }
 
 
@@ -276,11 +260,13 @@ export default class SintesisEval extends SintesisParserVisitor {
 
   // Visit a parse tree produced by SintesisParser#expMemberIndex.
   visitExpMemberIndex(ctx) {
+    let index = this.visit(ctx.idx)
+    index = MemoryRef.literalOf(index)
+    if (this.valueAssigning)
+      this.valueAssigning.index = index
     const memoryref = this.visit(ctx.exp)
     if (!memoryref || !(memoryref instanceof MemoryRef))
       throw new SintesisError(ctx.exp, "Operador izquierdo inválido")
-    let index = this.visit(ctx.idx)
-    index = MemoryRef.literalOf(index)
     if (!memoryref.variable.getRef) {
       if (memoryref.variable.value === null) {
         if (typeof index === 'string' && index.match(/^\d+$/))
@@ -289,7 +275,10 @@ export default class SintesisEval extends SintesisParserVisitor {
       } else
         throw new SintesisError(ctx.exp, "Operador izquierdo no es un tipo válido")
     }
-    let ref = memoryref.variable.getRef(index, this.createSymbol)
+    let ref = memoryref.variable
+    if (!ref)
+      throw new SintesisError(ctx.idx, "No encontrado")
+    ref = ref.getRef(index, !!this.valueAssigning)
     ref = ref ? new MemoryRef(memoryref.variable, index) : null
     if (!ctx.args || !ref)
       return ref
@@ -339,26 +328,32 @@ export default class SintesisEval extends SintesisParserVisitor {
 
   // Visit a parse tree produced by SintesisParser#expAssignment.
   visitExpAssignment(ctx) {
-    // console.log('assigning to', ctx.dest.getText())
-    this.createSymbol = true
-    const memoryref = this.visit(ctx.dest)
-    this.createSymbol = false
-    if (!memoryref || !(memoryref instanceof MemoryRef)) {
-      throw new SintesisError(ctx.dest, 'El operador izquierdo de asignación es inválido')
-    }
     let result = this.visit(ctx.exp)
+    // console.log('dest:', ctx.dest.getText())
     // if (!(result instanceof Variable) && !(result instanceof MemoryRef))
-      // throw new SintesisError(ctx.exp, 'Referencia no válida')
+    // throw new SintesisError(ctx.exp, 'Referencia no válida')
     let variable = result instanceof Variable ? result : result.variable
     let literal = MemoryRef.literalOf(result)
     let t = typeof literal
-    if (!variable ||
-      ['string', 'number', 'bigint', 'symbol', 'boolean', 'null', 'undefined'].includes(t)
-    )
-    {
-      memoryref.variable.value = t==='object'?VariableCreate(literal):literal 
+    // console.log('assigning to', ctx.dest.getText())
+
+    this.valueAssigning = {
+      value: literal
     }
-    else
+    const memoryref = this.visit(ctx.dest)
+    this.valueAssigning = false
+    
+    if (!memoryref || !(memoryref instanceof MemoryRef)) {
+      throw new SintesisError(ctx.dest, 'El operador izquierdo de asignación es inválido')
+    }
+    if (memoryref._variable && memoryref._variable.justCreated)
+    {
+      memoryref.variable.value = literal
+      memoryref._variable.justCreated = false
+    }
+    else if (!variable || ['string', 'number', 'bigint', 'symbol', 'boolean', 'null', 'undefined'].includes(t)) {
+      memoryref.variable.value = t === 'object' ? variableCreate(literal) : literal
+    } else
       memoryref.variable = variable
     return memoryref
   }
@@ -444,7 +439,7 @@ export default class SintesisEval extends SintesisParserVisitor {
   // Visit a parse tree produced by SintesisParser#expAssignmentOperator.
   visitExpAssignmentOperator(ctx) {
     const memoryref = this.visit(ctx.dest)
-    this.createSymbol = false
+    this.valueAssigning = false
     if (!memoryref)
       throw new SintesisError(ctx.dest, `Símbolo no encontrado`)
     if (!(memoryref instanceof MemoryRef))
@@ -462,7 +457,7 @@ export default class SintesisEval extends SintesisParserVisitor {
         e1 %= e2;
         break;
       case '+=':
-        e1 += e2;
+        e1 = this.addOp(e1, e2);
         break;
       case '-=':
         e1 -= e2;
@@ -491,6 +486,12 @@ export default class SintesisEval extends SintesisParserVisitor {
   }
 
 
+  addOp(e1, e2) {
+    if (Array.isArray(e1) && Array.isArray(e2))
+      return e1.concat(e2)
+    return e1 + e2
+  }
+
 
   // Visit a parse tree produced by SintesisParser#expOp.
   visitExpOp(ctx) {
@@ -498,45 +499,66 @@ export default class SintesisEval extends SintesisParserVisitor {
     let e2 = MemoryRef.literalOf(this.visit(ctx.e2))
     switch (ctx.op.text) {
       case '**':
-        return e1 ** e2;
+        e1 = e1 ** e2;
+        break;
       case '*':
-        return e1 * e2;
+        e1 = e1 * e2;
+        break;
       case '/':
-        return e1 / e2;
+        e1 = e1 / e2;
+        break;
       case '%':
-        return e1 % e2;
+        e1 = e1 % e2;
+        break;
       case '+':
-        return e1 + e2;
+        e1 = this.addOp(e1, e2);
+        break;
       case '-':
-        return e1 - e2;
+        e1 = e1 - e2;
+        break;
       case '<':
-        return e1 < e2;
+        e1 = e1 < e2;
+        break;
       case '>':
-        return e1 > e2;
+        e1 = e1 > e2;
+        break;
       case '<=':
-        return e1 <= e2;
+        e1 = e1 <= e2;
+        break;
       case '>=':
-        return e1 >= e2;
+        e1 = e1 >= e2;
+        break;
       case '==':
-        return e1 == e2;
+        e1 = e1 == e2;
+        break;
       case '!=':
-        return e1 != e2;
+        e1 = e1 != e2;
+        break;
       case '===':
-        return e1 === e2;
+        e1 = e1 === e2;
+        break;
       case '!==':
-        return e1 !== e2;
+        e1 = e1 !== e2;
+        break;
       case '&&':
-        return e1 && e2;
+        e1 = e1 && e2;
+        break;
       case '||':
-        return e1 || e2;
+        e1 = e1 || e2;
+        break;
       case '&':
-        return e1 & e2;
+        e1 = e1 & e2;
+        break;
       case '|':
-        return e1 | e2;
+        e1 = e1 | e2;
+        break;
       case '^':
-        return e1 ^ e2;
+        e1 = e1 ^ e2;
+        break;
+      default:
+        e1 = null
     }
-    return 0
+    return variableCreate(e1)
   }
 
   // Visit a parse tree produced by SintesisParser#expConcat.
@@ -829,11 +851,19 @@ export default class SintesisEval extends SintesisParserVisitor {
 
   // Visit a parse tree produced by SintesisParser#expIdentifier.
   visitExpIdentifier(ctx) {
-    const id = this.visit(ctx.children[0])
+    const id = ctx.getText()
     let mem_id = this.symbols.findSymbol(id)
-    if (mem_id === null && this.createSymbol)
-      mem_id = this.symbols.addVariable(id, new Variable())
-    if(!mem_id)
+    if (mem_id === null && this.valueAssigning) {
+      ///
+      let v = this.valueAssigning.index === undefined ?
+        variableCreate(this.valueAssigning.value) :
+        typeof this.valueAssigning.index === 'string' ? new Map() :
+        typeof this.valueAssigning.index === 'number' ? new Vector() :
+        variableCreate(this.valueAssigning.value)
+      v.justCreated = true
+      mem_id = this.symbols.addVariable(id, v)
+    }
+    if (!mem_id)
       throw new SintesisError(ctx, `Símbolo no encontrado`)
     return mem_id
   }
@@ -909,7 +939,7 @@ export default class SintesisEval extends SintesisParserVisitor {
     let args = this.visit(ctx.exp).filter(x => x !== undefined)
     let result = []
     for (let r of args) {
-      r = getDisplayValueOf(r)
+      r = printObject(r)
       r = '' + r
       result.push(r)
       // console.log('print '+r)

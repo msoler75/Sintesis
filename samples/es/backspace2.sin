@@ -1,0 +1,78 @@
+// https://codeforces.com/problemset/problem/1553/D
+
+function backspace2(s, t) {
+
+    const ls = long(s)
+
+    var encontrado = false
+
+    function procesar(objetivo, palabra, secuencia) {
+
+        if(encontrado) return []
+
+        if(1) {
+            var spaces = sub("                      ", long(secuencia))
+            imp objetivo, secuencia,spaces+palabra
+        }
+
+        var resultados = []
+
+        if (palabra == objetivo)
+        {
+            console.log('!')
+            if(objetivo===t && long(secuencia)==ls) {
+                encontrado = true
+                return []
+            }
+            resultados.push({
+                palabra : palabra,
+                secuencia: secuencia
+            })
+        }
+
+        // optimización
+        var restante = sub(s, long(secuencia))
+        para cada letra de objetivo
+        {
+            if(buscar(palabra, letra)<0 && buscar(restante, letra)<0) 
+                return resultados
+        }
+
+        if (long(secuencia) == ls)
+            return resultados
+
+        var pos = long(secuencia)
+        var letra = sub(s, pos, pos + 1)
+
+        // posibilidad 1 : pulsa backspace
+        var resultados1 = procesar(objetivo, long(palabra) > 0 ? sub(palabra, 0, long(palabra) - 1) : "", secuencia + "0")
+
+        // posibilidad 2 : pulsa letra
+        var resultados2 = procesar(objetivo, palabra + letra, secuencia + "1")
+
+        return resultados.concat(resultados1, resultados2)
+    }
+
+
+    var palabra = ''
+    var objetivo = ''
+    var resultados = [{palabra: '', secuencia: ''}]
+    para cada letra de t
+        palabra = objetivo
+        objetivo += letra
+        var r = []
+        para cada resultado de resultados
+        {
+            r = r + procesar(objetivo, resultado.palabra, resultado.secuencia)
+            if(encontrado) return true
+        }
+        resultados = r
+        // si no hay para este objetivo ya no seguimos
+        if (!long(resultados)) 
+            return false 
+    }
+
+    return false
+}
+
+imp backspace2('ababaa', 'aba')

@@ -7,7 +7,7 @@ fun backspace(s, t) {
 
     fun procesa(palabra, pos) {
         
-        si (encontrado!=0) { ret }
+        si (encontrado!=0) ret
 
         imp palabra
 
@@ -19,15 +19,11 @@ fun backspace(s, t) {
 
         var letra = sub(s, pos, pos+1)
 
-        x = palabra
+        // posibilidad 1 : pulsa backspace
+        procesa(long(palabra)>0 ? sub(palabra, 0, long(palabra)-1) : "", pos+1)
 
-        // posibilidad 1 : pulsa letra
+        // posibilidad 2 : pulsa letra
         procesa(palabra+letra, pos+1)
-
-        // posibilidad 2 : pulsa backspace
-        procesa(sub(palabra, 0, pos), pos+1)
-
-        if(x!=palabra) imp "ERROR"
 
     }
 
@@ -40,4 +36,4 @@ fun backspace(s, t) {
     ret encontrado!=0
 }
 
-imp backspace("aba", "ab")
+imp backspace("aaaaabaaaaaabaaa", "baaab")

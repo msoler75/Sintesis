@@ -1,2 +1,2 @@
-m = vector [2][3]
-print m
+a = vector[3]
+print num(a)
