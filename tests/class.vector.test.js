@@ -1,9 +1,10 @@
+import {createVectorWithSizes} from '../src/internals/Factory.js'
 import Vector from '../src/internals/Vector.js'
 import Map from '../src/internals/Map.js'
 
 
 test('Vector-class-basic-1', () => {
-    expect(Vector.createWithSizes([3,2], -1).text()).toContainText('[[-1, -1], [-1, -1], [-1, -1]]')
+    expect(createVectorWithSizes([3,2], -1).text()).toContainText('[[-1, -1], [-1, -1], [-1, -1]]')
 
     let v = new Vector([10, 20], 0)
     expect(v.text()).toContainText('[10, 20]')

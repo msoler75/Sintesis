@@ -1,5 +1,4 @@
 import Variable from './Variable.js'
-import variableCreate from './Factory.js'
 
 class Map extends Variable {
 
@@ -37,20 +36,5 @@ class Map extends Variable {
 }
 
 
-Map.prototype.getRef = function (key, create) {
-    if (!(key in this._value)) {
-        if (!create)
-            return null
-        this._value[key] = variableCreate(null)
-    }
-    return this._value[key]
-}
-
-Map.prototype.setValue = function (key, value) {
-    if (value instanceof Variable)
-        // throw new Error('setValue no permite asignar una Variable')
-        return this.setVariable(key, value)
-    this._value[key] = variableCreate(value)
-}
 
 export default Map

@@ -1,6 +1,3 @@
-import printObject from './Print.js'
-
-
 class Variable {
     constructor(value) {
         this.value = value
@@ -17,9 +14,7 @@ class Variable {
             this._value = value instanceof Variable ? value.value : value
     }
 
-    text() {
-        return printObject(this._value)
-    }
+    
 }
 
 Variable.valueOf = function (src) {

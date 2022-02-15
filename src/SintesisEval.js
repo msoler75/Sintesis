@@ -10,7 +10,7 @@ import Iterator from './internals/Iterator.js'
 import MemoryRef from './internals/MemoryRef.js'
 import printObject from './internals/Print.js'
 import SintesisError from './SintesisError.js'
-import variableCreate from './internals/Factory.js'
+import {variableCreate, createVectorWithSizes} from './internals/Factory.js'
 import SymbolContexts from './internals/SymbolContexts.js'
 import SintesisParserVisitor from './lib/SintesisParserVisitor.js'
 import promptSync from 'prompt-sync';
@@ -348,7 +348,7 @@ export default class SintesisEval extends SintesisParserVisitor {
     }
     if (memoryref._variable && memoryref._variable.justCreated)
     {
-      memoryref.variable.value = literal
+      memoryref.variable.value = variableCreate(literal)
       memoryref._variable.justCreated = false
     }
     else if (!variable || ['string', 'number', 'bigint', 'symbol', 'boolean', 'null', 'undefined'].includes(t)) {
@@ -383,7 +383,7 @@ export default class SintesisEval extends SintesisParserVisitor {
       let args = this.visit(ctx.args).values
       defaultValue = args[0]
     }
-    return Vector.createWithSizes(indexes, defaultValue).value
+    return createVectorWithSizes(indexes, defaultValue).value
   }
 
   visitExpNumberOf(ctx) {
