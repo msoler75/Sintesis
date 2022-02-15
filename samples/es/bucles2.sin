@@ -1,10 +1,7 @@
-a[1]=1
-a[3]=3
-para cada e de a repetir {
-    a[2]=2
-    imprimir e
-}
+a=1
+repetir {
+    imprimir a
+    a=a+1
+} mientras a<4
 
-para cada a de [1, 2, 3] repetir {
-        imprimir a
-    }
+a=1 rep imp a++ mientras a<4

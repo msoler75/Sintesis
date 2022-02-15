@@ -1,11 +1,6 @@
-b = vec[2][2]
-b[0]['x'] = 1
-prn b
-
-c = vec[2][2]
-c[0]['x'] = 1
-prn c
-
-d = vec[2][2][2]
-d[1]['x'] = 1
-prn d
+a=vector[2][2](-1)
+imprimir a
+a[0] = 1
+imprimir a
+a[1][1] = 1
+imprimir a

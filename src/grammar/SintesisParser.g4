@@ -72,38 +72,39 @@ member
 memberIdentifier
     : Attributes     
     | Methods
+    | Super
     | Constructor
     | identifierWithKeywords
     ;
 
 expression     
-    :    fn=basicFunction args=arguments                                     #expBasicFunction
-    |    Math Dot fn=(Identifier|Min|Max|Random) args=arguments              #expMath
-    |    dest=expression op=(PlusPlus|MinusMinus)                            #expPostIncrement
-    |    op=(PlusPlus | MinusMinus) dest=expression                          #expPreIncrement
-    |    Plus exp=expression                                                 #expUnaryPlus
-    |    Minus exp=expression                                                #expUnaryMinus
-    |    BitNot exp=expression                                               #expBitNot
-    |    Not exp=expression                                                  #expNot
-    |    e1=expression op=(Modulus|Multiply|Divide) e2=expression            #expOp
-    |    e1=expression op=('+'|'-') e2=expression                            #expOp
-    |    e1=expression op=('>>'|'<<'|'>>>') e2=expression                    #expOp
-    |    <assoc=right> e1=expression op=Power e2=expression                  #expOp
-    |    e1=expression op=('<'|'>') e2=expression                            #expOp
-    |    e1=expression op=LessThanEquals e2=expression                       #expOp
-    |    e1=expression op=GreaterThanEquals e2=expression                    #expOp
-    |    e1=expression InstanceOf e2=identifier                              #expInstanceOf
-    |    e1=expression op=(IdentityEquals|IdentityNotEquals) e2=expression   #expOp
-    |    e1=expression op=(Equals_|NotEquals) e2=expression                  #expOp
-    |    e1=expression op=(BitAnd|BitOr|BitXOr) e2=expression                #expOp
-    |    e1=expression op=(And|Or) e2=expression                             #expOp
-    |    cond=expression '?' ok=expression ':' no=expression                 #expTernary
-    |    <assoc=right> dest=expression Assign exp=expression                 #expAssignment
-    |    <assoc=right> dest=expression op=assignmentOperator exp=expression  #expAssignmentOperator
-    |    Var_ Identifier                                                     #expVar
-    |    '(' exp=expression ')'                                              #expParenthesis
-    |    member                                                              #expMember
-    |    literal                                                             #expLiteral
+    :    fn=basicFunction args=arguments                                    #expBasicFunction
+    |    Math Dot fn=(Identifier|Min|Max|Random) args=arguments             #expMath
+    |    dest=expression op=(PlusPlus|MinusMinus)                           #expPostIncrement
+    |    op=(PlusPlus | MinusMinus) dest=expression                         #expPreIncrement
+    |    Plus exp=expression                                                #expUnaryPlus
+    |    Minus exp=expression                                               #expUnaryMinus
+    |    BitNot exp=expression                                              #expBitNot
+    |    Not exp=expression                                                 #expNot
+    |    e1=expression op=(Modulus|Multiply|Divide) e2=expression           #expOp
+    |    e1=expression op=('+'|'-') e2=expression                           #expOp
+    |    e1=expression op=('>>'|'<<'|'>>>') e2=expression                   #expOp
+    |    <assoc=right> e1=expression op=Power e2=expression                 #expOp
+    |    e1=expression op=('<'|'>') e2=expression                           #expOp
+    |    e1=expression op=LessThanEquals e2=expression                      #expOp
+    |    e1=expression op=GreaterThanEquals e2=expression                   #expOp
+    |    e1=expression InstanceOf e2=identifier                             #expInstanceOf
+    |    e1=expression op=(IdentityEquals|IdentityNotEquals) e2=expression  #expOp
+    |    e1=expression op=(Equals_|NotEquals) e2=expression                 #expOp
+    |    e1=expression op=(BitAnd|BitOr|BitXOr) e2=expression               #expOp
+    |    e1=expression op=(And|Or) e2=expression                            #expOp
+    |    cond=expression '?' ok=expression ':' no=expression                #expTernary
+    |    <assoc=right> dest=member Assign exp=expression                    #expAssignment
+    |    <assoc=right> dest=member op=assignmentOperator exp=expression     #expAssignmentOperator
+    |    Var_ Identifier                                                    #expVar
+    |    '(' exp=expression ')'                                             #expParenthesis
+    |    member                                                             #expMember
+    |    literal                                                            #expLiteral
     ;
 
 
@@ -180,7 +181,7 @@ iterationStatement
     ;
 
 returnStatement
-    : Return exp=expression? eos
+    : Return (exp=expression|eos)
     ;
 
 formalParameterList
@@ -311,6 +312,7 @@ numericLiteral
     | OctalIntegerLiteral2
     | BinaryIntegerLiteral
     ;
+
 identifier : Identifier;
 
 identifierWithKeywords 

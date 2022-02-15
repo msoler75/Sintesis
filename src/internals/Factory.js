@@ -18,9 +18,6 @@ const variableCreate = function (src) {
 }
 
 
-// to do poner aquí toda slas funciones adicionales a las clases
-
-
 
 Variable.prototype.text = function () {
     return printObject(this.value)

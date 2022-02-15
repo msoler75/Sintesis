@@ -39,6 +39,7 @@ if (input) {
       .replace('alternative', 'alternativa')
       .replace(/\bat\b/, 'en')
       .replace('no viable alternativa en entrada', 'no se esperaba')
+      .replace('missing', 'se esperaba')
       )
   }
 

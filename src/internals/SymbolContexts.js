@@ -4,6 +4,7 @@ import Function from './Function.js'
 import Class from './Class.js'
 
 class MemoryRefContexts {
+
   constructor() {
     this.reset()
   }
@@ -15,18 +16,18 @@ class MemoryRefContexts {
   }
 
   // los contextos de símbolos son jerárquicos, tienen hijos y padres
-  pushLevel(inFunction, className) {
+  pushLevel(function_, instance) {
     this.contexts.push({
       parent: this.contexts.length - 1,
       memory: {},
-      inFunction: !!inFunction, // para señalar que estamos dentro de un nuevo contexto de función
-      className: className, // para señalar que estamos dentro de un nuevo contexto de clase
+      function: function_, // para señalar que estamos dentro de un nuevo contexto de función
+      instance: instance, // para señalar que estamos dentro de un nuevo contexto de instancia clase
       functionEnded: false, // para contextos de función, cuando se ejecuta 'return' el bloque o contexto entero se marca como 'terminado'
       functionResult: null // para contextos de función, cuando se retorna un resultado se guarda en esta variable
     })
     this.current = this.contexts.length - 1
   }
- 
+
   popLevel() {
     this.contexts.pop()
     this.current = this.contexts.length - 1
@@ -55,7 +56,12 @@ class MemoryRefContexts {
 
   findSymbol(id) {
     let i = this.findSymbolIndex(id)
-    return i<0?null:this.contexts[i].memory[id]
+    return i < 0 ?
+      new MemoryRef(new Error(JSON.stringify({
+        id,
+        error: 404
+      }))) :
+      this.contexts[i].memory[id]
   }
 
   findVarIndex(id) {
@@ -102,7 +108,7 @@ class MemoryRefContexts {
     let i = this.current
     while (i >= 0) {
       let context = this.contexts[i]
-      if (context.inFunction)
+      if (context.function)
         return i
       i = context.parent
     }
@@ -116,25 +122,30 @@ class MemoryRefContexts {
   }
 
 
-  getClassContextIndex() {
+  getInstanceContextIndex(name) {
     let i = this.current
     while (i >= 0) {
       let context = this.contexts[i]
-      if (context.className)
-        return i
+      if (context.instance) {
+        if(!name)
+          return i
+        if(context.instance._class.name==name)
+          return i
+      }
       i = context.parent
     }
     return -1
   }
 
-  getClassContext() {
-    let i = this.getClassContextIndex()
-    if (i >= 0) return this.getContext(i)
+  getInstanceContext(name) {
+    let i = this.getInstanceContextIndex(name)
+    if (i >= 0)
+      return this.getContext(i)
     return null
   }
 
   insideClass() {
-    return !!this.getClassContext()
+    return !!this.getInstanceContext()
   }
 
 
@@ -177,3 +188,99 @@ class MemoryRefContexts {
 }
 
 export default MemoryRefContexts
+
+
+/*
+clase padre
+
+escribir()
+
+clase hija
+
+escribir()
+
+
+nuevo Cliente ('Javier', 1234567)
+instancia de Persona { 
+  nombre
+  constructor(nombre)
+}
+instancia de Cliente {
+  dni
+  constructor(nombre, dni)
+  escribir()
+}
+contexto de Cliente.constructor() {
+  nombre: Javier
+  dni: 1234567
+}
+contexto de Persona.constructor() {
+  nombre: Javier
+} 
+instancia de Cuenta {
+  
+}
+
+
+
+*/
+
+
+
+
+
+
+
+
+
+
+
+/*
+
+
+fun a() {
+  b() // no accesible
+}
+
+fun c() {
+  fun b() {
+      imp "!!" 
+  }
+  a()
+}
+
+a()
+b() // no accesible
+c()
+
+-------------------------------------
+
+var a
+
+fun b()
+{
+  a
+  c() // no accesible
+  f // no accesible
+}
+
+clase d {
+  constructor () {
+    a = b()
+  }
+
+  c() {
+    e()
+  }
+
+  e() {
+    c() // no accesible
+  }
+}
+
+f = new d()
+
+
+
+------------------------------------
+*/

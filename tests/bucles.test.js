@@ -51,7 +51,7 @@ test('Bucles-4 while repeat', () => {
 })
 
 
-test('Bucles-5 for to', () => {
+test('Bucles-5 para to', () => {
     expect(exec(`
     para a=1 hasta 3 repetir {
         imprimir a
@@ -67,17 +67,29 @@ test('Bucles-5 for to', () => {
 })
 
 
-test('Bucles-6 for each of', () => {
+test('Bucles-6 para cada de', () => {
     expect(exec(`
     para cada a de [1, 2, 3] repetir {
         imprimir a
     }
+    `)).toContainText(`1 2 3`)
+    
+    expect(exec(`
     para a de [1, 2, 3] imp a
-    `)).toContainText(`1 2 3 1 2 3`)
+    `)).toContainText(`1 2 3`)
+    
+    expect(exec(`
+    para cada (a en [3, 2, 1]) imp a
+    `)).toContainText(`3 2 1`)
+    
+    expect(exec(`
+    para (a en ['r', 'f', 33]) imp a
+    `)).toContainText(`r f 33`)
+
 })
 
 
-test('Bucles-7 for modyfing iterator', () => {
+test('Bucles-7 para modyfing iterator', () => {
     expect(exec(`
     para a=1 .. 3 repetir {
         imprimir a
@@ -100,65 +112,69 @@ test('Bucles-7 for modyfing iterator', () => {
 })
 
 
-test('Bucles-8 for each of', () => {
+test('Bucles-8 para cada of', () => {
     expect(exec(`
-    for each (a of [1,2,3])
-        prn a
+    para cada (a of [1,2,3])
+        imp a
     `)).toContainText(`1 2 3`)
 
     expect(exec(`
-    foreach (a of [1,2,3]) do
-        prn a
+    paracada (a of [1,2,3]) do
+        imp a
     `)).toContainText(`1 2 3`)
 
     expect(exec(`
-    foreach (a of [1,2,3]) do
-        prn ++a
+    paracada (a of [1,2,3]) do
+        imp ++a
     `)).toContainText(`2 3 4`)
 
     expect(exec(`
-    foreach (a of [1,2,3]) do
-        prn a++
+    paracada (a of [1,2,3]) do
+        imp a++
     `)).toContainText(`1 2 3`)
 })
 
 
-test('Bucles-9 for each in', () => {
+test('Bucles-9 para cada in', () => {
     expect(exec(`
-    for each (a in [7,8,9])
-        prn a
+    para cada (a en [7,8,9])
+        imp a
     `)).toContainText(`7 8 9`)
 
     expect(exec(`
-    foreach a in [7,8,9] do
-        prn a
+    paracada a en [7,8,9] do
+        imp a
     `)).toContainText(`7 8 9`)
 
     expect(exec(`
-    foreach (a in [1,2,3]) do
-        prn ++a
+    para (a en [1,2,3]) do
+        imp ++a
     `)).toContainText(`2 3 4`)
 
     expect(exec(`
-    a = map() 
+    a = diccionario() 
     a['z'] = 1
     a[3] = 99
-    for x in a prn x
-    for x of a prn x
-    for x,i of a prn i, x
+    para x in a imp x
+    para x of a imp x
+    para x,i of a imp i, x
     `)).toContainText(`99 1 99 1 3 99 z 1`)
 })
 
 test('Bucles-10 negative values', () => {
     expect(exec(`
-    a = 0 while a>-4 imp a--    
+    a = 0 
+    mientras a>-4 
+    imp a--       
 
-    b = 0 rep 4 imp b--    
+    b = 0 
+    rep 4 
+    imp b--    
     `)).toContainText(`0 -1 -2 -3 0 -1 -2 -3`)
 
 })
 
-test('Bucles-11', () => {
+test('Bucles-11 paracada variants', () => {
     expect(exec(`
     para cada letra de 'jor' imp letra
     para cada (posicion =>  letra de 'jor') imp posicion, letra    
@@ -167,30 +183,30 @@ test('Bucles-11', () => {
 })
 
 
-test('Bucles-12-foreach', () => {
+test('Bucles-12-paracada', () => {
     expect(exec(`
-    diccionario['casa'] = 11
-    diccionario['pub'] = 22
-    diccionario['local'] = 33
+    lugares['casa'] = 11
+    lugares['pub'] = 22
+    lugares['local'] = 33
 
-    imprimir diccionario
+    imprimir lugares
 
-    imprimir '\ntipos de habitaculos:'
-    para cada (codigo, indice en diccionario) imprimir '- '+indice
+    imprimir 'tipos de habitaculos:'
+    para cada (codigo, indice en lugares) imprimir '- '+indice
 
-    imprimir '\ncodigos de habitaculos:'
-    para cada (codigo de diccionario) imprimir '- '+codigo
+    imprimir 'codigos de habitaculos:'
+    para cada (codigo de lugares) imprimir '- '+codigo
     `)).toContainText(`
     {casa: 11, pub: 22, local: 33}
 
-    tipos de habitáculos:
+    tipos de habitaculos:
     - casa
     - pub
     - local
     
-    códigos de habitáculos:
+    codigos de habitaculos:
     - 11
     - 22
-    - 33`)
+    - 33
+    `)
 })
-

@@ -1,3 +1,4 @@
-a = [1,2]
-b = [3,4]
-imp a+b
+a=vector[2][2](0) 
+para(i en 0..1) 
+a[i][1]=1 
+imprimir a

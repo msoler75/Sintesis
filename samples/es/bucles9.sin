@@ -1,13 +1,13 @@
-para cada (a in [7,8,9])
+para cada (a en [7,8,9])
     imp a
 
-paracada a in [7,8,9] do
+paracada a en [7,8,9] do
     imp a
 
-para (a in [1,2,3]) do
+para (a en [1,2,3]) do
     imp ++a
 
-a = dic() 
+a = diccionario() 
 a['z'] = 1
 a[3] = 99
 para x en a imp x

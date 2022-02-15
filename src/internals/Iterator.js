@@ -1,5 +1,6 @@
-import Vector from './Vector.js'
 import MemoryRef from './MemoryRef.js'
+import valueOf from './ValueOf.js'
+import Vector from './Vector.js'
 
 class Iterator {
     constructor(collection) {
@@ -9,7 +10,7 @@ class Iterator {
     }
 
     reset() {
-        let coll = MemoryRef.literalOf(this._collection)
+        let coll = valueOf(this._collection)
         this.idx = Array.isArray(coll) ? 0 :
             typeof coll === 'object' ? Object.keys(coll)[0] :
             0
@@ -17,7 +18,7 @@ class Iterator {
 
     next() {
         if (this.ended()) return null
-        let coll = MemoryRef.literalOf(this._collection)
+        let coll = valueOf(this._collection)
         if (typeof this.idx == 'number') {
             this.idx++
             if (this.idx >= this.size) {
@@ -50,7 +51,7 @@ class Iterator {
     }
 
     get size() {
-        let coll = MemoryRef.literalOf(this._collection)
+        let coll = valueOf(this._collection)
         if (!coll) return 0
         if (typeof coll === 'string')
             return coll.length
@@ -70,7 +71,7 @@ class Iterator {
 
     get current() {
         if (this.ended()) return null
-        let coll = MemoryRef.literalOf(this._collection)
+        let coll = valueOf(this._collection)
         return Array.isArray(coll) ? coll[this.idx] :
             coll instanceof Vector ? coll.getValueFrom([this.idx]) :
             typeof coll === 'string' ? coll.charAt(this.idx) :

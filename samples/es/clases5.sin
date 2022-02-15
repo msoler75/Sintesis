@@ -20,8 +20,10 @@ class Saludo {
 }
 
 s=nuevo Saludo("María")
+imprimir s
 // modificamos atributo
 s.nombre="Juan"
+imprimir s
 s.hola("Jorge")
 s.adios("Jorge")
 imprimir s

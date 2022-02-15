@@ -1,3 +1,6 @@
-para (a en ['r', 'f', 33]) imp a
-
-para cada (a en [3, 2, 1]) imp a
+a=1
+mientras a<4 repetir {
+    imprimir a
+    a=a+1
+}    
+a=1 mientras a<4 imp a++

@@ -1,4 +1,4 @@
-a = vec[]
-// error: índice ha de ser numérico
-a['text'] = 123
-imp a
+a=vector[3] 
+para(i en 0..1) 
+a[i]=1
+imprimir a

@@ -1,0 +1,6 @@
+a=vector[4][4]
+para(i=0..3) {
+    para(j=0..3)
+        a[i][j] = (i+j)%2    
+}
+imprimir a

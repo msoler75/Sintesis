@@ -30,7 +30,7 @@ test('Clases-1', () => {
     `)).toContainText(`
     Jorge
     Juan
-    Persona (nombre: Juan, atributos: {nombre: Jorge}, métodos: {constructor: (nombre)})
+    Persona (atributos: {nombre: Juan}, métodos: {constructor: (nombre)})
     `)
 })
 
@@ -85,7 +85,7 @@ test('Clases-3 con atributos y constructor', () => {
     a = nueva instancia de clase Basica()
     imprimir a.contador
     imprimir a
-    `)).toContainText(`2 Basica (contador: 2, atributos: {contador: 2}, métodos: {constructor: ()})`)
+    `)).toContainText(`2 Basica (atributos: {contador: 2}, métodos: {constructor: ()})`)
 })
 
 
@@ -113,7 +113,7 @@ test('Clases-4 con constructor con parámetros', () => {
     p = nueva Persona("Jorge")
     imprimir p.texto()
     imprimir p
-    `)).toContainText(`Mi nombre es: Jorge Persona (nombre: Jorge, atributos: {nombre: Jorge}, métodos: {constructor: (nombre), texto: ()})`)
+    `)).toContainText(`Mi nombre es: Jorge Persona (atributos: {nombre: Jorge}, métodos: {constructor: (nombre), texto: ()})`)
 })
 
 
@@ -141,16 +141,20 @@ test('Clases-5 con modificación de atributo y diferenciando parámetros de atri
     }
     
     s=nuevo Saludo("María")
+    imprimir s
     // modificamos atributo
     s.nombre="Juan"
+    imprimir s
     s.hola("Jorge")
     s.adios("Jorge")
     imprimir s
     `)).toContainText(`
     Creando saludo con María
+    Saludo (atributos: {nombre: María}, métodos: {constructor: (nombre), hola: (nombre), adios: (nombre)})
+    Saludo (atributos: {nombre: Juan}, métodos: {constructor: (nombre), hola: (nombre), adios: (nombre)})
     ¡Hola Jorge!
     ¡Adiós Juan!
-    Saludo (nombre: Juan, atributos: {nombre: Juan}, métodos: {constructor: (nombre), hola: (nombre), adios: (nombre)})
+    Saludo (atributos: {nombre: Juan}, métodos: {constructor: (nombre), hola: (nombre), adios: (nombre)})
     `)
 })
 
@@ -203,7 +207,31 @@ test('Clases-6 con herencia y constructor base que usa contador global', () => {
 })
 
 
-test('Clases-7 constructor', () => {
+test('Clases-7 con herencia en construcción', () => {
+    expect(exec(`
+    clase Persona {
+        nombre
+        constructor (nombre) {
+          nombre=atributos.nombre
+        }
+      }
+      
+      clase Cliente extiende Persona {
+        dni
+        constructor (nombre, dni) {
+          padre(nombre)
+          atributos.dni = dni
+        }
+      }
+      p = nuevo Cliente ('Javier', 1234567)
+      imp p
+      `)).toContainText(`
+      
+      `)
+})
+
+
+test('Clases-8 constructor & instanceof', () => {
     expect(exec(`
     clase Persona {
 
@@ -318,7 +346,7 @@ test('Clases-7 constructor', () => {
 
 
 
-test('Clases-8 creación y uso dinámico', () => {
+test('Clases-9 creación y uso dinámico', () => {
     expect(exec(`
     // clase sin atributos 
 

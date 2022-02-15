@@ -1,0 +1,11 @@
+lugares['casa'] = 11
+lugares['pub'] = 22
+lugares['local'] = 33
+
+imprimir lugares
+
+imprimir '\ntipos de habitaculos:'
+para cada (codigo, indice en lugares) imprimir '- '+indice
+
+imprimir '\ncodigos de habitaculos:'
+para cada (codigo de lugares) imprimir '- '+codigo

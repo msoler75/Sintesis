@@ -9,7 +9,7 @@ test('Funciones-0', () => {
 
 test('Funciones-1', () => {
     expect(exec(`
-    fun s() {print 1 return 5}
+    fun s() {imp 1 return 5}
     fun m(a,b) ret a*b
     s()
     imprimir m(2,3)
@@ -22,11 +22,11 @@ test('Funciones-2', () => {
     expect(exec(`
     // factorial
     fun f(n) if n<=1 ret 1 else ret n*f(n-1)
-    print f(4)
+    imp f(4)
     // suma
     fun s(a,b) ret a+b
     fun m(a,b) ret a*b
-    print s(7, m(2, 3))
+    imp s(7, m(2, 3))
 `)).toContainText(`24 13`)
 })
 

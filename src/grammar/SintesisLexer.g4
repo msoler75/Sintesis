@@ -257,8 +257,6 @@ Vector
               |    'vettore'
               |    'vetor'
               |    'variedade'
-              |    'vec'
-              |    'arr'
               ;    
 
 Delete          
@@ -418,8 +416,7 @@ Map
               |    'carte'
               |    'mappa'
               |    'diccionario'
-              |    'dic'
-              |    'dicc'
+              |    'dictionary'
               ;
 
 Get  

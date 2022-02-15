@@ -1,6 +1,7 @@
 import Map from '../src/internals/Map.js'
 import Vector from '../src/internals/Vector.js'
 import Variable from '../src/internals/Variable.js'
+import variableCreate from '../src/internals/Factory.js'
 
 test('Vector-class-with-map', () => {
 

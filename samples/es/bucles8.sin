@@ -1,0 +1,11 @@
+para cada (a of [1,2,3])
+    imp a
+
+para cada (a of [1,2,3]) do
+    imp a
+
+paracada (a of [1,2,3]) do
+    imp ++a
+
+paracada (a of [1,2,3]) do
+    imp a++
