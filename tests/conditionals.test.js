@@ -15,7 +15,7 @@ test('Conditionals-1', () => {
 test('Conditionals-2', () => {
     expect(exec(`
     a=2
-    si (a==1) imp "es 2"
+    si (a==1) imp "es 1"
     si a==2 imp "es 2"
     si a==3 imp "es 3"
     `)).toContainText(`es 2`)

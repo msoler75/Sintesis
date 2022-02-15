@@ -263,7 +263,10 @@ export default class SintesisEval extends SintesisParserVisitor {
     let index = this.visit(ctx.idx)
     index = MemoryRef.literalOf(index)
     if (this.valueAssigning)
+    {
       this.valueAssigning.index = index
+      this.valueAssigning.level=(this.valueAssigning.level||0)+1
+    }
     const memoryref = this.visit(ctx.exp)
     if (!memoryref || !(memoryref instanceof MemoryRef))
       throw new SintesisError(ctx.exp, "Operador izquierdo inválido")
@@ -337,6 +340,7 @@ export default class SintesisEval extends SintesisParserVisitor {
     let t = typeof literal
     // console.log('assigning to', ctx.dest.getText())
 
+    // determinamos primero el valor objetivo literal para poder definir la variable que se creará
     this.valueAssigning = {
       value: literal
     }
