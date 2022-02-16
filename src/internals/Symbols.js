@@ -3,6 +3,9 @@ import Variable from './Variable.js'
 import Function from './Function.js'
 import Class from './Class.js'
 
+
+const TAB = '  '
+
 class SymbolTable {
   constructor(function_, instance) {
     this.memory = {}
@@ -22,21 +25,21 @@ class SymbolTable {
 
   addVariable(id, value) {
     if (!(value instanceof Variable))
-    throw new Error('addVariable exige una clase Variable')
+      throw new Error('addVariable exige una clase Variable')
     this.memory[id] = new MemoryRef(value)
     return this.memory[id]
   }
 
   addFunction(id, value) {
     if (!(value instanceof Function))
-    throw new Error('addFunction exige una clase Function')
+      throw new Error('addFunction exige una clase Function')
     this.memory[id] = new MemoryRef(value)
     return this.memory[id]
   }
 
   addClass(id, value) {
     if (!(value instanceof Class))
-    throw new Error('addClass exige una clase Class')
+      throw new Error('addClass exige una clase Class')
     this.memory[id] = new MemoryRef(value)
     return this.memory[id]
   }
@@ -46,11 +49,11 @@ class SymbolTable {
 class SymbolFinder {
 
   // los contextos de símbolos son jerárquicos, tienen hijos y padres
-  createTable(ctx, function_, instance) {
+  static createTable(ctx, function_, instance) {
     ctx.symbolTable = new SymbolTable(function_, instance)
   }
 
-  findSymbolTableContext(ctx) {
+  static getSymbContext(ctx) {
     while (ctx) {
       if (ctx.symbolTable) return ctx
       ctx = ctx.parentCtx
@@ -58,20 +61,25 @@ class SymbolFinder {
     return null
   }
 
+  static getTable(ctx) {
+    ctx = getSymbContext(ctx)
+    if (ctx) return ctx.symbolTable
+    return null
+  }
 
-  findSymbolContext(ctx, id) {
-    ctx = this.findSymbolTableContext(ctx)
+
+  static findSymbolContext(ctx, id) {
+    ctx = this.getSymbContext(ctx)
     while (ctx) {
       if (ctx.symbolTable.hasSymbol(id))
         return ctx
-      ctx = this.findSymbolTableContext(ctx.parentCtx)
+      ctx = this.getSymbContext(ctx.parentCtx)
     }
     return null
   }
 
-  findSymbol(ctx, id) {
-    ctx = this.findSymbolContext(ctx)
-    console.log("id", id)
+  static findSymbol(ctx, id) {
+    ctx = this.findSymbolContext(ctx, id)
     return ctx == null ?
       new MemoryRef(new Error(JSON.stringify({
         id,
@@ -80,60 +88,84 @@ class SymbolFinder {
       ctx.symbolTable.getRef(id)
   }
 
-  getFuncContext(ctx) {
+  static getFuncContext(ctx) {
     ctx = this.findSymbolContext(ctx)
     while (ctx) {
       if (ctx.symbolTable.function)
         return ctx
-      ctx = this.findSymbolTableContext(ctx.parentCtx)
+      ctx = this.getSymbContext(ctx.parentCtx)
     }
     return null
   }
 
-  getInstanceContext(ctx, name) {
+  static getInstanceContext(ctx, name) {
     ctx = this.findSymbolContext(ctx)
     while (ctx) {
-      if (ctx.symbolTable.function)
-      {
+      if (ctx.symbolTable.function) {
         if (!name)
           return ctx
         if (ctx.symbolTable.instance._class.name == name)
           return ctx
       }
-      ctx = this.findSymbolTableContext(ctx.parentCtx)
+      ctx = this.getSymbContext(ctx.parentCtx)
     }
     return null
   }
 
-  insideClass() {
-    return !!this.getInstanceContext()
+  static insideClass(ctx) {
+    return !!this.getInstanceContext(ctx)
   }
 
 
   // añade una variable al contexto actual
-  addVariable(ctx, id, value) {
-    ctx = this.findSymbolTableContext(ctx)
-    if(!ctx) return null
+  static addVariable(ctx, id, value) {
+    ctx = this.getSymbContext(ctx)
+    if (!ctx) return null
     return ctx.symbolTable.addVariable(id, value)
   }
 
   // añade una función al contexto actual
-  addFunction(id, value) {
-    ctx = this.findSymbolTableContext(ctx)
-    if(!ctx) return null
+  static addFunction(id, value) {
+    ctx = this.getSymbContext(ctx)
+    if (!ctx) return null
     return ctx.symbolTable.addFunction(id, value)
   }
 
   // añade una clase  al contexto actual
-  addClass(id, value) {
-    ctx = this.findSymbolTableContext(ctx)
-    if(!ctx) return null
+  static addClass(id, value) {
+    ctx = this.getSymbContext(ctx)
+    if (!ctx) return null
     return ctx.symbolTable.addClass(id, value)
+  }
+
+  static print(ctx, tabs) {
+    if (!tabs) tabs = 0;
+    let str = ""
+    if (ctx.children && Array.isArray(ctx.children))
+      ctx.children.forEach(x => {
+        str += SymbolFinder.print(x, tabs)
+      })
+    if (ctx.symbolTable) {
+      str =
+        '{\n' +
+        TAB + Object.keys(ctx.symbolTable.memory).join(', ') + '\n' +
+        tabulate(str, 1) +
+        '}\n'
+    }
+    return tabulate(str, tabs)
   }
 
 }
 
-export {SymbolTable, SymbolFinder}
+function tabulate(str, tabs) {
+  var lines = str.split('\n')
+  return lines.map(x => (TAB.repeat(tabs) + x)).join('\n')
+}
+
+export {
+  SymbolTable,
+  SymbolFinder
+}
 
 
 /*

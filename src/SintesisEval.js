@@ -12,7 +12,9 @@ import Iterator from './internals/Iterator.js'
 import MemoryRef from './internals/MemoryRef.js'
 import printObject from './internals/Print.js'
 import SintesisError from './SintesisError.js'
-import {SymbolFinder} from './internals/Symbols.js'
+import {
+  SymbolFinder
+} from './internals/Symbols.js'
 import SintesisParserVisitor from './lib/SintesisParserVisitor.js'
 import {
   variableCreate,
@@ -28,48 +30,68 @@ const paramFloat = ['f', 'd', 'dec', 'float', 'decimal']
 const paramText = ['s', 't', 'string', 'str', 'text', 'texto']
 
 
-class SintesisSymbolParser extends SintesisParserVisitor {
 
-  setSymbolFinder(sf) {
-    this.symbolFinder = sf;
-  }
+
+
+class SintesisSymbolParser extends SintesisParserVisitor {
 
   // Visit a parse tree produced by SintesisParser#program.
   visitProgram(ctx) {
-    this.declaringSymbols = false
+    SymbolFinder.createTable(ctx)
     this.visitChildren(ctx);
   }
 
   // Visit a parse tree produced by SintesisParser#block.
   visitBlock(ctx) {
-    this.symbolFinder.createTable(ctx)
+    SymbolFinder.createTable(ctx)
     const r = ctx.stmt ? this.visit(ctx.stmt) : this.visitChildren(ctx)
     return r
+  }
+
+  // Visit a parse tree produced by SintesisParser#expIdentifier.
+  visitExpIdentifier(ctx) {
+    const id = ctx.getText()
+    let memoryref = SymbolFinder.findSymbol(ctx, id)
+    if (!memoryref || (memoryref._variable instanceof Error))
+      if (this.createIfNotFound)
+        SymbolFinder.addVariable(ctx, id, new Variable(null))
+  }
+
+  // Visit a parse tree produced by SintesisParser#expVar.
+  visitExpVar(ctx) {
+    const id = ctx.getText()
+    SymbolFinder.addVariable(ctx, id, new Variable(null))
+  }
+
+  // Visit a parse tree produced by SintesisParser#variableDeclaration.
+  visitVariableDeclaration(ctx) {
+    const id = ctx.id.getText()
+    SymbolFinder.addVariable(ctx, id, new Variable(null))
   }
 
   // Visit a parse tree produced by SintesisParser#functionDeclaration.
   visitFunctionDeclaration(ctx) {
     let id = ctx.id.text
     const fn = new Function(ctx)
-    if (id in this.symbolFinder.currentContext().memory)
+    if (id in SymbolFinder.getTable().memory)
       throw new SintesisError(ctx.id, `El símbolo '${id}' ya fue definido en este contexto`)
-    this.symbolFinder.addFunction(ctx, id, fn)
-    this.symbolFinder.createTable(ctx, fn)
+    SymbolFinder.addFunction(ctx, id, fn)
+    SymbolFinder.createTable(ctx, fn)
     this.visit(ctx.pl)
     this.visit(ctx.stmt)
   }
 
-   // Visit a parse tree produced by SintesisParser#classDeclaration.
-   visitClassDeclaration(ctx) {
+  // Visit a parse tree produced by SintesisParser#classDeclaration.
+  visitClassDeclaration(ctx) {
     const id = ctx.id.text;
     let extend = ctx.ext ? ctx.ext.text : null
     const attributes = ctx.atrs ? ctx.atrs.children.map(x => x.getText()).filter(x => !x.match(/[,{}]/)) : {}
     // const attributes = ctx.atrs? ctx.atrs.children.filter(x=>x.constructor.name!=='TerminalNodeImpl').map(x => x.getText())
     const methodList = ctx.methods ? ctx.methods.children.map(x => new Function(x, ctx)) : {}
-    if (id in this.symbolFinder.currentContext().memory)
+    if (id in SymbolFinder.getTable().memory)
       throw new SintesisError(ctx.id, `El símbolo '${id}' ya fue definido en este contexto`)
     if (extend) {
-      let memoryref = this.symbolFinder.findClass(extend)
+      let memoryref = SymbolFinder.findClass(extend)
       if (!memoryref)
         throw new SintesisError(ctx.id, 'No existe la clase ${extend}')
       if (!(memoryref.variable instanceof Class))
@@ -120,7 +142,7 @@ class SintesisSymbolParser extends SintesisParserVisitor {
         }
       }, ctx)
 
-    this.symbolFinder.addClass(ctx, id, cls)
+    SymbolFinder.addClass(ctx, id, cls)
     return this.visitChildren(ctx)
   }
 
@@ -132,29 +154,14 @@ class SintesisSymbolParser extends SintesisParserVisitor {
     this.createIfNotFound = false
   }
 
-  // Visit a parse tree produced by SintesisParser#expIdentifier.
-  visitExpIdentifier(ctx) {
-    const id = ctx.getText()
-    let mem_id = this.symbolFinder.findSymbol(ctx, id)
-    if (!mem_id && this.createIfNotFound)
-      this.symbolFinder.addSymbol(ctx, id)
-  }
-
-  // Visit a parse tree produced by SintesisParser#expVar.
-  visitExpVar(ctx) {
-    const id = ctx.getText()
-    this.symbolFinder.addVariable(ctx, id, new Variable())
-  }
-
-
   // Visit a parse tree produced by SintesisParser#forFromToStatement.
   visitForFromToStatement(ctx) {
     const iter = ctx.iter
     const id_iterator = iter.id.text
-    this.symbolFinder.createTable(ctx)
-    let mem_index = iter.vvar ? null : this.symbolFinder.findSymbol(ctx, id_iterator)
+    SymbolFinder.createTable(ctx)
+    let mem_index = iter.vvar ? null : SymbolFinder.findSymbol(ctx, id_iterator)
     if (!mem_index || !mem_index._variable || !(mem_index._variable instanceof Variable))
-      mem_index = this.symbolFinder.addVariable(ctx, id_iterator, new Single())
+      mem_index = SymbolFinder.addVariable(ctx, id_iterator, new Single())
     this.visit(ctx.stmt)
   }
 
@@ -171,9 +178,9 @@ class SintesisSymbolParser extends SintesisParserVisitor {
     const value_id = iter.idv ? iter.idv.text : null
     const index_id = iter.idk ? iter.idk.text : null
 
-    this.symbolFinder.createTable(ctx)
-    if (index_id) this.symbolFinder.addVariable(ctx, index_id, new Variable())
-    this.symbolFinder.addVariable(ctx, value_id, new Variable())
+    SymbolFinder.createTable(ctx)
+    if (index_id) SymbolFinder.addVariable(ctx, index_id, new Variable())
+    SymbolFinder.addVariable(ctx, value_id, new Variable())
     this.visit(ctx.stmt)
   }
 
@@ -186,19 +193,23 @@ class SintesisSymbolParser extends SintesisParserVisitor {
 }
 
 
+// -----------------------------------------------------------------------------------
+// -----------------------------------------------------------------------------------
+
 
 export default class SintesisEval extends SintesisParserVisitor {
 
   // Visit a parse tree produced by SintesisParser#program.
   visitProgram(ctx) {
     // parsea todos los símbolos primero
-    this.symbolFinder = new SymbolFinder();
-    this.symbolParser = new SintesisSymbolParser()
-    this.symbolParser.setSymbolFinder(this.symbolFinder)
-    this.symbolParser.visitProgram(ctx)
+    let symbolParser = new SintesisSymbolParser()
+    symbolParser.visitProgram(ctx)
+
+    // prepara la salida
     this.output = ""
     // procesa el programa
-    return this.visitChildren(ctx);
+    this.visitChildren(ctx);
+    console.log(SymbolFinder.print(ctx))
   }
 
   find(ctx, className) {
@@ -214,13 +225,13 @@ export default class SintesisEval extends SintesisParserVisitor {
 
   // Visit a parse tree produced by SintesisParser#statementList.
   visitStatementList(ctx) {
-    let callContext = this.symbolFinder.getFuncContext(ctx)
+    let callContext = SymbolFinder.getFuncContext(ctx)
     let i = 0
     while ((!callContext || !callContext.functionEnded) && i < ctx.children.length) {
       if (imprimirCadaLinea) console.log(ctx.children[i].getText())
       this.visit(ctx.children[i++])
     }
-    // console.log("LENGTH=", this.symbolFinder.contexts.length)
+    // console.log("LENGTH=", SymbolFinder.contexts.length)
     return callContext ? (callContext.functionResult || null) : null
   }
 
@@ -231,14 +242,13 @@ export default class SintesisEval extends SintesisParserVisitor {
     //return this.visitChildren(ctx);
   }
 
-
-  // Visit a parse tree produced by SintesisParser#functionDeclaration.
-  visitFunctionDeclaration(ctx) {
+  // Visit a parse tree produced by SintesisParser#classDeclaration.
+  visitClassDeclaration(ctx) {
     return null
   }
 
-  // Visit a parse tree produced by SintesisParser#classDeclaration.
-  visitClassDeclaration(ctx) {
+  // Visit a parse tree produced by SintesisParser#functionDeclaration.
+  visitFunctionDeclaration(ctx) {
     return null
   }
 
@@ -247,13 +257,10 @@ export default class SintesisEval extends SintesisParserVisitor {
     return this.visitFunctionDeclaration(ctx)
   }
 
- 
-
-
   // Visit a parse tree produced by SintesisParser#expNew.
   visitExpNew(ctx) {
     const id = ctx.id.text
-    let memoryref = this.symbolFinder.findClass(id)
+    let memoryref = SymbolFinder.findClass(id)
     if (!memoryref)
       throw new SintesisError(ctx.id, 'No existe la clase ${id}')
     if (!(memoryref.variable instanceof Class))
@@ -301,28 +308,28 @@ export default class SintesisEval extends SintesisParserVisitor {
 
       for (const instance of instances) {
         // creamos un nuevo contexto
-        this.symbolFinder.pushLevel(false, instance)
+        SymbolFinder.pushLevel(false, instance)
 
         // añadimos los atributos y métodos en la tabla de símbolos
         for (const id in instance.attributes) {
           const vari = instance.getRef(id)
-          this.symbolFinder.addVariable(id, vari)
+          SymbolFinder.addVariable(id, vari)
         }
 
         for (const id in instance.methods) {
-          this.symbolFinder.addFunction(id, instance.methods[id])
+          SymbolFinder.addFunction(id, instance.methods[id])
         }
       }
     }
     */
 
     // creamos un nuevo contexto de símbolos de un contexto de función
-    // this.symbolFinder.pushLevel(true)
+    // SymbolFinder.pushLevel(true)
 
     // pone en el contexto los parámetros de la función como si fueran variables, con los valores asignados desde la llamada con argumentos a la función
     for (let i = 0; i < params.length; i++) {
       let id = params[i]
-      //this.symbolFinder.addVariable(id, variableCreate(i in values ? valueOf(values[i]) : null))
+      //SymbolFinder.addVariable(id, variableCreate(i in values ? valueOf(values[i]) : null))
     }
 
 
@@ -337,7 +344,7 @@ export default class SintesisEval extends SintesisParserVisitor {
     // ejecutamos el cuerpo de la función
     this.visit(fn.context.stmt)
 
-    const r = this.symbolFinder.currentContext().functionResult
+    const r = SymbolFinder.getTable().functionResult
 
 
     return r
@@ -346,7 +353,7 @@ export default class SintesisEval extends SintesisParserVisitor {
 
   // Visit a parse tree produced by SintesisParser#returnStatement.
   visitReturnStatement(ctx) {
-    let callContext = this.symbolFinder.getFuncContext(ctx)
+    let callContext = SymbolFinder.getFuncContext(ctx)
     if (!callContext)
       throw new SintesisError(ctx, 'Se ha intentado retornar sin estar dentro de función o método')
     let r = ctx.exp ? this.visit(ctx.exp) : null
@@ -375,7 +382,7 @@ export default class SintesisEval extends SintesisParserVisitor {
       if (data.error == 404) {
         if (this.allowSymbolNotFound) {
           let v = typeof index === 'number' ? new Vector() : new Map()
-          memoryref = this.symbolFinder.addVariable(data.id, v)
+          memoryref = SymbolFinder.addVariable(ctx, data.id, v)
         }
       }
     }
@@ -438,11 +445,9 @@ export default class SintesisEval extends SintesisParserVisitor {
 
   // Visit a parse tree produced by SintesisParser#expAssignment.
   visitExpAssignment(ctx) {
-    this.allowSymbolNotFound = true
     let memoryref = this.visit(ctx.dest)
-    this.allowSymbolNotFound = false
 
-    if (!memoryref || !(memoryref instanceof MemoryRef))
+    if (!memoryref || !(memoryref instanceof MemoryRef) || (memoryref._variable instanceof Error))
       throw new SintesisError(ctx.dest, 'El operador izquierdo de asignación es inválido')
 
     let result = this.visit(ctx.exp)
@@ -456,7 +461,7 @@ export default class SintesisEval extends SintesisParserVisitor {
       if (data.error == 404) {
         // el tipo de variable lo determinamos según el literal del valor a asignar
         // y retornamos
-        return this.symbolFinder.addVariable(data.id,
+        return SymbolFinder.addVariable(ctx, data.id,
           result._variable instanceof Instance ? result._variable : variableCreate(literal))
       }
     }
@@ -729,9 +734,9 @@ export default class SintesisEval extends SintesisParserVisitor {
     let iterator = new Iterator(collection)
 
     if (iterator.size) {
-      // this.symbolFinder.pushLevel()
-      let mem_idx = index_id ? this.symbolFinder.addVariable(index_id, new Variable(iterator.idx)) : null
-      let mem_item = this.symbolFinder.addVariable(value_id, new Variable(iterator.current))
+      // SymbolFinder.pushLevel()
+      let mem_idx = index_id ? SymbolFinder.addVariable(ctx, index_id, new Variable(iterator.idx)) : null
+      let mem_item = SymbolFinder.addVariable(ctx, value_id, new Variable(iterator.current))
       while (!iterator.ended()) {
         mem_item.variable.value = iterator.current
         if (mem_idx) mem_idx.variable.value = iterator.idx
@@ -756,10 +761,10 @@ export default class SintesisEval extends SintesisParserVisitor {
     const end = this.visit(iter.to)
     const id_iterator = iter.id.text
 
-    // this.symbolFinder.pushLevel()
-    let mem_index = iter.vvar ? null : this.symbolFinder.findSymbol(ctx, id_iterator)
+    // SymbolFinder.pushLevel()
+    let mem_index = iter.vvar ? null : SymbolFinder.findSymbol(ctx, id_iterator)
     // if (!mem_index || !mem_index._variable || !(mem_index._variable instanceof Variable))
-      // mem_index = this.symbolFinder.addVariable(id_iterator, new Single())
+    // mem_index = SymbolFinder.addVariable(id_iterator, new Single())
     mem_index.variable.value = from
     while ((from < end && valueOf(mem_index.variable) <= end) ||
       (from > end) && mem_index.variable.value >= end) {
@@ -912,11 +917,9 @@ export default class SintesisEval extends SintesisParserVisitor {
   }
 
 
-
-
   // Visit a parse tree produced by SintesisParser#expTernary.
   visitExpTernary(ctx) {
-    let cond = this.visit(ctx.cond)
+    let cond = valueOf(this.visit(ctx.cond))
     if (cond) return this.visit(ctx.ok)
     return this.visit(ctx.no)
   }
@@ -951,15 +954,15 @@ export default class SintesisEval extends SintesisParserVisitor {
   // Visit a parse tree produced by SintesisParser#expIdentifier.
   visitExpIdentifier(ctx) {
     const id = ctx.getText()
-    return this.symbolFinder.findSymbol(ctx, id)
+    return SymbolFinder.findSymbol(ctx, id)
   }
 
   // Visit a parse tree produced by SintesisParser#expVar.
   visitExpVar(ctx) {
     const id = ctx.id.getText()
-    let mem_id = this.symbolFinder.findSymbol(ctx, id)
+    let mem_id = SymbolFinder.findSymbol(ctx, id)
     // if(!(mem_id._variable instanceof Variable))
-      // throw new SintesisError(ctx.id, 'error de redaclaración de variable')
+    // throw new SintesisError(ctx.id, 'error de redaclaración de variable')
     if (ctx.exp) {
       let result = this.visit(ctx.exp)
       let literal = valueOf(result)
@@ -979,21 +982,21 @@ export default class SintesisEval extends SintesisParserVisitor {
   }
 
   visitExpAttributes(ctx) {
-    if (!this.symbolFinder.insideClass())
+    if (!SymbolFinder.insideClass())
       throw new SintesisError(ctx, `Referencia fuera de Clase`)
-    return this.symbolFinder.findSymbol(ctx, '__attributes')
+    return SymbolFinder.findSymbol(ctx, '__attributes')
   }
 
   visitExpMethods(ctx) {
-    if (!this.symbolFinder.insideClass())
+    if (!SymbolFinder.insideClass())
       throw new SintesisError(ctx, `Referencia fuera de Clase`)
-    return this.symbolFinder.findSymbol(ctx, '__methods')
+    return SymbolFinder.findSymbol(ctx, '__methods')
   }
 
 
   // Visit a parse tree produced by SintesisParser#expSuper.
   visitExpSuper(ctx) {
-    const instance_ctx = this.symbolFinder.getInstanceContext(ctx)
+    const instance_ctx = SymbolFinder.getInstanceContext(ctx)
     if (!instance_ctx)
       throw new SintesisError(ctx, "Referencia fuera de clase")
     if (!instance_ctx.instance || !instance_ctx.instance.superClass)
@@ -1010,14 +1013,6 @@ export default class SintesisEval extends SintesisParserVisitor {
   visitIdentifier(ctx) {
     return ctx.children[0].getText()
   }
-
-  // Visit a parse tree produced by SintesisParser#block.
-  /*visitBlock(ctx) {
-    this.symbolFinder.pushLevel()
-    const r = ctx.stmt ? this.visit(ctx.stmt) : this.visitChildren(ctx)
-    this.symbolFinder.popLevel()
-    return r
-  }*/
 
   // Visit a parse tree produced by SintesisParser#functionBody.
   visitFunctionBody(ctx) {
