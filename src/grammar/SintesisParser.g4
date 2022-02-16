@@ -101,7 +101,7 @@ expression
     |    cond=expression '?' ok=expression ':' no=expression                #expTernary
     |    <assoc=right> dest=member Assign exp=expression                    #expAssignment
     |    <assoc=right> dest=member op=assignmentOperator exp=expression     #expAssignmentOperator
-    |    Var_ Identifier                                                    #expVar
+    |    Var_ id=Identifier                                                 #expVar
     |    '(' exp=expression ')'                                             #expParenthesis
     |    member                                                             #expMember
     |    literal                                                            #expLiteral
@@ -228,7 +228,7 @@ vectorIndexes
     ;
 
 formalParameterArg
-    : Identifier (Assign expression)?      
+    : identifier (Assign expression)?      
     ;
 
 variableStatement

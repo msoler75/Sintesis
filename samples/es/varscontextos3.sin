@@ -1,0 +1,6 @@
+fun a(b) {
+  var b = 2
+  imp b  
+} 
+
+a(1)

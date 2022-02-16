@@ -1,26 +1,26 @@
  // asigna un valor a una variable, y como no existe, la crea
-    a = 1
+a = 1
 
-    // imprime el valor de a
+// imprime el valor de a
+imprimir a
+
+// creamos un contexto 
+{
+    a = 2
+    imprimir a
+}
+
+imprimir a
+
+// nuevo contexto  
+{ 
+    // declaración de la variable a en este contexto
+    var a = 3
+    
+    // lo imprimimos
     imprimir a
 
-    // creamos un contexto 
-    {
-        a = 2
-        imprimir a
-    }
+    // cuando termina este contexto, la variable a de este contexto desaparece
+}
 
-    imprimir a
-
-    // nuevo contexto  
-    { 
-        // declaración de la variable a en este contexto
-        var a = 3
-        
-        // lo imprimimos
-        imprimir a
-
-        // cuando termina este contexto, la variable a de este contexto desaparece
-    }
-
-    imprimir a
+imprimir a

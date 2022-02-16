@@ -1,0 +1,8 @@
+fun a(b) {
+  fun c(d) {
+      imp d
+  }
+  c(b+1)
+}
+
+a(1)

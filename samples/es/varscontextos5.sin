@@ -1,0 +1,14 @@
+fun a() {
+  b() // no accesible
+}
+
+fun c() {
+  fun b() {
+      imp "!!" 
+  }
+  a()
+}
+
+a()
+b() // no accesible
+c()
