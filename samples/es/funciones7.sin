@@ -1,0 +1,7 @@
+// las variables deben conservar su valor local en las llamadas recursivas
+fun f(n) {
+    n++
+    if(n<4) f(n)
+    imp n
+}
+f(0)

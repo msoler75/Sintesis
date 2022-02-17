@@ -1,16 +1,11 @@
-fun negativo (x) {
-    si(x<0) ret cierto
-    o ret falso
+fun haceralgo(a) {
+ 
+    fun suma_dos(a) {
+        ret a+2
+    }
+ 
+    ret suma_dos(a)
 }
 
-fun positivo (x) {
-    ret x>=0
-}
+imprimir haceralgo(3)
 
-imp negativo(3)
-imp negativo(-2)
-imp negativo(0)
-
-imp positivo(3)
-imp positivo(-2)
-imp positivo(0)

@@ -1,13 +1,13 @@
 import exec from '../bin/exec.js'
 
-test('Funciones-0', () => {
+test('Funciones-1', () => {
     expect(exec(`
     funcion s() retornar 3
     imprimir s()
 `)).toContainText(`3`)
 })
 
-test('Funciones-1', () => {
+test('Funciones-2', () => {
     expect(exec(`
     fun s() {imp 1 return 5}
     fun m(a,b) ret a*b
@@ -18,7 +18,7 @@ test('Funciones-1', () => {
 })
 
 
-test('Funciones-2', () => {
+test('Funciones-3', () => {
     expect(exec(`
     // factorial
     fun f(n) if n<=1 ret 1 else ret n*f(n-1)
@@ -32,7 +32,7 @@ test('Funciones-2', () => {
 
 
 
-test('Funciones-3', () => {
+test('Funciones-4', () => {
     expect(exec(`
     fun depende(x) ret x-10
     {
@@ -44,7 +44,7 @@ test('Funciones-3', () => {
 })
 
 
-test('Funciones-4', () => {
+test('Funciones-5', () => {
     expect(exec(`
     fun haceralgo(a) {
         fun suma_dos(a) {
@@ -58,7 +58,7 @@ test('Funciones-4', () => {
 
 
 
-test('Funciones-5', () => {
+test('Funciones-6', () => {
     expect(exec(`
     fun negativo (x) {
         si(x<0) ret cierto

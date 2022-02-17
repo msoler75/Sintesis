@@ -17,9 +17,4 @@ class Variable {
     
 }
 
-Variable.valueOf = function (src) {
-    return src instanceof Variable ? src.value : src
-}
-
-
 export default Variable

@@ -1,11 +1,13 @@
-fun haceralgo(a) {
- 
-    fun suma_dos(a) {
-        ret a+2
-    }
- 
-    ret suma_dos(a)
+fun depende(x) ret x-10
+
+// creamos nuevo contexto
+{
+    fun depende(x) ret x+10
+    imprimir depende(5)
 }
 
-imprimir haceralgo(3)
+imprimir depende(5)
+
+
+
 

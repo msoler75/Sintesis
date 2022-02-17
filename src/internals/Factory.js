@@ -18,6 +18,7 @@ const variableCreate = function (src) {
 }
 
 
+// extends variable classes
 
 Variable.prototype.text = function () {
     return printObject(this.value)
@@ -43,7 +44,7 @@ Map.prototype.setValue = function (key, value) {
 
 
 
-Vector.prototype._init = function (obj, arr, defaultValue) {
+Vector.prototype._initVector = function (obj, arr, defaultValue) {
     for (const i in arr) {
         if (arr[i] instanceof Variable)
             obj.setVariable(i, arr[i])
@@ -90,7 +91,6 @@ Vector.prototype.getRef = function (index, create) {
     index = _checkIndex(index)
     if (!(index in this._value)) {
         if (!create) return null
-        this.defineDefault()
         for (let i = this._value.length; i <= index; i++)
             this._value[i] = variableCreate(this.defaultValue)
     }
@@ -125,7 +125,6 @@ Vector.prototype.delete = function (index) {
         this._value.pop()
     else {
         delete this._value[index]
-        this.defineDefault()
         this._value[index] = variableCreate(this.defaultValue)
     }
 }
