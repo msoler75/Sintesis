@@ -79,16 +79,16 @@ class SintesisSymbolParser extends SintesisParserVisitor {
   visitFunctionDeclaration(ctx) {
     let id = ctx.id.text
     const fn = new Function(ctx)
-    if (id in SymbolFinder.getTable(ctx).memory)
-      throw new SintesisError(ctx.id, `El símbolo '${id}' ya fue definido en este contexto`)
-    SymbolFinder.addFunction(ctx, id, fn)
+    if (id in SymbolFinder.getTable(ctx.parentCtx).memory)
+      throw new SintesisError(ctx.id, `El símbolo '${id}' ya fue definido`)
+    SymbolFinder.addFunction(ctx.parentCtx, id, fn)
+    SymbolFinder.createTable(ctx, fn)
     if (ctx.pl) {
       this.createIfNotFound = true
       this.visit(ctx.pl)
       this.createIfNotFound = false
     }
-    if(ctx.stmt) {
-      SymbolFinder.createTable(ctx.stmt, fn)
+    if (ctx.stmt) {
       this.visit(ctx.stmt)
     }
   }
@@ -292,10 +292,10 @@ export default class SintesisEval extends SintesisParserVisitor {
     const ctx = fn.context
 
     // caso de constructores vacíos
-    if (!fn.context.stmt) return
+    if (!ctx.stmt) return
 
     // obtenemos los argumentos o parámetros de la función y los valores
-    const params = fn.context.pl ? this.visit(fn.context.pl).params : []
+    const params = ctx.pl ? this.visit(ctx.pl).params : []
     const values = ctxArgs ? ctxArgs.values : []
 
     if (params.length !== values.length)
@@ -341,7 +341,6 @@ export default class SintesisEval extends SintesisParserVisitor {
       mem_param.assign(i in values ? valueOf(values[i]) : null)
     }
 
-
     // si es un método constructor de una clase, que además tiene una clase padre, 
     // y no tiene explícitamente una llamada a la superclase...
     if (fn._class && obj.superClass && Class.isConstructorName(fn.name) && !fn.callingSuperClass) {
@@ -349,16 +348,13 @@ export default class SintesisEval extends SintesisParserVisitor {
       this.callToFunction(new MemoryRef(obj.superClass, fncon.name), true)
     }
 
-
     // ejecutamos el cuerpo de la función
-    this.visit(fn.context.stmt)
+    this.visit(ctx.stmt)
 
     const r = SymbolFinder.getReturnValue(ctx)
 
     // restauramos nivel de pila
     SymbolFinder.popLevel(ctx)
-
-
 
     return r
   }
@@ -369,7 +365,7 @@ export default class SintesisEval extends SintesisParserVisitor {
     if (!SymbolFinder.insideFunction(ctx))
       throw new SintesisError(ctx, 'Se ha intentado retornar sin estar dentro de función o método')
     let r = ctx.exp ? this.visit(ctx.exp) : null
-    r = valueOf(r)
+    // r = valueOf(r)
     SymbolFinder.setReturnValue(ctx, r)
     return r;
   }
@@ -1002,7 +998,7 @@ export default class SintesisEval extends SintesisParserVisitor {
 
   // Visit a parse tree produced by SintesisParser#printStatement.
   visitPrintStatement(ctx) {
-    let args = this.visit(ctx.exp).filter(x => x !== undefined)
+    let args = this.visit(ctx.exp) //.filter(x => x !== undefined)
     let result = []
     for (let r of args) {
       r = printObject(r)

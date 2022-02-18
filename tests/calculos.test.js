@@ -1,6 +1,6 @@
 import exec from '../bin/exec.js'
 
-test('Bucles-1 repeat', () => {
+test('Cálculos', () => {
     expect(exec(`
     a=1
     b=2

@@ -78,3 +78,37 @@ test('Funciones-6', () => {
     imp positivo(0)    
 `)).toContainText(`falso cierto falso cierto falso cierto`)
 })
+
+
+test('Funciones-7', () => {
+    expect(exec(`
+    // las variables deben conservar su valor local en las llamadas recursivas
+    fun f(n) {
+        n++
+        if(n<3) f(n)
+        imp n
+    }
+    f(0)
+    imp n
+    `)).toContainText(`3 2 1 nulo`)
+})
+
+
+
+
+
+test('Funciones-8', () => {
+    expect(exec(`
+    // las variables deben conservar su valor local en las llamadas recursivas
+    fun f(n) {
+        n++
+        {
+            e=1
+            if(n<3) f(n)
+            e++
+            imprimir e
+        }
+    }
+    f(0)
+    `)).toContainText(`2 2 2`)
+})

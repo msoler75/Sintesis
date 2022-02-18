@@ -1,8 +1,11 @@
 // las variables deben conservar su valor local en las llamadas recursivas
 fun f(n) {
     n++
-    if(n<3) f(n)
-    imp n
+    {
+        e=1
+        if(n<3) f(n)
+        e++
+        imprimir e
+    }
 }
 f(0)
-imp n

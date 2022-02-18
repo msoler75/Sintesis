@@ -1,4 +1,4 @@
-fun depende(x) ret x-10
+ fun depende(x) ret x-10
 
 // creamos nuevo contexto
 {

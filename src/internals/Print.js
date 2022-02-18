@@ -1,12 +1,12 @@
 import MemoryRef from './MemoryRef.js'
 
 const printObject = function (obj) {
+    while (obj instanceof MemoryRef)
+        obj = obj.variable
     if (obj === undefined) return 'nulo'
     if (obj === null) return 'nulo'
     if (obj === true) return 'cierto'
     if (obj === false) return 'falso'
-    while (obj instanceof MemoryRef)
-        obj = obj.variable
     if (obj.text && typeof obj.text === 'function')
         return obj.text()
     if (Array.isArray(obj))

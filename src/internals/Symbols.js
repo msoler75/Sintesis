@@ -1,6 +1,7 @@
 import MemoryRef from './MemoryRef.js'
 import Variable from './Variable.js'
 import Function from './Function.js'
+import valueOf from './ValueOf.js'
 import Class from './Class.js'
 
 
@@ -19,13 +20,11 @@ class SymbolTable {
   }
 
   pushLevel() {
-    this.returnContext = true
-    const m = this.getMemory()
+    const m = this.memory[0]
     const m2 = {}
     Object.keys(this.memory[0]).forEach(key => {
       m2[key] = new MemoryRef(
-        m[key]._variable && (m[key]._variable instanceof Function || m[key]._variable instanceof Class) ?
-        m[key]._variable : undefined
+        m[key]._variable && (m[key]._variable instanceof Function || m[key]._variable instanceof Class) ? m[key]._variable : undefined
       )
     })
     m2['___ended'] = false // para contextos de función, cuando se ejecuta 'return' el bloque o contexto entero se marca como 'terminado'
@@ -93,11 +92,17 @@ class SymbolTable {
 
 }
 
+
+
+
+
 class SymbolFinder {
 
   // los contextos de símbolos son jerárquicos, tienen hijos y padres
   static createTable(ctx, function_, instance) {
     ctx.symbolTable = new SymbolTable(function_, instance)
+    if (function_)
+      ctx.symbolTable.returnContext = true
   }
 
   static getSymbContext(ctx) {
@@ -140,18 +145,31 @@ class SymbolFinder {
     return null
   }
 
+  static visitChildren(ctx, fn) {
+    fn(ctx)
+    if (ctx && ctx.children && ctx.children.length)
+      ctx.children.forEach(item =>
+        SymbolFinder.visitChildren(item, fn)
+      )
+  }
+
+  // hemos de replicar la operación de push en la symbol table en todos los nodos descendientes
   static pushLevel(ctx) {
     ctx = this.getSymbContext(ctx)
-    if (ctx) {
-      ctx.symbolTable.pushLevel()
-    }
+    SymbolFinder.visitChildren(ctx, function (ctx) {
+      if (ctx && ctx.symbolTable) {
+        ctx.symbolTable.pushLevel()
+      }
+    })
   }
 
   static popLevel(ctx) {
     ctx = this.getSymbContext(ctx)
-    if (ctx) {
-      ctx.symbolTable.popLevel()
-    }
+    SymbolFinder.visitChildren(ctx, function (ctx) {
+      if (ctx && ctx.symbolTable) {
+        ctx.symbolTable.popLevel()
+      }
+    })
   }
 
   static setReturnValue(ctx, value) {
@@ -242,9 +260,17 @@ class SymbolFinder {
         str += SymbolFinder.print(x, tabs)
       })
     if (ctx.symbolTable) {
+      const m0 = ctx.symbolTable.getMemory()
+      console.log(ctx.symbolTable)
       str =
         '{\n' +
-        TAB + Object.keys(ctx.symbolTable.getMemory()).join(', ') + '\n' +
+        TAB + Object.keys(m0)
+        .map(id =>
+          id + ': {' +
+          ctx.symbolTable.memory.map(m => valueOf(m[id])).join(', ') +
+          '}'
+        )
+        .join(', ') + '\n' +
         tabulate(str, 1) +
         '}\n'
     }
