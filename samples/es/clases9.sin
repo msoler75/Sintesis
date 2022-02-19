@@ -1,0 +1,27 @@
+b = 1
+e = 2
+
+clase A {  //   [0]=>{b:4} [1]=>{b:7}
+    b
+    constructor(d)
+    {
+        b=d
+    }
+}
+
+clase B extiende A {   // [0]=> {b:4, e:5}  [1]=>{b:7, e:8}
+    e
+    constructor(d, x) {
+        padre(d)
+        e = x
+    }
+}
+
+z = nueva A(2)
+imp z
+/* k = nueva B(4, 5)
+m = nueva B(7, 8)
+imp k
+imp m
+imp b, e 
+*/

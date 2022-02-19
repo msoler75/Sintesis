@@ -1,0 +1,16 @@
+class A {
+    b
+    constructor(c) {
+        b=c
+    }
+}
+
+contador = 33
+
+fun crear() {
+    retorna nuevo A(contador++)
+}
+
+z = crear()
+imp z
+imp crear()

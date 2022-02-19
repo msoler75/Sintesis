@@ -2,13 +2,14 @@ import printObject from './Print.js'
 import Variable from './Variable.js'
 import Class from "./Class.js"
 import Map from "./Map.js"
+import { SymbolTable } from './Symbols.js'
 
 class Instance extends Variable {
     constructor(clsBase, mode) {
         super()
         if (!(clsBase instanceof Class))
             throw new Error('El parámetro de Instance debe ser del tipo Class');
-        this._class = clsBase
+        this.class = clsBase
         this.attributes = {}
         this.superClass = clsBase.superClass ? new Instance(clsBase.superClass) : null
         if (mode != 'methods')
@@ -28,14 +29,15 @@ class Instance extends Variable {
                 met[i] = ref.methods[i]
             ref = ref.superClass
         } while (ref)
-        this.attributes['__attributes'] = new Map(atr)
-        this.attributes['__methods'] = new Map(met)
+        this.attributes['___attributes'] = new Map(atr)
+        this.attributes['___methods'] = new Map(met)
+        // this.symbolTable = new SymbolTable(null, this)
     }
 
     isInstanceOf(name) {
         let ref = this
         do {
-            if (ref._class.name === name)
+            if (ref.class.name === name)
                 return true
             ref = ref.superClass
         } while (ref)
@@ -59,8 +61,8 @@ class Instance extends Variable {
     }
 
     getRef(name) {
-        if (Class.isMethodsName(name)) name = '__methods'
-        if (Class.isAttributesName(name)) name = '__attributes'
+        if (Class.isMethodsName(name)) name = '___methods'
+        if (Class.isAttributesName(name)) name = '___attributes'
         // si es un atributo o método lo busca entre la instancia actual y las padres
         let ref = this
         do {
@@ -78,7 +80,7 @@ class Instance extends Variable {
     getByClass(classname) {
         let ref = this
         do {
-            if (ref._class.name === classname) return ref
+            if (ref.class.name === classname) return ref
             ref = ref.superClass
         } while (ref)
         return null
@@ -103,7 +105,7 @@ class Instance extends Variable {
             if(!['métodos','atributos'].includes(lbl)) continue
             r.push(`${lbl}: ${printObject(this.getRef(a).value)}`)
         }
-        return this._class.name + ' (' + r.join(', ') + ')'
+        return this.class.name + ' (' + r.join(', ') + ')'
     }
 
 }

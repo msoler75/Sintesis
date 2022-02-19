@@ -1,12 +1,13 @@
 class Class {
-    constructor(name, superClass, attributes, methods) {
+    constructor(ctx, name, superClass, attributes, methods) {
+        this.context = ctx
         this.name = name
         this.superClass = superClass
         this.attributes = attributes
         this.methods = methods || {}
         if (this.methods)
             for (const i in this.methods)
-                this.methods[i]._class = this
+                this.methods[i].class = this
     }
 
     addMethod(name) {
@@ -48,12 +49,12 @@ Class.isConstructorName = function (name) {
 
 Class.isAttributesName = function (name) {
     // to-do: lang
-    return ['__attributes', 'attributes', 'atributos'].includes(name)
+    return ['___attributes', 'attributes', 'atributos'].includes(name)
 }
 
 Class.isMethodsName = function (name) {
     // to-do: lang
-    return ['__methods', 'methods', 'metodos', 'métodos'].includes(name)
+    return ['___methods', 'methods', 'metodos', 'métodos'].includes(name)
 }
 
 export default Class

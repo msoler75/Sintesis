@@ -1,26 +1,17 @@
-
-fun externa(a, b)
-{
-  escribir() // no accesible
-}
-
 clase Persona {
-  nombre
-  constructor (nombre) {
-    nombre=atributos.nombre
-    escribir() // no accesible
-    externa() 
-    o = new Cuenta() -> inicio otro contexto
-  }
+    nombre
+    constructor (nombre) {
+        nombre=atributos.nombre
+    }
 }
 
 clase Cliente extiende Persona {
-  dni
-  constructor (nombre, dni) {
-    padre(nombre)
-    atributos.dni = dni
-  }
-  escribir() {imp nombre }
+    dni
+    constructor (nombre, dni) {
+        padre(nombre)
+        atributos.dni = dni
+    }
 }
+
 p = nuevo Cliente ('Javier', 1234567)
 imp p

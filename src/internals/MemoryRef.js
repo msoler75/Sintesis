@@ -33,6 +33,8 @@ class MemoryRef {
     }
 
     assign(value) {
+        if(value instanceof MemoryRef)
+        value = value.variable
         let literal = valueOf(value)
         let valueIsVarType = value instanceof Variable || value instanceof Function || value instanceof Instance
         if (!this._variable) {

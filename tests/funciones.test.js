@@ -112,3 +112,26 @@ test('Funciones-8', () => {
     f(0)
     `)).toContainText(`2 2 2`)
 })
+
+
+
+test('Funciones-9', () => {
+    expect(exec(`
+    class A {
+        b
+        constructor(c) {
+            b=c
+        }
+    }
+
+    contador = 33
+
+    fun crear() {
+        retorna nuevo A(contador++)
+    }
+
+    z = crear()
+    imp z
+    imp crear()
+    `)).toContainText(`xxxxxxx`)
+})

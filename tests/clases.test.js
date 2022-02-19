@@ -226,12 +226,46 @@ test('Clases-7 con herencia en construcción', () => {
       p = nuevo Cliente ('Javier', 1234567)
       imp p
       `)).toContainText(`
-      
+      xxx
       `)
 })
 
 
-test('Clases-8 constructor & instanceof', () => {
+test('Clases-8 creación y uso dinámico', () => {
+  expect(exec(`
+  // clase sin atributos 
+
+  clase p 
+  {
+      x() {
+          imp 'funciona!' 
+      } 
+  }
+
+  // creación de clase y llamado dinámico
+  nuevo p().x()
+  `)).toContainText(`funciona!`)
+})
+
+test('Clases-9 creación de varias instancias', () => {
+  expect(exec(`
+  clase A {
+    b
+    constructor(d)
+    {
+      b=d
+    }
+  }
+  
+  k = nueva A(4)
+  m = nueva A(7)
+  imp k
+  imp m
+  `)).toContainText(`xxx`)
+})
+
+
+test('Clases-10 constructor & instanceof', () => {
     expect(exec(`
     clase Persona {
 
@@ -342,22 +376,4 @@ test('Clases-8 constructor & instanceof', () => {
       si(c es Cliente) 
         print "es cliente"
     `)).toContainText(`xxx`)
-})
-
-
-
-test('Clases-9 creación y uso dinámico', () => {
-    expect(exec(`
-    // clase sin atributos 
-
-    clase p 
-    {
-        x() {
-            imp 'funciona!' 
-        } 
-    }
-
-    // creación de clase y llamado dinámico
-    nuevo p().x()
-    `)).toContainText(`funciona!`)
 })
