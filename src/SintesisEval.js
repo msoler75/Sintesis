@@ -374,7 +374,7 @@ export default class SintesisEval extends SintesisParserVisitor {
     SymbolFinder.popStack(ctx)
 
     if (fn.class)
-      SymbolFinder.popStack(fn.context.parentCtx)
+      SymbolFinder.popStack(fn.context.parentCtx, inst)
 
     return r
   }
@@ -1018,7 +1018,7 @@ export default class SintesisEval extends SintesisParserVisitor {
 
   // Visit a parse tree produced by SintesisParser#printStatement.
   visitPrintStatement(ctx) {
-    let args = this.visit(ctx.exp) //.filter(x => x !== undefined)
+    let args = this.visit(ctx.exp).filter(x => x !== undefined)
     let result = []
     for (let r of args) {
       r = printObject(r)

@@ -11,7 +11,7 @@ class Class {
     }
 
     addMethod(name) {
-        
+
     }
 
     getConstructor(numargs) {
@@ -49,12 +49,29 @@ Class.isConstructorName = function (name) {
 
 Class.isAttributesName = function (name) {
     // to-do: lang
-    return ['___attributes', 'attributes', 'atributos'].includes(name)
+    return ['__attributes', '___attributes', 'attributes', 'atributos'].includes(name)
 }
 
 Class.isMethodsName = function (name) {
     // to-do: lang
-    return ['___methods', 'methods', 'metodos', 'métodos'].includes(name)
+    return ['__methods', '___methods', 'methods', 'metodos', 'métodos'].includes(name)
+}
+
+Class.isSuperName = function (name) {
+    // to-do: lang
+    return ['__super', '___super'].includes(name)
+}
+
+Class.isInstance = function (name) {
+    // to-do: lang
+    return ['__instance', '___instance'].includes(name)
+}
+
+Class.isSpecialMember = function (name) {
+    return Class.isAttributesName(name) ||
+        Class.isMethodsName(name) ||
+        Class.isSuperName(name) ||
+        Class.isInstance(name)
 }
 
 export default Class

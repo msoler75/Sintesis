@@ -28,6 +28,8 @@ class SymbolTable {
   pushStack(instance) {
     const m = this.memory[0]
     const m2 = {}
+    if (this.memory.length == 0)
+      console.error('NO MEMORY SYMBOLS!')
     Object.keys(this.memory[0]).forEach(key => {
       if (m[key]._variable instanceof RefClass) {
         if (m[key]._variable.value.classInstance.name === instance.class.name) {
@@ -55,6 +57,8 @@ class SymbolTable {
   }
 
   popStack() {
+    if (this.memory.length <= 1)
+      console.error("DEMASIADOS POP");
     this.memory.pop()
   }
 
@@ -208,13 +212,16 @@ class SymbolFinder {
       })
   }
 
-  static popStack(ctx) {
+  static popStack(ctx, instance) {
     ctx = this.findTable(ctx)
-    SymbolFinder.visitChildren(ctx, function (ctx) {
-      if (ctx && ctx.symbolTable) {
-        ctx.symbolTable.popStack()
-      }
-    })
+    if (instance)
+      ctx.symbolTable.popStack()
+    else
+      SymbolFinder.visitChildren(ctx, function (ctx) {
+        if (ctx && ctx.symbolTable) {
+          ctx.symbolTable.popStack()
+        }
+      })
   }
 
   static setReturnValue(ctx, value) {
@@ -313,13 +320,11 @@ class SymbolFinder {
     if (ctx.symbolTable) {
       const m0 = ctx.symbolTable.getMemory()
       // console.log(ctx.symbolTable)
-      if(m0===null || m0===undefined)
-      {
+      if (m0 === null || m0 === undefined) {
         str = ''
         // console.log('ERROR', m0)
-      }
-      else
-      str =
+      } else
+        str =
         '{\n' +
         TAB + Object.keys(m0)
         .map(id =>

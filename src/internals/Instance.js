@@ -2,7 +2,9 @@ import printObject from './Print.js'
 import Variable from './Variable.js'
 import Class from "./Class.js"
 import Map from "./Map.js"
-import { SymbolTable } from './Symbols.js'
+import {
+    SymbolTable
+} from './Symbols.js'
 
 class Instance extends Variable {
     constructor(clsBase, mode) {
@@ -88,23 +90,31 @@ class Instance extends Variable {
 
 
     text() {
-        let atr = []
+        const a = []
+        const m = []
         let ref = this
         do {
-            for (const name in ref.attributes)
-                atr.push(name)
+            for (const name in ref.attributes) {
+                if (!Class.isSpecialMember(name))
+                    a.push({
+                        name,
+                        value: printObject(this.getRef(name).value)
+                    })
+            }
+            for (const name in ref.methods) {
+                if (!Class.isSpecialMember(name))
+                    m.push({
+                        name,
+                        value: printObject(this.getRef(name))
+                    })
+            }
             ref = ref.superClass
         } while (ref)
-        let r = []
-        for (const a of atr) {
-            let lbl = a
-            if (Class.isMethodsName(a))
-                lbl = 'métodos'
-            if (Class.isAttributesName(a))
-                lbl = 'atributos'
-            if(!['métodos','atributos'].includes(lbl)) continue
-            r.push(`${lbl}: ${printObject(this.getRef(a).value)}`)
-        }
+        const r = []
+        if (a.length)
+            r.push('atributos: {' + a.map(x => `${x.name}: ${x.value}`).join(', ') + '}')
+        if (m.length)
+            r.push('métodos: {' + m.map(x => `${x.name}: ${x.value}`).join(', ') + '}')
         return this.class.name + ' (' + r.join(', ') + ')'
     }
 
