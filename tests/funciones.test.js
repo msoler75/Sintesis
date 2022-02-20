@@ -133,5 +133,8 @@ test('Funciones-9', () => {
     z = crear()
     imp z
     imp crear()
-    `)).toContainText(`xxxxxxx`)
+    `)).toContainText(`
+    A {b: 33}
+    A {b: 34}
+    `)
 })

@@ -30,7 +30,7 @@ test('Clases-1', () => {
     `)).toContainText(`
     Jorge
     Juan
-    Persona (atributos: {nombre: Juan}, métodos: {constructor: (nombre)})
+    Persona {nombre: Juan}
     `)
 })
 
@@ -63,7 +63,7 @@ test('Clases-2', () => {
     `)).toContainText(`
     corriendo...
     saltando...
-    animal (atributos: {}, métodos: {correr: (), saltar: (), constructor: ()})
+    animal {}
     {}
     {correr: (), saltar: (), constructor: ()}`)
 })
@@ -85,7 +85,7 @@ test('Clases-3 con atributos y constructor', () => {
     a = nueva instancia de clase Basica()
     imprimir a.contador
     imprimir a
-    `)).toContainText(`2 Basica (atributos: {contador: 2}, métodos: {constructor: ()})`)
+    `)).toContainText(`2 Basica {contador: 2}`)
 })
 
 
@@ -113,7 +113,7 @@ test('Clases-4 con constructor con parámetros', () => {
     p = nueva Persona("Jorge")
     imprimir p.texto()
     imprimir p
-    `)).toContainText(`Mi nombre es: Jorge Persona (atributos: {nombre: Jorge}, métodos: {constructor: (nombre), texto: ()})`)
+    `)).toContainText(`Mi nombre es: Jorge Persona {nombre: Jorge}`)
 })
 
 
@@ -148,13 +148,15 @@ test('Clases-5 con modificación de atributo y diferenciando parámetros de atri
     s.hola("Jorge")
     s.adios("Jorge")
     imprimir s
+    imprimir s.metodos
     `)).toContainText(`
     Creando saludo con María
-    Saludo (atributos: {nombre: María}, métodos: {constructor: (nombre), hola: (nombre), adios: (nombre)})
-    Saludo (atributos: {nombre: Juan}, métodos: {constructor: (nombre), hola: (nombre), adios: (nombre)})
+    Saludo {nombre: María}
+    Saludo {nombre: Juan}
     ¡Hola Jorge!
     ¡Adiós Juan!
-    Saludo (atributos: {nombre: Juan}, métodos: {constructor: (nombre), hola: (nombre), adios: (nombre)})
+    Saludo {nombre: Juan}
+    {constructor: (nombre), hola: (nombre), adios: (nombre)}
     `)
 })
 
@@ -212,7 +214,7 @@ test('Clases-7 con herencia en construcción', () => {
     clase Persona {
         nombre
         constructor (nombre) {
-          nombre=atributos.nombre
+          atributos.nombre=nombre
         }
       }
       
@@ -226,7 +228,7 @@ test('Clases-7 con herencia en construcción', () => {
       p = nuevo Cliente ('Javier', 1234567)
       imp p
       `)).toContainText(`
-      xxx
+      Cliente {dni: 1234567, nombre: Javier}
       `)
 })
 
@@ -247,7 +249,53 @@ test('Clases-8 creación y uso dinámico', () => {
   `)).toContainText(`funciona!`)
 })
 
-test('Clases-9 creación de varias instancias', () => {
+
+test('Clases-9', () => {
+  expect(exec(`
+  b = 1
+  e = 2
+  
+  clase A {  //   [0]=>{b:2} [1]=>{b:3} [2]=>{b:4} [3]=>{b:7}
+      b
+      constructor(d)
+      {
+          b=d
+      }
+  }
+  
+  clase B extiende A {   // [0]=> {b:4, e:5}  [1]=>{b:7, e:8}
+      e
+      constructor(d, x) {
+          padre(d)
+          e = x
+      }
+  }
+  
+  z = nueva A(2)
+  imp z
+  y = nueva A(3)
+  imp y
+  k = nueva B(4, 5)
+  imp k
+  m = nueva B(7, 8)
+  imp m
+  m.b=1
+  m.e=2
+  imp k
+  imp m
+  imp b, e 
+  `)).toContainText(`
+  A {b: 2}
+  A {b: 3}
+  B {e: 5, b: 4}
+  B {e: 8, b: 7}
+  B {e: 5, b: 4}
+  B {e: 2, b: 1}
+  1 2
+`)
+})
+
+test('Clases-10 creación de varias instancias', () => {
   expect(exec(`
   clase A {
     b
@@ -261,119 +309,143 @@ test('Clases-9 creación de varias instancias', () => {
   m = nueva A(7)
   imp k
   imp m
-  `)).toContainText(`xxx`)
+  `)).toContainText(`
+  A {b: 4}
+  A {b: 7}
+  `)
 })
 
 
-test('Clases-10 constructor & instanceof', () => {
+test('Clases-11 constructor & instanceof', () => {
     expect(exec(`
     clase Persona {
 
-        nombre, apellidos
+      nombre, apellidos
       
-        constructor (nombre, apellidos) {
+      constructor (nombre, apellidos) {
           asignaNombre (nombre)
           asignaApellidos(apellidos)
-        }
-      
-        asignaNombre(nombre) {
-          atributos.nombre=nombre
-        }
-      
-        asignaApellidos(apellidos) {
-          atributos.apellidos = apellidos
-        }
-      
-        texto() {
-          retorna 'Persona (nombre:'+nombre+', apellidos: '+apellidos+')'
-        }  
       }
       
+      asignaNombre(nombre) {
+          atributos.nombre=nombre
+      }
+      
+      asignaApellidos(apellidos) {
+          atributos.apellidos = apellidos
+      }
+      
+      texto() {
+          retorna 'Persona (nombre#'+nombre+', apellidos#'+apellidos+')'
+      }  
+    }
+        
+        
+        
+    clase Cliente extiende Persona {
+        
+      dni
+      // además hereda los atributos del padre
+      // nombre
+      // apellidos
       
       
-      clase Cliente extiende Persona {
-      
-        dni
-        // además hereda los atributos del padre
-        // nombre
-        // apellidos
-      
-      
-        constructor (dni, nombre, apellidos) {
+      constructor (dni, nombre, apellidos) {
           padre(nombre, apellidos)
           asignaDNI(dni)
-        }
-      
-        asignaDNI(dni) {
-          atributos.dni = dni
-        }
-      
-        texto() {
-          retorna 'Cliente (dni: '+dni+', '+'nombre:'+nombre+', apellidos: '+apellidos+')'
-        }
-      
-        // además hereda los métodos del padre (clase Persona)
-        // asignaNombre(nombre) ...
-        // asignaApellidos(apellidos) ...
-        
       }
       
+      asignaDNI(dni) {
+          atributos.dni = dni
+      }
       
+      texto() {
+          retorna 'Cliente (dni -> '+dni+', '+'nombre -> '+nombre+', apellidos -> '+apellidos+')'
+      }
       
-      // persona
-      
-      p = nueva Persona ('Andrés', 'Pérez')
-      imprimir p.texto()
-      
-      p.asignaNombre('Laura')
-      p.asignaApellidos('Gutierrez')
-      
-      imprimir p.texto()
-      
-      imprimir p.atributos.nombre
-      imprimir p.atributos.apellidos
-      
-      imprimir p.nombre
-      imprimir p.apellidos
-      
-      si(p es Persona) 
-        print "es persona"
-      
-      si(p es Cliente) 
-        print "es cliente"
-      
-      si(p es NoExiste) 
-        print "no existe"
-      
-      // cliente
-      
-      c = nuevo Cliente(777, 'Jorge', 'García')
-      imprimir c.texto()
-      
-      c.asignaDNI(1234567)
-      c.asignaNombre('María')
-      c.asignaApellidos('López')
-      
-      imprimir c.texto()
-      
-      c.metodos.asignaNombre('Marcel')
-      c.metodos.asignaApellidos('Soler')
-      c.metodos.asignaDNI('987654321')
-      
-      imprimir c.texto()
-      
-      imprimir c.atributos.nombre
-      imprimir c.atributos.apellidos
-      imprimir c.atributos.DNI
-      
-      imprimir c.nombre
-      imprimir c.apellidos
-      imprimir c.DNI
-      
-      si(c es Persona) 
-        print "es persona"
-      
-      si(c es Cliente) 
-        print "es cliente"
-    `)).toContainText(`xxx`)
+      // además hereda los métodos del padre (clase Persona)
+      // asignaNombre(nombre) ...
+      // asignaApellidos(apellidos) ...
+        
+    }
+        
+        
+        
+    // persona
+    
+    p = nueva Persona ('Andrés', 'Pérez')
+    imprimir p
+    imprimir p.texto()
+    
+    imprimir "(antes) nombre: ", p.nombre, p.atributos.nombre
+    imprimir "(antes) apellidos: ", p.apellidos, p.atributos.apellidos
+    
+    p.asignaNombre('Laura')
+    p.asignaApellidos('Gutierrez')
+    
+    imprimir p.texto()
+    
+    imprimir "(después) nombre: ", p.nombre, p.atributos.nombre
+    imprimir "(después) apellidos: ", p.apellidos, p.atributos.apellidos
+    
+    si(p es Persona) 
+    print p.nombre, "es persona"
+    
+    si(p es Cliente) 
+    print p.nombre, "es cliente"
+    
+    si(p es NoExiste) 
+    print "no existe"
+    
+    // cliente
+    
+    c = nuevo Cliente(777, 'Jorge', 'García')
+    imprimir c.texto()
+    
+    c.asignaDNI(1234567)
+    c.asignaNombre('María')
+    c.asignaApellidos('López')
+    
+    imprimir c.texto()
+    
+    c.metodos.asignaNombre('Marcel')
+    c.metodos.asignaApellidos('Soler')
+    c.metodos.asignaDNI('987654321')
+    
+    imprimir c.texto()
+    
+    imprimir "nombre:", c.atributos.nombre, c.nombre
+    imprimir "apellidos:", c.atributos.apellidos, c.apellidos
+    imprimir "dni:", c.atributos.dni, c.dni
+    
+    c.nombre = "Paco"
+    
+    imprimir "(después del cambio de nombre) nombre:", c.nombre, c.atributos.nombre
+    
+    si(c es Persona) 
+    print c.nombre, "es persona"
+    
+    si(c es Cliente) 
+    print c.nombre, "es cliente"
+    `)).toContainText(`
+    Persona {nombre: Andrés, apellidos: Pérez}
+    Persona (nombre#Andrés, apellidos#Pérez)
+    (antes) nombre:  Andrés Andrés
+    (antes) apellidos:  Pérez Pérez
+    Persona (nombre#Laura, apellidos#Gutierrez)
+    (después) nombre:  Laura Laura
+    (después) apellidos:  Gutierrez Gutierrez
+    Laura es persona
+    Laura es cliente
+    no existe
+    Cliente (dni -> 777, nombre -> Jorge, apellidos -> García)
+    Cliente (dni -> 1234567, nombre -> María, apellidos -> López)
+    Cliente (dni -> 987654321, nombre -> Marcel, apellidos -> Soler)
+    nombre: Marcel Marcel
+    apellidos: Soler Soler
+    dni: 987654321 987654321
+    (después del cambio de nombre) nombre: Paco Paco
+    Paco es persona
+    Paco es cliente
+    `)
 })

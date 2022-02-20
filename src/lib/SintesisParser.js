@@ -3038,7 +3038,7 @@ export default class SintesisParser extends SintesisParserBase {
 	    try {
 	        this.enterOuterAlt(localctx, 1);
 	        this.state = 563;
-	        this.identifier();
+	        localctx.id = this.identifier();
 	        this.state = 566;
 	        this._errHandler.sync(this);
 	        _la = this._input.LA(1);
@@ -7031,6 +7031,7 @@ class FormalParameterArgContext extends antlr4.ParserRuleContext {
         super(parent, invokingState);
         this.parser = parser;
         this.ruleIndex = SintesisParser.RULE_formalParameterArg;
+        this.id = null; // IdentifierContext
     }
 
 	identifier() {

@@ -76,6 +76,11 @@ class SintesisSymbolParser extends SintesisParserVisitor {
     SymbolFinder.addSymbol(ctx, id)
   }
 
+  // Visit a parse tree produced by SintesisParser#formalParameterArg.
+	visitFormalParameterArg(ctx) {
+	  this.visitVariableDeclaration(ctx)
+	}
+
   // Visit a parse tree produced by SintesisParser#functionDeclaration.
   visitFunctionDeclaration(ctx) {
     let id = ctx.id.text
@@ -91,9 +96,7 @@ class SintesisSymbolParser extends SintesisParserVisitor {
     SymbolFinder.addFunction(ctx.parentCtx, id, fn)
     SymbolFinder.createTable(ctx, fn)
     if (ctx.pl) {
-      this.createIfNotFound = true
       this.visit(ctx.pl)
-      this.createIfNotFound = false
     }
     if (ctx.stmt) {
       this.visit(ctx.stmt)
@@ -321,7 +324,7 @@ export default class SintesisEval extends SintesisParserVisitor {
       throw new SintesisError(ctxArgs, (fn.isConstructor ? `El constructor ` : `La función ${fn.name} `) +
         (params.length ? `requiere ${params.length} argumentos` : `no tiene parámetros`))
 
-    if (fn.class)
+    if (fn.class && inst instanceof Instance)
       SymbolFinder.pushStack(fn.context.parentCtx, inst)
 
     // creamos un nuevo contexto de símbolos de un contexto de función
@@ -330,7 +333,7 @@ export default class SintesisEval extends SintesisParserVisitor {
     // pone en el contexto los parámetros de la función como si fueran variables, con los valores asignados desde la llamada con argumentos a la función
     for (let i = 0; i < params.length; i++) {
       let id = params[i]
-      let mem_param = SymbolFinder.findSymbol(ctx.stmt, id)
+      let mem_param = SymbolFinder.findSymbol(ctx, id)
       mem_param.assign(i in values ? valueOf(values[i]) : null)
     }
 
@@ -349,7 +352,7 @@ export default class SintesisEval extends SintesisParserVisitor {
     // restauramos nivel de pila
     SymbolFinder.popStack(ctx)
 
-    if (fn.class)
+    if (fn.class && inst instanceof Instance)
       SymbolFinder.popStack(fn.context.parentCtx, inst)
 
     return r

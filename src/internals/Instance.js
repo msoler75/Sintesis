@@ -91,7 +91,7 @@ class Instance extends Variable {
 
     text() {
         const a = []
-        const m = []
+        // const m = []
         let ref = this
         do {
             for (const name in ref.attributes) {
@@ -101,22 +101,23 @@ class Instance extends Variable {
                         value: printObject(this.getRef(name).value)
                     })
             }
-            for (const name in ref.methods) {
+            /* for (const name in ref.methods) {
                 const v = printObject(this.getRef(name))
                 if (!m.find(x => x.name === name && x.value === v))
                     m.push({
                         name,
                         value: v
                     })
-            }
+            } */
             ref = ref.superClass
         } while (ref)
-        const r = []
-        if (a.length)
-            r.push('atributos: {' + a.map(x => `${x.name}: ${x.value}`).join(', ') + '}')
-        if (m.length)
-            r.push('métodos: {' + m.map(x => `${x.name}: ${x.value}`).join(', ') + '}')
-        return this.class.name + ' (' + r.join(', ') + ')'
+        return this.class.name + ' {' + a.map(x => `${x.name}: ${x.value}`).join(', ') + '}'
+        // const r = []
+        // if (a.length)
+           // r.push('atributos: {' + a.map(x => `${x.name}: ${x.value}`).join(', ') + '}')
+        // if (m.length)
+           // r.push('métodos: {' + m.map(x => `${x.name}: ${x.value}`).join(', ') + '}')
+        // return this.class.name + ' (' + r.join(', ') + ')'
     }
 
 }

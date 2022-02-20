@@ -228,7 +228,7 @@ vectorIndexes
     ;
 
 formalParameterArg
-    : identifier (Assign expression)?      
+    : id=identifier (Assign expression)?      
     ;
 
 variableStatement

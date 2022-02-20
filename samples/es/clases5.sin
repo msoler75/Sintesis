@@ -27,3 +27,4 @@ imprimir s
 s.hola("Jorge")
 s.adios("Jorge")
 imprimir s
+imprimir s.metodos

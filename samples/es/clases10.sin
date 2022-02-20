@@ -1,108 +1,12 @@
-clase Persona {
-
-        nombre, apellidos
-      
-        constructor (nombre, apellidos) {
-          asignaNombre (nombre)
-          asignaApellidos(apellidos)
-        }
-      
-        asignaNombre(nombre) {
-          atributos.nombre=nombre
-        }
-      
-        asignaApellidos(apellidos) {
-          atributos.apellidos = apellidos
-        }
-      
-        texto() {
-          retorna 'Persona (nombre:'+nombre+', apellidos: '+apellidos+')'
-        }  
-      }
-      
-      
-      
-      clase Cliente extiende Persona {
-      
-        dni
-        // además hereda los atributos del padre
-        // nombre
-        // apellidos
-      
-      
-        constructor (dni, nombre, apellidos) {
-          padre(nombre, apellidos)
-          asignaDNI(dni)
-        }
-      
-        asignaDNI(dni) {
-          atributos.dni = dni
-        }
-      
-        texto() {
-          retorna 'Cliente (dni: '+dni+', '+'nombre:'+nombre+', apellidos: '+apellidos+')'
-        }
-      
-        // además hereda los métodos del padre (clase Persona)
-        // asignaNombre(nombre) ...
-        // asignaApellidos(apellidos) ...
-        
-      }
-      
-      
-      
-      // persona
-      
-      p = nueva Persona ('Andrés', 'Pérez')
-      imprimir p.texto()
-      
-      p.asignaNombre('Laura')
-      p.asignaApellidos('Gutierrez')
-      
-      imprimir p.texto()
-      
-      imprimir p.atributos.nombre
-      imprimir p.atributos.apellidos
-      
-      imprimir p.nombre
-      imprimir p.apellidos
-      
-      si(p es Persona) 
-        print "es persona"
-      
-      si(p es Cliente) 
-        print "es cliente"
-      
-      si(p es NoExiste) 
-        print "no existe"
-      
-      // cliente
-      
-      c = nuevo Cliente(777, 'Jorge', 'García')
-      imprimir c.texto()
-      
-      c.asignaDNI(1234567)
-      c.asignaNombre('María')
-      c.asignaApellidos('López')
-      
-      imprimir c.texto()
-      
-      c.metodos.asignaNombre('Marcel')
-      c.metodos.asignaApellidos('Soler')
-      c.metodos.asignaDNI('987654321')
-      
-      imprimir c.texto()
-      
-      imprimir c.atributos.nombre
-      imprimir c.atributos.apellidos
-      imprimir c.atributos.DNI
-      
-      imprimir c.nombre
-      imprimir c.apellidos
-      imprimir c.DNI
-      
-      si(c es Persona) 
-        print "es persona"
-      
-      si(c es Cliente) 
-        print "es cliente"
+ clase A {
+    b
+    constructor(d)
+    {
+      b=d
+    }
+  }
+  
+  k = nueva A(4)
+  m = nueva A(7)
+  imp k
+  imp m

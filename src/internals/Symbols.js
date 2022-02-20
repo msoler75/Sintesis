@@ -1,6 +1,7 @@
 import MemoryRef from './MemoryRef.js'
 import Variable from './Variable.js'
 import RefClass from './RefClass.js'
+import Instance from './Instance.js'
 import Function from './Function.js'
 import valueOf from './ValueOf.js'
 import Class from './Class.js'
@@ -186,9 +187,11 @@ class SymbolFinder {
       if (ctx.symbolTable.class && ctx.symbolTable.class.superClass) {
         let ctxClass = ctx
         while (ctxClass) {
+          if (!ctxClass.symbolTable)
+            throw new Error("SymbolTable not found")
           if (ctxClass.symbolTable.hasSymbol(id))
             return ctxClass
-          ctxClass = ctxClass.symbolTable.class.superClass.context
+          ctxClass = ctxClass.symbolTable.class.superClass ? ctxClass.symbolTable.class.superClass.context : null
         }
       }
       ctx = this.findTable(ctx.parentCtx)
@@ -212,10 +215,14 @@ class SymbolFinder {
 
   // hemos de replicar la operación de push en la symbol table en todos los nodos descendientes
   static pushStack(ctx, instance) {
+    if(instance && !(instance instanceof Instance))
+      throw new Error("Must be Instance")
     ctx = this.findTable(ctx)
     if (instance) {
       let inst = instance
       while (inst) {
+        if(!inst.class)
+        throw new Error("Not Class Found in instance")
         inst.class.context.symbolTable.pushStack(inst)
         inst = inst.superClass
       }
