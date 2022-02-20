@@ -215,14 +215,14 @@ class SymbolFinder {
 
   // hemos de replicar la operación de push en la symbol table en todos los nodos descendientes
   static pushStack(ctx, instance) {
-    if(instance && !(instance instanceof Instance))
+    if (instance && !(instance instanceof Instance))
       throw new Error("Must be Instance")
     ctx = this.findTable(ctx)
     if (instance) {
       let inst = instance
       while (inst) {
-        if(!inst.class)
-        throw new Error("Not Class Found in instance")
+        if (!inst.class)
+          throw new Error("Not Class Found in instance")
         inst.class.context.symbolTable.pushStack(inst)
         inst = inst.superClass
       }
@@ -330,6 +330,34 @@ class SymbolFinder {
     ctx = this.findTable(ctx)
     if (!ctx) return null
     return ctx.symbolTable.addClass(id, value)
+  }
+
+  static canAccess(memoryref, ctxFrom) {
+    if(memoryref && memoryref._variable instanceof RefClass) {
+      const rc = memoryref._variable
+      let visibility = rc._value.classInstance.getVisibility(rc._value.id)
+      if (visibility == 'public')
+        return true
+      let ctx = SymbolFinder.getClassContext(ctxFrom)
+      // en elementos privados, si procedemos del mismo contexto de la clase misma tendremos acceso
+      if (visibility == 'private')
+        return ctx && ctx.symbolTable.class.name === rc._value.classInstance.name
+      // protected:
+      return ctx && ctx.symbolTable.class.isDescendantOf(rc._value.classInstance.name)
+    }
+    if (memoryref && memoryref._variable instanceof Instance && memoryref._index) {
+      const instance = memoryref._variable
+      let visibility = instance.class.getVisibility(memoryref._index)
+      if (visibility == 'public')
+        return true
+      let ctx = SymbolFinder.getClassContext(ctxFrom)
+      // en elementos privados, si procedemos del mismo contexto de la clase misma tendremos acceso
+      if (visibility == 'private')
+        return ctx && ctx.symbolTable.class.name === instance.class.name
+      // protected:
+      return ctx && ctx.symbolTable.class.isDescendantOf(instance.class.name)
+    }
+    return true
   }
 
   static print(ctx, tabs) {

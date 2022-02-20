@@ -2,40 +2,33 @@ import printObject from './Print.js'
 import Variable from './Variable.js'
 import Class from "./Class.js"
 import Map from "./Map.js"
-import {
-    SymbolTable
-} from './Symbols.js'
+
 
 class Instance extends Variable {
-    constructor(clsBase, mode) {
+    constructor(clsBase) {
         super()
         if (!(clsBase instanceof Class))
             throw new Error('El parámetro de Instance debe ser del tipo Class');
         this.class = clsBase
         this.attributes = {}
         this.superClass = clsBase.superClass ? new Instance(clsBase.superClass) : null
-        if (mode != 'methods')
-            if (Symbol.iterator in Object(clsBase.attributes))
-                for (const a of clsBase.attributes)
-                    this.attributes[a] = new Variable()
-        if (mode != 'attributes')
-            this.methods = clsBase.methods
+        for (const id in clsBase.attributes)
+            this.attributes[id] = new Variable()
+        this.methods = clsBase.methods
 
         const atr = {}
         const met = {}
         let ref = this
-        let consnum = 1
+        let numconstruc = 1
         do {
             for (const id in ref.attributes)
                 if (!Class.isSpecialAttribute(id))
                     atr[id] = ref.attributes[id]
-            for (const name in ref.methods)
-            {
+            for (const name in ref.methods) {
                 let lbl = name
-                if(Class.isConstructorName(name))
-                {
-                    lbl = consnum==1?'constructor':'constructor'+consnum
-                    consnum++
+                if (Class.isConstructorName(name)) {
+                    lbl = numconstruc == 1 ? 'constructor' : 'constructor' + numconstruc
+                    numconstruc++
                 }
                 met[lbl] = ref.methods[name]
             }
@@ -111,9 +104,9 @@ class Instance extends Variable {
         return this.class.name + ' {' + a.map(x => `${x.name}: ${x.value}`).join(', ') + '}'
         // const r = []
         // if (a.length)
-           // r.push('atributos: {' + a.map(x => `${x.name}: ${x.value}`).join(', ') + '}')
+        // r.push('atributos: {' + a.map(x => `${x.name}: ${x.value}`).join(', ') + '}')
         // if (m.length)
-           // r.push('métodos: {' + m.map(x => `${x.name}: ${x.value}`).join(', ') + '}')
+        // r.push('métodos: {' + m.map(x => `${x.name}: ${x.value}`).join(', ') + '}')
         // return this.class.name + ' (' + r.join(', ') + ')'
     }
 

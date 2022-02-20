@@ -31,12 +31,12 @@ class MemoryRef {
         else
             this._variable = vari
     }
-
+    
     assign(value) {
         //if(this._variable instanceof RefClass)
-          //  console.error("No puede asignar a RefClass")
-        if(value instanceof MemoryRef)
-        value = value.variable
+        //  console.error("No puede asignar a RefClass")
+        if (value instanceof MemoryRef)
+            value = value.variable
         let literal = valueOf(value)
         let valueIsVarType = value instanceof Variable || value instanceof Function || value instanceof Instance
         if (!this._variable) {
@@ -54,7 +54,7 @@ class MemoryRef {
         this.variable.value += inc
     }
 
-    get value () {
+    get value() {
         return this.variable.value
     }
 

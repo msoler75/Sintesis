@@ -445,6 +445,11 @@ Var_
               |      'let'
               ;
 
+
+Private:                        'private' | 'privad'[oa];
+Public:                         'public' | 'p'[u\u00FA]'blic'[oa];
+Protected:                      'protected' | 'protegid'[oa];
+
 /// Identifier Names and Identifiers
 
 // bug: https://github.com/antlr/antlr4/issues/3506
@@ -453,7 +458,7 @@ Var_
 
 /// Identifier Names and Identifiers
 
-Identifier:                     [a-zA-Z$_áéíóúÁÉÍÓÚàèìòùÀÈÌÒÙ][a-zA-Z$_áéíóúÁÉÍÓÚàèìòùÀÈÌÒÙ0-9]* ;
+Identifier:                     [a-zA-Z$_áéíóúÁÉÍÓÚàèìòùÀÈÌÒÙñÑ][a-zA-Z$_áéíóúÁÉÍÓÚàèìòùÀÈÌÒÙñÑ0-9]* ;
 
 // Strings
 

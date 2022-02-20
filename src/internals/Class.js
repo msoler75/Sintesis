@@ -3,15 +3,12 @@ class Class {
         this.context = ctx
         this.name = name
         this.superClass = superClass
+        // this.attributes = attributes
         this.attributes = attributes
         this.methods = methods || {}
         if (this.methods)
             for (const i in this.methods)
                 this.methods[i].class = this
-    }
-
-    addMethod(name) {
-
     }
 
     getConstructor(numargs) {
@@ -25,6 +22,29 @@ class Class {
 
     hasDefaultConstructor() {
         return !!this.getConstructor(0)
+    }
+
+    isDescendantOf(ancestorName) {
+        let ref = this
+        while (ref) {
+            if (ref.name === ancestorName)
+                return true
+            ref = ref.superClass
+        }
+        return false
+    }
+
+    getVisibility(id) {
+        let visibility = 'public'
+        let ref = this
+        while (ref) {
+            if (id in ref.attributes)
+                visibility = ref.attributes[id]
+            ref = ref.superClass
+        }
+        // if (id in instance.class.methods)
+        // visibility = this.attributes[id]
+        return visibility
     }
 
 
@@ -44,7 +64,7 @@ class Class {
 
 Class.isConstructorName = function (name) {
     // to-do: lang
-    return ['constructor', 'construct'].includes(name)  || name.startsWith('__construct')
+    return ['constructor', 'construct'].includes(name) || name.startsWith('__construct')
 }
 
 Class.isAttributesName = function (name) {
@@ -72,6 +92,21 @@ Class.isSpecialAttribute = function (name) {
         Class.isMethodsName(name) ||
         Class.isSuperName(name) ||
         Class.isInstance(name)
+}
+
+Class.isPublic = function (vis) {
+    // to-do: lang
+    return ['public'].includes(vis) || vis.match(/^p[uú]blic[oa]$/i)
+}
+
+Class.isPrivate = function (vis) {
+    // to-do: lang
+    return ['private'].includes(vis) || vis.match(/^privad[oa]$/i)
+}
+
+Class.isProtected = function (vis) {
+    // to-do: lang
+    return ['protected'].includes(vis) || vis.match(/^protegid[oa]$/i)
 }
 
 export default Class

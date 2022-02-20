@@ -196,6 +196,12 @@ arguments
     : '(' (expression (',' expression)* )? ')'
     ;
 
+visibility
+    :   Public
+    |   Private
+    |   Protected
+    ;
+
 classDeclaration
     : Class_ id=Identifier (Extends ext=Identifier)? '{' 
         ((Attributes ':')? ('{' atrs=identifiers '}' | atrs=identifiers ))?
@@ -204,11 +210,15 @@ classDeclaration
     ;
 
 identifiers 
-    : (Identifier ','?)+
+    : classAttributeDecl+
+    ;
+
+classAttributeDecl 
+    :  vis=visibility? identifier (','? identifier)* eos
     ;
 
 methodDeclaration
-    : (Method|Function_)? id=(Identifier|Constructor) '(' pl=formalParameterList? ')' stmt=functionBody
+    : vis=visibility? (Method|Function_)? id=(Identifier|Constructor) '(' pl=formalParameterList? ')' stmt=functionBody
     ;
 
 methodsList

@@ -19,7 +19,8 @@ clase Figura {
 }
 
 clase Cuadrado extiende Figura {
-    atributos: ancho alto
+    atributos: ancho ,
+      alto
 
     métodos: {
         constructor(ancho, alto) {
@@ -35,5 +36,6 @@ clase Cuadrado extiende Figura {
 
 f = nueva Figura()
 c = nuevo Cuadrado(2, 3)
+imp c
 imprimir "Figura ", f.dameId() , " tiene area " + f.area()
 imprimir "Figura ", c.dameId() , " tiene area " + c.area()

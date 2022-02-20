@@ -56,6 +56,10 @@ class SintesisSymbolParser extends SintesisParserVisitor {
     if (!memoryref || (memoryref._variable instanceof Error))
       if (this.createIfNotFound)
         SymbolFinder.addSymbol(ctx, id)
+
+    // comprobamos accesibilidad de atributos métodos
+    if (!SymbolFinder.canAccess(memoryref, ctx))
+      throw new SintesisError(ctx, "Acceso no permitido")
   }
 
 
@@ -124,11 +128,11 @@ class SintesisSymbolParser extends SintesisParserVisitor {
     const id = ctx.id.text;
     let extend = ctx.ext ? ctx.ext.text : null
     if (id in SymbolFinder.getTable(ctx.parentCtx).memory)
-    throw new SintesisError(ctx.id, `El símbolo '${id}' ya fue definido`)
+      throw new SintesisError(ctx.id, `El símbolo '${id}' ya fue definido`)
     if (extend) {
       let memoryref = SymbolFinder.findSymbol(ctx, extend)
       if (!memoryref)
-      throw new SintesisError(ctx.id, `No existe la clase ${extend}`)
+        throw new SintesisError(ctx.id, `No existe la clase ${extend}`)
       if (!(memoryref.variable instanceof Class))
         throw new SintesisError(ctx.id, `${extend} no es una clase`)
       extend = memoryref.variable
@@ -137,13 +141,13 @@ class SintesisSymbolParser extends SintesisParserVisitor {
     const methodList = ctx.methods ? ctx.methods.children.map(x => new Function(x.id.text, x, ctx)) : {}
     let extendingWithNoDefaultConstructor = extend && !extend.hasDefaultConstructor()
     let methods = {}
-    let consnum = 0
+    let numconstruc = 0
     for (const i in methodList) {
       const method = methodList[i]
       let name = method.context.id.text
       const isConstructor = Class.isConstructorName(name)
-      if(isConstructor) 
-        name = '__constructor.'+consnum++
+      if (isConstructor)
+        name = '__constructor.' + numconstruc++
       method.name = name
       if (extendingWithNoDefaultConstructor && isConstructor) {
         // comprobar que el constructor llama al constructor padre
@@ -168,22 +172,37 @@ class SintesisSymbolParser extends SintesisParserVisitor {
       methods[name] = method
     }
     // let k = Object.values(methods)/
-    const attributes = ctx.atrs ? ctx.atrs.children.map(x => x.getText()).filter(x => !x.match(/[,{}]/)) : []
+    const attributes = {}
+    if (ctx.atrs) {
+      this.find(ctx.atrs, 'ClassAttributeDeclContext')
+        .forEach(x => {
+          this.find(x, 'IdentifierContext').forEach(at => {
+            let id = at.getText()
+            let vis = x.vis ? x.vis.getText() : ''
+            vis = !vis || Class.isPublic(vis) ? 'public' :
+              Class.isProtected(vis) ? 'protected' :
+              'private'
+            attributes[id] = vis
+          })
+        })
+    }
+    //ctx.atrs.children.map(x => x.getText()).filter(x => !x.match(/[,{}]/)) : []
     // const attributes = ctx.atrs? ctx.atrs.children.filter(x=>x.constructor.name!=='TerminalNodeImpl').map(x => x.getText())
-    if (attributes.length && !Object.values(methods).find(x => Class.isConstructorName(x.name)))
+    var numAttributes = Object.keys(attributes).length
+    if (numAttributes && !Object.values(methods).find(x => Class.isConstructorName(x.name)))
       throw new SintesisError(ctx.mdec || ctx, "Se requiere un constructor para inicializar los atributos")
 
     const cls = new Class(ctx, id, extend, attributes, methods)
 
     // si no tiene atributos no requiere constructor por defecto definido, pero lo necesitamos para que funcione
-    if (!extend && !attributes.length && !cls.hasDefaultConstructor())
+    if (!extend && !numAttributes && !cls.hasDefaultConstructor())
       cls.methods['__constructor.default'] = new Function('__constructor.default', null, ctx)
 
     SymbolFinder.addClass(ctx.parentCtx, id, cls)
     SymbolFinder.createTable(ctx, cls)
 
     // añadimos para cada atributo y método la referencia al objeto o instancia de clase
-    for (const id of cls.attributes)
+    for (const id in cls.attributes)
       SymbolFinder.addVariable(ctx, id, new RefClass(cls, id))
     for (const id in cls.methods)
       SymbolFinder.addVariable(ctx, id, new RefClass(cls, id))
@@ -193,7 +212,6 @@ class SintesisSymbolParser extends SintesisParserVisitor {
       if (cls.methods[id].context)
         this.visit(cls.methods[id].context)
   }
-
 
   // Visit a parse tree produced by SintesisParser#expAssignment.
   visitExpAssignment(ctx) {
@@ -381,6 +399,10 @@ export default class SintesisEval extends SintesisParserVisitor {
     if (!memoryref || !(memoryref instanceof MemoryRef))
       throw new SintesisError(ctx.exp, "Operador izquierdo inválido")
 
+    // comprobamos accesibilidad de atributos métodos
+    if (!SymbolFinder.canAccess(memoryref, ctx))
+      throw new SintesisError(ctx.exp, "Acceso no permitido")
+
     let index = this.visit(ctx.idx)
     index = valueOf(index)
     if (index == undefined)
@@ -404,6 +426,11 @@ export default class SintesisEval extends SintesisParserVisitor {
 
     // si no existe el índice retornaremos null
     ref = ref ? new MemoryRef(memoryref.variable, index) : null
+    
+    // comprobamos accesibilidad de atributos métodos
+    if (ref && !SymbolFinder.canAccess(ref, ctx))
+      throw new SintesisError(ctx.idx, "Acceso no permitido")
+
     if (!ctx.args || !ref)
       return ref
 
@@ -942,7 +969,11 @@ export default class SintesisEval extends SintesisParserVisitor {
   // Visit a parse tree produced by SintesisParser#expIdentifier.
   visitExpIdentifier(ctx) {
     const id = ctx.getText()
-    return SymbolFinder.findSymbol(ctx, id)
+    const memoryref =  SymbolFinder.findSymbol(ctx, id)
+    // comprobamos accesibilidad de atributos métodos
+    if (!SymbolFinder.canAccess(memoryref, ctx))
+      throw new SintesisError(ctx, "Acceso no permitido")
+    return memoryref
   }
 
   // Visit a parse tree produced by SintesisParser#expVar.
