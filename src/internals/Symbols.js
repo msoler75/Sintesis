@@ -12,7 +12,7 @@ class SymbolTable {
     this.memory = [{}]
     if (function_or_class instanceof Function)
       this.function = function_or_class // para señalar que estamos dentro de un nuevo contexto de función
-    else
+    else if (function_or_class)
       this.class = function_or_class // para señalar que estamos dentro de un nuevo contexto de instancia clase
   }
 
@@ -28,16 +28,27 @@ class SymbolTable {
   pushStack(instance) {
     const m = this.memory[0]
     const m2 = {}
+    if (!this.memory)
+      throw new Error("Symbols not found")
     if (this.memory.length == 0)
-      console.error('NO MEMORY SYMBOLS!')
-    Object.keys(this.memory[0]).forEach(key => {
-      if (m[key]._variable instanceof RefClass) {
-        if (m[key]._variable.value.classInstance.name === instance.class.name) {
+      throw new Error("No Symbol stacks")
+    let keys = Object.keys(this.memory[0])
+    keys.forEach(key => {
+      if (instance && m[key]._variable instanceof RefClass) {
+        let value = m[key]._variable.value
+        if (!value || !value.classInstance)
+          throw new Error("RefClass Variable value not valid")
+        let inst = instance
+        // aplicamos a las referencias de clase la instancia correspondiente
+        while (inst) {
+          if (inst.class.name === value.classInstance.name) break
+          inst = inst.superClass
+        }
+        if (inst && value.classInstance.name === inst.class.name) {
           m2[key] = new MemoryRef(instance, key)
-          // console.log(key, '<', instance.class.name + '.' + key)
-          // break
-        } else
-          console.log('EEEEEEK!', m[key]._variable.value.classInstance.name, '!=', instance.class.name)
+        } else {
+          throw new Error("RefClass key not found in instance")
+        }
       } else
         m2[key] = new MemoryRef(
           m[key]._variable && (m[key]._variable instanceof Function || m[key]._variable instanceof Class) ? m[key]._variable : undefined
@@ -49,7 +60,7 @@ class SymbolTable {
       m2['___methods'] = new MemoryRef(instance.attributes['___methods'])
       if (instance.superClass)
         m2['___super'] = new MemoryRef(instance.superClass)
-    } else {
+    } else if (this.function) {
       m2['___ended'] = false // para contextos de función, cuando se ejecuta 'return' el bloque o contexto entero se marca como 'terminado'
       m2['___result'] = null // para contextos de función, cuando se retorna un resultado se guarda en esta variable
     }
@@ -58,7 +69,7 @@ class SymbolTable {
 
   popStack() {
     if (this.memory.length <= 1)
-      console.error("DEMASIADOS POP");
+      throw new Error("popStack invalid")
     this.memory.pop()
   }
 
@@ -172,12 +183,12 @@ class SymbolFinder {
     while (ctx) {
       if (ctx.symbolTable.hasSymbol(id))
         return ctx
-      if (ctx.symbolTable.class && ctx.symbolTable.superClass) {
-        ctxClass = ctx
+      if (ctx.symbolTable.class && ctx.symbolTable.class.superClass) {
+        let ctxClass = ctx
         while (ctxClass) {
           if (ctxClass.symbolTable.hasSymbol(id))
             return ctxClass
-          ctxClass = ctx.ctx.symbolTable.superClass.context
+          ctxClass = ctxClass.symbolTable.class.superClass.context
         }
       }
       ctx = this.findTable(ctx.parentCtx)
@@ -202,9 +213,13 @@ class SymbolFinder {
   // hemos de replicar la operación de push en la symbol table en todos los nodos descendientes
   static pushStack(ctx, instance) {
     ctx = this.findTable(ctx)
-    if (instance)
-      ctx.symbolTable.pushStack(instance)
-    else
+    if (instance) {
+      let inst = instance
+      while (inst) {
+        inst.class.context.symbolTable.pushStack(inst)
+        inst = inst.superClass
+      }
+    } else
       SymbolFinder.visitChildren(ctx, function (ctx) {
         if (ctx && ctx.symbolTable) {
           ctx.symbolTable.pushStack()

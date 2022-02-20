@@ -25,15 +25,15 @@ class Instance extends Variable {
         const met = {}
         let ref = this
         do {
-            for (const i in ref.attributes)
-                atr[i] = ref.attributes[i]
+            for (const id in ref.attributes)
+                if (!Class.isSpecialAttribute(id))
+                    atr[id] = ref.attributes[id]
             for (const i in ref.methods)
                 met[i] = ref.methods[i]
             ref = ref.superClass
         } while (ref)
         this.attributes['___attributes'] = new Map(atr)
         this.attributes['___methods'] = new Map(met)
-        // this.symbolTable = new SymbolTable(null, this)
     }
 
     isInstanceOf(name) {
@@ -95,17 +95,18 @@ class Instance extends Variable {
         let ref = this
         do {
             for (const name in ref.attributes) {
-                if (!Class.isSpecialMember(name))
+                if (!Class.isSpecialAttribute(name))
                     a.push({
                         name,
                         value: printObject(this.getRef(name).value)
                     })
             }
             for (const name in ref.methods) {
-                if (!Class.isSpecialMember(name))
+                const v = printObject(this.getRef(name))
+                if (!m.find(x => x.name === name && x.value === v))
                     m.push({
                         name,
-                        value: printObject(this.getRef(name))
+                        value: v
                     })
             }
             ref = ref.superClass

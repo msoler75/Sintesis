@@ -25,4 +25,8 @@ k = nueva B(4, 5)
 imp k
 m = nueva B(7, 8)
 imp m
+m.b=1
+m.e=2
+imp k
+imp m
 imp b, e 

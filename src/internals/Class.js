@@ -67,7 +67,7 @@ Class.isInstance = function (name) {
     return ['__instance', '___instance'].includes(name)
 }
 
-Class.isSpecialMember = function (name) {
+Class.isSpecialAttribute = function (name) {
     return Class.isAttributesName(name) ||
         Class.isMethodsName(name) ||
         Class.isSuperName(name) ||

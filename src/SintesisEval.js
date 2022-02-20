@@ -79,10 +79,15 @@ class SintesisSymbolParser extends SintesisParserVisitor {
   // Visit a parse tree produced by SintesisParser#functionDeclaration.
   visitFunctionDeclaration(ctx) {
     let id = ctx.id.text
-    if (!Class.isConstructorName(id))
-      if (SymbolFinder.getTable(ctx.parentCtx).hasSymbol(id))
-        throw new SintesisError(ctx.id, `El símbolo '${id}' ya fue definido`)
-    const fn = new Function(ctx)
+    if (!Class.isConstructorName(id)) {
+      const st = SymbolFinder.getTable(ctx.parentCtx)
+      if (st.hasSymbol(id)) {
+        const fn = st.getRef(id)
+        if (!(fn._variable instanceof RefClass))
+          throw new SintesisError(ctx.id, `El símbolo '${id}' ya fue definido`)
+      }
+    }
+    const fn = new Function(id, ctx)
     SymbolFinder.addFunction(ctx.parentCtx, id, fn)
     SymbolFinder.createTable(ctx, fn)
     if (ctx.pl) {
@@ -116,7 +121,7 @@ class SintesisSymbolParser extends SintesisParserVisitor {
   visitClassDeclaration(ctx) {
     const id = ctx.id.text;
     let extend = ctx.ext ? ctx.ext.text : null
-    const methodList = ctx.methods ? ctx.methods.children.map(x => new Function(x, ctx)) : {}
+    const methodList = ctx.methods ? ctx.methods.children.map(x => new Function(x.id.text, x, ctx)) : {}
     if (id in SymbolFinder.getTable(ctx.parentCtx).memory)
       throw new SintesisError(ctx.id, `El símbolo '${id}' ya fue definido`)
     if (extend) {
@@ -156,7 +161,7 @@ class SintesisSymbolParser extends SintesisParserVisitor {
       methods[name] = method
     }
     // let k = Object.values(methods)/
-    const attributes = ctx.atrs ? ctx.atrs.children.map(x => x.getText()).filter(x => !x.match(/[,{}]/)) : {}
+    const attributes = ctx.atrs ? ctx.atrs.children.map(x => x.getText()).filter(x => !x.match(/[,{}]/)) : []
     // const attributes = ctx.atrs? ctx.atrs.children.filter(x=>x.constructor.name!=='TerminalNodeImpl').map(x => x.getText())
     if (attributes.length && !Object.values(methods).find(x => Class.isConstructorName(x.name)))
       throw new SintesisError(ctx.mdec || ctx, "Se requiere un constructor para inicializar los atributos")
@@ -166,22 +171,21 @@ class SintesisSymbolParser extends SintesisParserVisitor {
     // si no tiene atributos no requiere constructor por defecto definido, pero lo necesitamos para que funcione
     if (!attributes.length && !cls.hasDefaultConstructor())
       // si no tiene un constructor por defecto definido, le creamos uno
-      cls.methods['constructor'] = new Function({
-        id: {
-          text: 'constructor'
-        }
-      }, ctx)
+      cls.methods['constructor'] = new Function(id, null, ctx)
 
     SymbolFinder.addClass(ctx.parentCtx, id, cls)
     SymbolFinder.createTable(ctx, cls)
 
-    for (const id in cls.methods)
-      this.visit(cls.methods[id].context)
     // añadimos para cada atributo y método la referencia al objeto o instancia de clase
     for (const id of cls.attributes)
       SymbolFinder.addVariable(ctx, id, new RefClass(cls, id))
     for (const id in cls.methods)
       SymbolFinder.addVariable(ctx, id, new RefClass(cls, id))
+
+    // llamamos a los métodos para que generen los símbolos
+    for (const id in cls.methods)
+      if (cls.methods[id].context)
+        this.visit(cls.methods[id].context)
   }
 
 
@@ -301,13 +305,13 @@ export default class SintesisEval extends SintesisParserVisitor {
 
 
 
-  callToFunction(memoryref, ctxArgs, justInClass) {
+  callToFunction(memoryref, ctxArgs) {
     const fn = memoryref.variable
     const inst = memoryref._variable
     const ctx = fn.context
 
     // caso de constructores vacíos
-    if (!ctx.stmt) return
+    if (!ctx || !ctx.stmt) return
 
     // obtenemos los argumentos o parámetros de la función y los valores
     const params = ctx.pl ? this.visit(ctx.pl).params : []
@@ -319,34 +323,6 @@ export default class SintesisEval extends SintesisParserVisitor {
 
     if (fn.class)
       SymbolFinder.pushStack(fn.context.parentCtx, inst)
-
-    //let instances = []
-    // si es una función (método) de clase...
-    // creamos para cada superclase una tabla de símbolos de todos sus atributos de clase
-    /*if (fn.class && obj instanceof Instance) {
-      // obtenemos la referencia al objeto o instancia de clase
-      let ref = obj
-      do {
-        instances.unshift(ref)
-        ref = ref.superClass
-      } while (ref)
-
-      for (const instance of instances) {
-        // creamos un nuevo contexto
-        SymbolFinder.pushStack(false, instance)
-
-        // añadimos los atributos y métodos en la tabla de símbolos
-        for (const id in instance.attributes) {
-          const vari = instance.getRef(id)
-          SymbolFinder.addVariable(id, vari)
-        }
-
-        for (const id in instance.methods) {
-          SymbolFinder.addFunction(id, instance.methods[id])
-        }
-      }
-    }*/
-
 
     // creamos un nuevo contexto de símbolos de un contexto de función
     SymbolFinder.pushStack(ctx)
@@ -362,7 +338,7 @@ export default class SintesisEval extends SintesisParserVisitor {
     // y no tiene explícitamente una llamada a la superclase...
     if (fn.class && inst.superClass && Class.isConstructorName(fn.name) && !fn.callingSuperClass) {
       let fncon = inst.superClass.class.getConstructor(0)
-      this.callToFunction(new MemoryRef(inst.superClass, fncon.name), true)
+      this.callToFunction(new MemoryRef(inst.superClass, fncon.name), null )
     }
 
     // ejecutamos el cuerpo de la función
@@ -394,6 +370,7 @@ export default class SintesisEval extends SintesisParserVisitor {
 
   // Visit a parse tree produced by SintesisParser#expMemberIndex.
   visitExpMemberIndex(ctx) {
+    const logexp = ctx.exp.getText()
     let memoryref = this.visit(ctx.exp)
     if (!memoryref || !(memoryref instanceof MemoryRef))
       throw new SintesisError(ctx.exp, "Operador izquierdo inválido")
@@ -426,7 +403,7 @@ export default class SintesisEval extends SintesisParserVisitor {
 
     // es una llamada a un método 
     if (!(ref.variable instanceof Function))
-      throw new SintesisError(ctx.exp, "${index} no es una función")
+      throw new SintesisError(ctx.exp, `${index} no es una función`)
 
     // preparamos argumentos
     let values = ctx.args ? this.visit(ctx.args).values : []
@@ -468,6 +445,7 @@ export default class SintesisEval extends SintesisParserVisitor {
   // Visit a parse tree produced by SintesisParser#expAssignment.
   visitExpAssignment(ctx) {
     this.createIndexIfNotExists = true
+    const logD = ctx.dest.getText()
     let memoryref = this.visit(ctx.dest)
     this.createIndexIfNotExists = false
 

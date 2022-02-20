@@ -33,6 +33,8 @@ class MemoryRef {
     }
 
     assign(value) {
+        //if(this._variable instanceof RefClass)
+          //  console.error("No puede asignar a RefClass")
         if(value instanceof MemoryRef)
         value = value.variable
         let literal = valueOf(value)
