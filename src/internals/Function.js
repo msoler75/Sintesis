@@ -8,7 +8,7 @@ class Function extends Variable {
     this.isConstructor = Class.isConstructorName(this.name)
     this.callingSuperClass = false // para indicar si dentro del cuerpo del método constructor hay una llamada al constructor padre
     this.context = ctx
-    let vis = ctx.vis ? ctx.vis.getText() : ''
+    let vis = ctx && ctx.vis ? ctx.vis.getText() : ''
     this.visibility = !vis || Class.isPublic(vis) ? 'public' :
       Class.isProtected(vis) ? 'protected' :
       'private'

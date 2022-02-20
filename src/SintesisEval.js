@@ -97,8 +97,10 @@ class SintesisSymbolParser extends SintesisParserVisitor {
       }
     }
     const fn = new Function(id, ctx)
-    if(!isMethod)
+    // si es un método, no se añade porque ya se ha añadido el símbolo en la declaración de la clase
+    if (!isMethod)
       SymbolFinder.addFunction(ctx.parentCtx, id, fn)
+    
     SymbolFinder.createTable(ctx, fn)
     if (ctx.pl) {
       this.visit(ctx.pl)
@@ -428,7 +430,7 @@ export default class SintesisEval extends SintesisParserVisitor {
 
     // si no existe el índice retornaremos null
     ref = ref ? new MemoryRef(memoryref.variable, index) : null
-    
+
     // comprobamos accesibilidad de atributos métodos
     if (ref && !SymbolFinder.canAccess(ref, ctx))
       throw new SintesisError(ctx.idx, "Acceso no permitido")
@@ -971,7 +973,7 @@ export default class SintesisEval extends SintesisParserVisitor {
   // Visit a parse tree produced by SintesisParser#expIdentifier.
   visitExpIdentifier(ctx) {
     const id = ctx.getText()
-    const memoryref =  SymbolFinder.findSymbol(ctx, id)
+    const memoryref = SymbolFinder.findSymbol(ctx, id)
     // comprobamos accesibilidad de atributos métodos
     if (!SymbolFinder.canAccess(memoryref, ctx))
       throw new SintesisError(ctx, "Acceso no permitido")

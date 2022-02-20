@@ -24,7 +24,17 @@ test('acentos-3', () => {
 
 test('acentos-4', () => {
     expect(exec(`
-    clase ámbito { único métodos: constructor(ámbito){atributos.único=ámbito} únicamente(índole){imp índole,único}}
+    clase ámbito { 
+        único 
+        
+        métodos: 
+        constructor(ámbito){
+            atributos.único=ámbito
+        } 
+        únicamente(índole) {
+            imp índole,único
+        }
+    }
     nuevo ámbito(1).únicamente(2)
     `)).toContainText(`2 1`)
 })
