@@ -1,0 +1,35 @@
+clase Animal {
+    nombre
+    
+    constructor(nombre) {atributos.nombre = nombre}
+
+    accion() { }
+}
+
+clase Perro extiende Animal {
+    constructor(nombre) {
+        super(nombre)
+    }
+
+    accion() {
+        imp nombre, "ladra"
+    }
+}
+
+clase Gato extiende Animal {
+    constructor(nombre) {
+        super(nombre)
+    }
+
+    accion() {
+        imp nombre, "maúlla"
+    }
+}
+
+anim = nuevo Animal("Pepito")
+perro = nuevo Perro("Bobby")
+gato = nuevo Gato("Fauna")
+
+anim.accion()
+perro.accion()
+gato.accion()

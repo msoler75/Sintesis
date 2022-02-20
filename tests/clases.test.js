@@ -449,3 +449,87 @@ test('Clases-11 constructor & instanceof', () => {
     Paco es cliente
     `)
 })
+
+
+
+
+test('Clases-12 métodos heredados', () => {
+  expect(exec(`
+  clase Animal {
+    nombre
+    
+    constructor(nombre) {atributos.nombre = nombre}
+
+    accion() { }
+  }
+
+  clase Perro extiende Animal {
+      constructor(nombre) {
+          super(nombre)
+      }
+
+      accion() {
+          imp nombre, "ladra"
+      }
+  }
+
+  clase Gato extiende Animal {
+      constructor(nombre) {
+          super(nombre)
+      }
+
+      accion() {
+          imp nombre, "maúlla"
+      }
+  }
+
+  anim = nuevo Animal("Pepito")
+  perro = nuevo Perro("Bobby")
+  gato = nuevo Gato("Fauna")
+
+  anim.accion()
+  perro.accion()
+  gato.accion()
+  `)).toContainText(`
+  Bobby ladra
+  Fauna maúlla
+  `)
+})
+
+
+
+test('Clases-13 sobrecarga de constructores', () => {
+  expect(exec(`
+  class Persona
+  {
+      nombre, apellidos
+
+      // constructor sobrecargado
+      constructor() {}
+      
+      constructor(nombre) {
+          atributos.nombre = nombre
+      }  
+
+      constructor(nombre, apellidos) {
+          atributos.nombre = nombre
+          atributos.apellidos = apellidos
+      }
+      
+  }
+
+  a = nueva Persona()
+  b = nueva Persona("Jorge")
+  c = nueva Persona("Juan", "García")
+
+  imp a
+  imp b
+  imp c
+  imp a.metodos
+  `)).toContainText(`
+  Persona {nombre: nulo, apellidos: nulo}
+  Persona {nombre: Jorge, apellidos: nulo}
+  Persona {nombre: Juan, apellidos: García}
+  {constructor: (), constructor2: (nombre), constructor3: (nombre, apellidos)}
+  `)
+})

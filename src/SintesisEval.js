@@ -1,5 +1,5 @@
 const imprimirCadaLinea = 0
-
+import antlr4 from 'antlr4';
 import Map from './internals/Map.js'
 import Class from './internals/Class.js'
 import Vector from './internals/Vector.js'
@@ -64,22 +64,21 @@ class SintesisSymbolParser extends SintesisParserVisitor {
     return this.visitIdentifier(ctx)
   }
 
-  // Visit a parse tree produced by SintesisParser#expVar.
-  visitExpVar(ctx) {
-    const id = ctx.getText()
-    SymbolFinder.addSymbol(ctx, id)
-  }
-
   // Visit a parse tree produced by SintesisParser#variableDeclaration.
   visitVariableDeclaration(ctx) {
     const id = ctx.id.getText()
     SymbolFinder.addSymbol(ctx, id)
   }
 
+  // Visit a parse tree produced by SintesisParser#expVar.
+  visitExpVar(ctx) {
+    this.visitVariableDeclaration(ctx)
+  }
+
   // Visit a parse tree produced by SintesisParser#formalParameterArg.
-	visitFormalParameterArg(ctx) {
-	  this.visitVariableDeclaration(ctx)
-	}
+  visitFormalParameterArg(ctx) {
+    this.visitVariableDeclaration(ctx)
+  }
 
   // Visit a parse tree produced by SintesisParser#functionDeclaration.
   visitFunctionDeclaration(ctx) {
@@ -124,24 +123,29 @@ class SintesisSymbolParser extends SintesisParserVisitor {
   visitClassDeclaration(ctx) {
     const id = ctx.id.text;
     let extend = ctx.ext ? ctx.ext.text : null
-    const methodList = ctx.methods ? ctx.methods.children.map(x => new Function(x.id.text, x, ctx)) : {}
     if (id in SymbolFinder.getTable(ctx.parentCtx).memory)
-      throw new SintesisError(ctx.id, `El símbolo '${id}' ya fue definido`)
+    throw new SintesisError(ctx.id, `El símbolo '${id}' ya fue definido`)
     if (extend) {
       let memoryref = SymbolFinder.findSymbol(ctx, extend)
       if (!memoryref)
-        throw new SintesisError(ctx.id, `No existe la clase ${extend}`)
+      throw new SintesisError(ctx.id, `No existe la clase ${extend}`)
       if (!(memoryref.variable instanceof Class))
         throw new SintesisError(ctx.id, `${extend} no es una clase`)
       extend = memoryref.variable
     }
 
+    const methodList = ctx.methods ? ctx.methods.children.map(x => new Function(x.id.text, x, ctx)) : {}
     let extendingWithNoDefaultConstructor = extend && !extend.hasDefaultConstructor()
     let methods = {}
+    let consnum = 0
     for (const i in methodList) {
       const method = methodList[i]
-      const name = method.context.id.text
-      if (extendingWithNoDefaultConstructor && Class.isConstructorName(name)) {
+      let name = method.context.id.text
+      const isConstructor = Class.isConstructorName(name)
+      if(isConstructor) 
+        name = '__constructor.'+consnum++
+      method.name = name
+      if (extendingWithNoDefaultConstructor && isConstructor) {
         // comprobar que el constructor llama al constructor padre
         const body = method.context.children.find(x => x.constructor.name === 'FunctionBodyContext').children[0].children[1]
         // console.log(body.getText())
@@ -172,9 +176,8 @@ class SintesisSymbolParser extends SintesisParserVisitor {
     const cls = new Class(ctx, id, extend, attributes, methods)
 
     // si no tiene atributos no requiere constructor por defecto definido, pero lo necesitamos para que funcione
-    if (!attributes.length && !cls.hasDefaultConstructor())
-      // si no tiene un constructor por defecto definido, le creamos uno
-      cls.methods['constructor'] = new Function(id, null, ctx)
+    if (!extend && !attributes.length && !cls.hasDefaultConstructor())
+      cls.methods['__constructor.default'] = new Function('__constructor.default', null, ctx)
 
     SymbolFinder.addClass(ctx.parentCtx, id, cls)
     SymbolFinder.createTable(ctx, cls)
@@ -302,7 +305,7 @@ export default class SintesisEval extends SintesisParserVisitor {
     let constructor = obj.getConstructor(values.length)
     if (!constructor)
       throw new SintesisError(ctx.args, `No existe un método constructor ` + (values.length ? `con ${values.length} parámetro${values.length!==1?'s':''}` : `sin parámetros`))
-    this.callToFunction(new MemoryRef(obj, 'constructor'), ctx.args)
+    this.callToFunction(new MemoryRef(obj, constructor.name), ctx.args)
     return new MemoryRef(obj)
   }
 
@@ -341,7 +344,7 @@ export default class SintesisEval extends SintesisParserVisitor {
     // y no tiene explícitamente una llamada a la superclase...
     if (fn.class && inst.superClass && Class.isConstructorName(fn.name) && !fn.callingSuperClass) {
       let fncon = inst.superClass.class.getConstructor(0)
-      this.callToFunction(new MemoryRef(inst.superClass, fncon.name), null )
+      this.callToFunction(new MemoryRef(inst.superClass, fncon.name), null)
     }
 
     // ejecutamos el cuerpo de la función

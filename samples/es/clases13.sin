@@ -1,0 +1,26 @@
+class Persona
+{
+    nombre, apellidos
+
+    // constructor sobrecargado
+    constructor() {}
+    
+    constructor(nombre) {
+        atributos.nombre = nombre
+    }  
+
+    constructor(nombre, apellidos) {
+        atributos.nombre = nombre
+        atributos.apellidos = apellidos
+    }
+    
+}
+
+a = nueva Persona()
+b = nueva Persona("Jorge")
+c = nueva Persona("Juan", "García")
+
+imp a
+imp b
+imp c
+imp a.metodos

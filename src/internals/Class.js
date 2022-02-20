@@ -44,7 +44,7 @@ class Class {
 
 Class.isConstructorName = function (name) {
     // to-do: lang
-    return ['constructor', 'construct'].includes(name)
+    return ['constructor', 'construct'].includes(name)  || name.startsWith('__construct')
 }
 
 Class.isAttributesName = function (name) {

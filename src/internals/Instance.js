@@ -24,12 +24,21 @@ class Instance extends Variable {
         const atr = {}
         const met = {}
         let ref = this
+        let consnum = 1
         do {
             for (const id in ref.attributes)
                 if (!Class.isSpecialAttribute(id))
                     atr[id] = ref.attributes[id]
-            for (const i in ref.methods)
-                met[i] = ref.methods[i]
+            for (const name in ref.methods)
+            {
+                let lbl = name
+                if(Class.isConstructorName(name))
+                {
+                    lbl = consnum==1?'constructor':'constructor'+consnum
+                    consnum++
+                }
+                met[lbl] = ref.methods[name]
+            }
             ref = ref.superClass
         } while (ref)
         this.attributes['___attributes'] = new Map(atr)
@@ -47,19 +56,7 @@ class Instance extends Variable {
     }
 
     getConstructor(numArgs) {
-        let ref = this
-        do {
-            for (const name in ref.methods) {
-                // to do lang
-                if (name === 'constructor') {
-                    // elige el método constructor en base al número de argumentos
-                    if (numArgs === ref.methods[name].params.length)
-                        return ref.methods[name]
-                }
-            }
-            ref = ref.superClass
-        } while (ref)
-        return null
+        return this.class.getConstructor(numArgs)
     }
 
     getRef(name) {
