@@ -110,7 +110,7 @@ test('Vector-11-3d', () => {
 
 test('Vector-12-w-map', () => {
     expect(exec(`
-    a = vec[2][2](-2)
+    a = vector[2][2](-2)
     a[1] = 99
     a[2] = {z:'hola'}
     a[3] = ['a', 'b', 'c']
