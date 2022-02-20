@@ -8,16 +8,20 @@ class Function extends Variable {
     this.isConstructor = Class.isConstructorName(this.name)
     this.callingSuperClass = false // para indicar si dentro del cuerpo del método constructor hay una llamada al constructor padre
     this.context = ctx
+    let vis = ctx.vis ? ctx.vis.getText() : ''
+    this.visibility = !vis || Class.isPublic(vis) ? 'public' :
+      Class.isProtected(vis) ? 'protected' :
+      'private'
     this.classContext = classContext
     this.params = []
-    if(ctx&&ctx.pl)
-    for (let i = 0; i < ctx.pl.children.length; i++)
-      if (i % 2 == 0)
-        this.params.push(ctx.pl.children[i].getText())
+    if (ctx && ctx.pl)
+      for (let i = 0; i < ctx.pl.children.length; i++)
+        if (i % 2 == 0)
+          this.params.push(ctx.pl.children[i].getText())
   }
 
   text() {
-    return '('+this.params.join(', ')+')'
+    return '(' + this.params.join(', ') + ')'
   }
 }
 

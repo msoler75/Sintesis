@@ -39,11 +39,11 @@ class Class {
         let ref = this
         while (ref) {
             if (id in ref.attributes)
-                visibility = ref.attributes[id]
+                return ref.attributes[id]
+            if(id in ref.methods)
+                return ref.methods[id].visibility || 'public'
             ref = ref.superClass
         }
-        // if (id in instance.class.methods)
-        // visibility = this.attributes[id]
         return visibility
     }
 

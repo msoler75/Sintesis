@@ -1,0 +1,41 @@
+clase Persona {
+    publico nombre, apellidos
+    privada frase
+    privada contraseña
+
+    constructor(nombre, apellidos) {
+        atributos.nombre=nombre
+        atributos.apellidos=apellidos
+        contraseña="miclave"
+        frase = "¿Hola qué tal?"
+    }
+
+    protegida dimeContraseña() {
+        return contraseña
+    }
+
+    protegida dimeFrase() {
+        return frase
+    }
+}
+
+clase Cliente extiende Persona {
+    constructor(nombre, apellidos) {
+        super(nombre, apellidos)
+    }
+
+    dameContraseña() {
+        return dimeContraseña()
+    }
+
+    cualFrase() {
+        return dimeFrase()
+    }
+}
+
+p = nueva Persona("Juan", "López")
+c = nuevo Cliente("Jorge", "Pérez")
+imp c.cualFrase()
+imp c.dameContraseña()
+// no accesible
+// imp p.dimeFrase(

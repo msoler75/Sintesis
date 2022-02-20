@@ -58,6 +58,7 @@ class SintesisSymbolParser extends SintesisParserVisitor {
         SymbolFinder.addSymbol(ctx, id)
 
     // comprobamos accesibilidad de atributos métodos
+    // if(memoryref._variable&&memoryref._variable instanceof Function)
     if (!SymbolFinder.canAccess(memoryref, ctx))
       throw new SintesisError(ctx, "Acceso no permitido")
   }
@@ -85,7 +86,7 @@ class SintesisSymbolParser extends SintesisParserVisitor {
   }
 
   // Visit a parse tree produced by SintesisParser#functionDeclaration.
-  visitFunctionDeclaration(ctx) {
+  visitFunctionDeclaration(ctx, isMethod) {
     let id = ctx.id.text
     if (!Class.isConstructorName(id)) {
       const st = SymbolFinder.getTable(ctx.parentCtx)
@@ -96,7 +97,8 @@ class SintesisSymbolParser extends SintesisParserVisitor {
       }
     }
     const fn = new Function(id, ctx)
-    SymbolFinder.addFunction(ctx.parentCtx, id, fn)
+    if(!isMethod)
+      SymbolFinder.addFunction(ctx.parentCtx, id, fn)
     SymbolFinder.createTable(ctx, fn)
     if (ctx.pl) {
       this.visit(ctx.pl)
@@ -108,7 +110,7 @@ class SintesisSymbolParser extends SintesisParserVisitor {
 
   // Visit a parse tree produced by SintesisParser#methodDeclaration.
   visitMethodDeclaration(ctx) {
-    return this.visitFunctionDeclaration(ctx)
+    return this.visitFunctionDeclaration(ctx, true)
   }
 
   // buscar todos los nodos determinados por la clase ContextClassName
