@@ -13,7 +13,7 @@ options {
 }
 
 program
-    : statementList EOF
+    : statementList? EOF
     ;
 
 statementList
