@@ -815,8 +815,10 @@ export default class SintesisEval extends SintesisParserVisitor {
       result.push(r)
       // console.log('print '+r)
     }
-    this.output += result.join(" ").replace(/\\n/g, '\n') + '\n'
+    let str = result.join(" ").replace(/\\n/g, '\n') 
+    this.output += str + '\n'
     // console.log('PRINTING', r);
+    return str
   }
 
   async visitStepStatement(ctx) {
