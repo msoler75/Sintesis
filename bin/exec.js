@@ -9,7 +9,7 @@ import SintesisEval from '../src/SintesisEval.js'
 import SintesisSymbolParser from '../src/SintesisSymbolParser.js'
 import SintesisErrorListener from '../src/SintesisErrorListener.js'
 
-function exec(input) {
+async function exec(input) {
     var chars = new InputStream(input, true)
     var lexer = new SintesisLexer(chars)
     var tokens = new CommonTokenStream(lexer)
@@ -23,9 +23,9 @@ function exec(input) {
 
     const tree = parser.program() // 'program' is the start rule
     // genera las tablas de símbolos
-    symboly.visitProgram(tree)
+    await symboly.visitProgram(tree)
     // ejecuta el programa
-    evaly.visitProgram(tree)
+    await evaly.visitProgram(tree)
     return evaly.output
 }
 

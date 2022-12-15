@@ -739,12 +739,12 @@ export default class SintesisEval extends SintesisParserVisitor {
   // Visit a parse tree produced by SintesisParser#expIdentifier.
   async visitExpIdentifier(ctx) {
     const id = ctx.getText()
-    console.log('ID', id)
+    // console.log('ID', id)
     const memoryref = SymbolFinder.findSymbol(ctx, id)
     // comprobamos accesibilidad de atributos métodos
     if (!SymbolFinder.canAccess(memoryref, ctx))
       throw new SintesisError(ctx, "Acceso no permitido")
-    console.log('EXPIDER', memoryref)
+    // console.log('EXPIDER', memoryref)
     return memoryref
   }
 
@@ -806,7 +806,7 @@ export default class SintesisEval extends SintesisParserVisitor {
   // Visit a parse tree produced by SintesisParser#printStatement.
   async visitPrintStatement(ctx) {
     let args = await this.visit(ctx.exp)
-    console.log('PRINT ARGS', args)
+    //console.log('PRINT ARGS', args)
     args = args.filter(x => x !== undefined)
     let result = []
     for (let r of args) {
