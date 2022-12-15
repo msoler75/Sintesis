@@ -1,18 +1,18 @@
 const imprimirCadaLinea = 0
-import antlr4 from 'antlr4';
+
 import Map from './internals/Map.js'
 import Class from './internals/Class.js'
 import Vector from './internals/Vector.js'
-import Single from './internals/Single.js'
 import valueOf from './internals/ValueOf.js'
 import Variable from './internals/Variable.js'
 import Function from './internals/Function.js'
 import Instance from './internals/Instance.js'
 import Iterator from './internals/Iterator.js'
-import RefClass from './internals/RefClass.js'
 import MemoryRef from './internals/MemoryRef.js'
 import printObject from './internals/Print.js'
 import SintesisError from './SintesisError.js'
+import './internals/ArrayUtils.js'
+// import SintesisSymbolParser from './SintesisSymbolParser.js'
 import {
   SymbolFinder
 } from './internals/Symbols.js'
@@ -31,290 +31,56 @@ const paramFloat = ['f', 'd', 'dec', 'float', 'decimal']
 const paramText = ['s', 't', 'string', 'str', 'text', 'texto']
 
 
-
-
-
-class SintesisSymbolParser extends SintesisParserVisitor {
-
-  // Visit a parse tree produced by SintesisParser#program.
-  visitProgram(ctx) {
-    SymbolFinder.createTable(ctx)
-    this.visitChildren(ctx);
-  }
-
-  // Visit a parse tree produced by SintesisParser#block.
-  visitBlock(ctx) {
-    SymbolFinder.createTable(ctx)
-    const r = ctx.stmt ? this.visit(ctx.stmt) : this.visitChildren(ctx)
-    return r
-  }
-
-  // Visit a parse tree produced by SintesisParser#identifier.
-  visitIdentifier(ctx) {
-    const id = ctx.getText()
-    let memoryref = SymbolFinder.findSymbol(ctx, id)
-    if (!memoryref || (memoryref._variable instanceof Error))
-      if (this.createIfNotFound)
-        SymbolFinder.addSymbol(ctx, id)
-
-    // comprobamos accesibilidad de atributos métodos
-    // if(memoryref._variable&&memoryref._variable instanceof Function)
-    if (!SymbolFinder.canAccess(memoryref, ctx))
-      throw new SintesisError(ctx, "Acceso no permitido")
-  }
-
-
-  // Visit a parse tree produced by SintesisParser#expIdentifier.
-  visitExpIdentifier(ctx) {
-    return this.visitIdentifier(ctx)
-  }
-
-  // Visit a parse tree produced by SintesisParser#variableDeclaration.
-  visitVariableDeclaration(ctx) {
-    const id = ctx.id.getText()
-    SymbolFinder.addSymbol(ctx, id)
-  }
-
-  // Visit a parse tree produced by SintesisParser#expVar.
-  visitExpVar(ctx) {
-    this.visitVariableDeclaration(ctx)
-  }
-
-  // Visit a parse tree produced by SintesisParser#formalParameterArg.
-  visitFormalParameterArg(ctx) {
-    this.visitVariableDeclaration(ctx)
-  }
-
-  // Visit a parse tree produced by SintesisParser#functionDeclaration.
-  visitFunctionDeclaration(ctx, isMethod) {
-    let id = ctx.id.text
-    if (!Class.isConstructorName(id)) {
-      const st = SymbolFinder.getTable(ctx.parentCtx)
-      if (st.hasSymbol(id)) {
-        const fn = st.getRef(id)
-        if (!(fn._variable instanceof RefClass))
-          throw new SintesisError(ctx.id, `El símbolo '${id}' ya fue definido`)
-      }
-    }
-    const fn = new Function(id, ctx)
-    // si es un método, no se añade porque ya se ha añadido el símbolo en la declaración de la clase
-    if (!isMethod)
-      SymbolFinder.addFunction(ctx.parentCtx, id, fn)
-    
-    SymbolFinder.createTable(ctx, fn)
-    if (ctx.pl) {
-      this.visit(ctx.pl)
-    }
-    if (ctx.stmt) {
-      this.visit(ctx.stmt)
-    }
-  }
-
-  // Visit a parse tree produced by SintesisParser#methodDeclaration.
-  visitMethodDeclaration(ctx) {
-    return this.visitFunctionDeclaration(ctx, true)
-  }
-
-  // buscar todos los nodos determinados por la clase ContextClassName
-  find(ctx, ContextClassName) {
-    if (ctx.constructor.name === ContextClassName) return [ctx]
-    let r = []
-    if (ctx.children && Array.isArray(ctx.children)) {
-      ctx.children.map(function (child) {
-        r = r.concat(this.find(child, ContextClassName))
-      }, this);
-    }
-    return r
-  }
-
-  // Visit a parse tree produced by SintesisParser#classDeclaration.
-  visitClassDeclaration(ctx) {
-    const id = ctx.id.text;
-    let extend = ctx.ext ? ctx.ext.text : null
-    if (id in SymbolFinder.getTable(ctx.parentCtx).memory)
-      throw new SintesisError(ctx.id, `El símbolo '${id}' ya fue definido`)
-    if (extend) {
-      let memoryref = SymbolFinder.findSymbol(ctx, extend)
-      if (!memoryref)
-        throw new SintesisError(ctx.id, `No existe la clase ${extend}`)
-      if (!(memoryref.variable instanceof Class))
-        throw new SintesisError(ctx.id, `${extend} no es una clase`)
-      extend = memoryref.variable
-    }
-
-    const methodList = ctx.methods ? ctx.methods.children.map(x => new Function(x.id.text, x, ctx)) : {}
-    let extendingWithNoDefaultConstructor = extend && !extend.hasDefaultConstructor()
-    let methods = {}
-    let numconstruc = 0
-    for (const i in methodList) {
-      const method = methodList[i]
-      let name = method.context.id.text
-      const isConstructor = Class.isConstructorName(name)
-      if (isConstructor)
-        name = '__constructor.' + numconstruc++
-      method.name = name
-      if (extendingWithNoDefaultConstructor && isConstructor) {
-        // comprobar que el constructor llama al constructor padre
-        const body = method.context.children.find(x => x.constructor.name === 'FunctionBodyContext').children[0].children[1]
-        // console.log(body.getText())
-        let callingSuper = false
-        const calls = this.find(body, 'ExpMemberFuncContext')
-        for (const c of calls) {
-          let s = this.find(c, 'ExpSuperContext')
-          if (s.length > 0) {
-            const a = this.find(s[0].parentCtx, 'ArgumentsContext')
-            var numargs = Math.ceil((a[0].children.length - 2) / 2)
-            if (!extend.getConstructor(numargs))
-              throw new SintesisError(a[0], `La clase padre no tiene ningún constructor ` + (numargs > 0 ? `con ${numargs} parámetros` : `sin parámetro${numargs>1?'s':''}`))
-            callingSuper = true
-          }
-        }
-        if (!callingSuper)
-          throw new SintesisError(body, 'Debe llamar al método constructor de la clase padre')
-        method.callingSuperClass = true
-      }
-      methods[name] = method
-    }
-    // let k = Object.values(methods)/
-    const attributes = {}
-    if (ctx.atrs) {
-      this.find(ctx.atrs, 'ClassAttributeDeclContext')
-        .forEach(x => {
-          this.find(x, 'IdentifierContext').forEach(at => {
-            let id = at.getText()
-            let vis = x.vis ? x.vis.getText() : ''
-            vis = !vis || Class.isPublic(vis) ? 'public' :
-              Class.isProtected(vis) ? 'protected' :
-              'private'
-            attributes[id] = vis
-          })
-        })
-    }
-    //ctx.atrs.children.map(x => x.getText()).filter(x => !x.match(/[,{}]/)) : []
-    // const attributes = ctx.atrs? ctx.atrs.children.filter(x=>x.constructor.name!=='TerminalNodeImpl').map(x => x.getText())
-    var numAttributes = Object.keys(attributes).length
-    if (numAttributes && !Object.values(methods).find(x => Class.isConstructorName(x.name)))
-      throw new SintesisError(ctx.mdec || ctx, "Se requiere un constructor para inicializar los atributos")
-
-    const cls = new Class(ctx, id, extend, attributes, methods)
-
-    // si no tiene atributos no requiere constructor por defecto definido, pero lo necesitamos para que funcione
-    if (!extend && !numAttributes && !cls.hasDefaultConstructor())
-      cls.methods['__constructor.default'] = new Function('__constructor.default', null, ctx)
-
-    SymbolFinder.addClass(ctx.parentCtx, id, cls)
-    SymbolFinder.createTable(ctx, cls)
-
-    // añadimos para cada atributo y método la referencia al objeto o instancia de clase
-    for (const id in cls.attributes)
-      SymbolFinder.addVariable(ctx, id, new RefClass(cls, id))
-    for (const id in cls.methods)
-      SymbolFinder.addVariable(ctx, id, new RefClass(cls, id))
-
-    // llamamos a los métodos para que generen los símbolos
-    for (const id in cls.methods)
-      if (cls.methods[id].context)
-        this.visit(cls.methods[id].context)
-  }
-
-  // Visit a parse tree produced by SintesisParser#expAssignment.
-  visitExpAssignment(ctx) {
-    this.createIfNotFound = true
-    this.visit(ctx.dest)
-    this.createIfNotFound = false
-  }
-
-  // Visit a parse tree produced by SintesisParser#forFromToStatement.
-  visitForFromToStatement(ctx) {
-    const iter = ctx.iter
-    const id_iterator = iter.id.text
-    SymbolFinder.createTable(ctx)
-    let mem_index = iter.vvar ? null : SymbolFinder.findSymbol(ctx, id_iterator)
-    if (!mem_index)
-      mem_index = SymbolFinder.addSymbol(ctx, id_iterator)
-    this.visit(ctx.stmt)
-  }
-
-
-  // Visit a parse tree produced by SintesisParser#forFromToStatement2.
-  visitForFromToStatement2(ctx) {
-    return this.visitForFromToStatement(ctx);
-  }
-
-
-  // Visit a parse tree produced by SintesisParser#forEachStatement.
-  visitForEachStatement(ctx) {
-    const iter = ctx.iter
-    const value_id = iter.idv ? iter.idv.text : null
-    const index_id = iter.idk ? iter.idk.text : null
-
-    SymbolFinder.createTable(ctx)
-    SymbolFinder.addSymbol(ctx, value_id)
-    if (index_id) SymbolFinder.addSymbol(ctx, index_id)
-    this.visit(ctx.stmt)
-  }
-
-
-  // Visit a parse tree produced by SintesisParser#forEachStatement2.
-  visitForEachStatement2(ctx) {
-    return this.visitForEachStatement(ctx);
-  }
-
-}
-
-
-// -----------------------------------------------------------------------------------
-// -----------------------------------------------------------------------------------
-
-
 export default class SintesisEval extends SintesisParserVisitor {
 
+
   // Visit a parse tree produced by SintesisParser#program.
-  visitProgram(ctx) {
+  async visitProgram(ctx) {
     // parsea todos los símbolos primero
-    let symbolParser = new SintesisSymbolParser()
-    symbolParser.visitProgram(ctx)
+    // let symbolParser = new SintesisSymbolParser()
+    // symbolParser.visitProgram(ctx)
 
     // prepara la salida
     this.output = ""
     // procesa el programa
-    this.visitChildren(ctx);
-    console.log(SymbolFinder.print(ctx))
+    await this.visitChildren(ctx);
+    // console.log(SymbolFinder.print(ctx))
+    return this.output
   }
 
   // Visit a parse tree produced by SintesisParser#statementList.
-  visitStatementList(ctx) {
+  async visitStatementList(ctx) {
     let i = 0
     while (i < ctx.children.length && !SymbolFinder.functionHasEnded(ctx)) {
       if (imprimirCadaLinea) console.log(ctx.children[i].getText())
-      this.visit(ctx.children[i++])
+      await this.visit(ctx.children[i++])
     }
   }
 
   // Visit a parse tree produced by SintesisParser#statement.
-  visitStatement(ctx) {
+  async visitStatement(ctx) {
     // console.log('statement', ctx.getText())
-    return ctx.children.length ? this.visit(ctx.children[0]) : null
-    //return this.visitChildren(ctx);
+    return ctx.children.length ? await this.visit(ctx.children[0]) : null
+    //return await this.visitChildren(ctx);
   }
 
   // Visit a parse tree produced by SintesisParser#classDeclaration.
-  visitClassDeclaration(ctx) {
+  async visitClassDeclaration(ctx) {
     return null
   }
 
   // Visit a parse tree produced by SintesisParser#functionDeclaration.
-  visitFunctionDeclaration(ctx) {
+  async visitFunctionDeclaration(ctx) {
     return null
   }
 
   // Visit a parse tree produced by SintesisParser#methodDeclaration.
-  visitMethodDeclaration(ctx) {
-    return this.visitFunctionDeclaration(ctx)
+  async visitMethodDeclaration(ctx) {
+    return await this.visitFunctionDeclaration(ctx)
   }
 
   // Visit a parse tree produced by SintesisParser#expNew.
-  visitExpNew(ctx) {
+  async visitExpNew(ctx) {
     const id = ctx.id.text
     let memoryref = SymbolFinder.findSymbol(ctx, id)
     if (!memoryref)
@@ -322,18 +88,18 @@ export default class SintesisEval extends SintesisParserVisitor {
     if (!(memoryref.variable instanceof Class))
       throw new SintesisError(ctx.id, '${id} no es una clase')
     let obj = new Instance(memoryref.variable)
-    let values = ctx.args ? this.visit(ctx.args).values : []
+    let values = ctx.args ? (await this.visit(ctx.args)).values : []
     if (values) ctx.args.values = values
     let constructor = obj.getConstructor(values.length)
     if (!constructor)
       throw new SintesisError(ctx.args, `No existe un método constructor ` + (values.length ? `con ${values.length} parámetro${values.length!==1?'s':''}` : `sin parámetros`))
-    this.callToFunction(new MemoryRef(obj, constructor.name), ctx.args)
+    await this.callToFunction(new MemoryRef(obj, constructor.name), ctx.args)
     return new MemoryRef(obj)
   }
 
 
 
-  callToFunction(memoryref, ctxArgs) {
+  async callToFunction(memoryref, ctxArgs) {
     const fn = memoryref.variable
     const inst = memoryref._variable
     const ctx = fn.context
@@ -342,7 +108,7 @@ export default class SintesisEval extends SintesisParserVisitor {
     if (!ctx || !ctx.stmt) return
 
     // obtenemos los argumentos o parámetros de la función y los valores
-    const params = ctx.pl ? this.visit(ctx.pl).params : []
+    const params = ctx.pl ? (await this.visit(ctx.pl)).params : []
     const values = ctxArgs ? ctxArgs.values : []
 
     if (params.length !== values.length)
@@ -366,11 +132,11 @@ export default class SintesisEval extends SintesisParserVisitor {
     // y no tiene explícitamente una llamada a la superclase...
     if (fn.class && inst.superClass && Class.isConstructorName(fn.name) && !fn.callingSuperClass) {
       let fncon = inst.superClass.class.getConstructor(0)
-      this.callToFunction(new MemoryRef(inst.superClass, fncon.name), null)
+      await this.callToFunction(new MemoryRef(inst.superClass, fncon.name), null)
     }
 
     // ejecutamos el cuerpo de la función
-    this.visit(ctx.stmt)
+    await this.visit(ctx.stmt)
 
     const r = SymbolFinder.getReturnValue(ctx)
 
@@ -385,10 +151,10 @@ export default class SintesisEval extends SintesisParserVisitor {
 
 
   // Visit a parse tree produced by SintesisParser#returnStatement.
-  visitReturnStatement(ctx) {
+  async visitReturnStatement(ctx) {
     if (!SymbolFinder.insideFunction(ctx))
       throw new SintesisError(ctx, 'Se ha intentado retornar sin estar dentro de función o método')
-    let r = ctx.exp ? this.visit(ctx.exp) : null
+    let r = ctx.exp ? await this.visit(ctx.exp) : null
     // r = valueOf(r)
     SymbolFinder.setReturnValue(ctx, r)
     return r;
@@ -397,9 +163,9 @@ export default class SintesisEval extends SintesisParserVisitor {
 
 
   // Visit a parse tree produced by SintesisParser#expMemberIndex.
-  visitExpMemberIndex(ctx) {
+  async visitExpMemberIndex(ctx) {
     const logexp = ctx.exp.getText()
-    let memoryref = this.visit(ctx.exp)
+    let memoryref = await this.visit(ctx.exp)
     if (!memoryref || !(memoryref instanceof MemoryRef))
       throw new SintesisError(ctx.exp, "Operador izquierdo inválido")
 
@@ -407,7 +173,7 @@ export default class SintesisEval extends SintesisParserVisitor {
     if (!SymbolFinder.canAccess(memoryref, ctx))
       throw new SintesisError(ctx.exp, "Acceso no permitido")
 
-    let index = this.visit(ctx.idx)
+    let index = await this.visit(ctx.idx)
     index = valueOf(index)
     if (index == undefined)
       throw new SintesisError(ctx.idx, "Índice no válido")
@@ -443,76 +209,76 @@ export default class SintesisEval extends SintesisParserVisitor {
       throw new SintesisError(ctx.exp, `${index} no es una función`)
 
     // preparamos argumentos
-    let values = ctx.args ? this.visit(ctx.args).values : []
+    let values = ctx.args ? (await this.visit(ctx.args)).values : []
     if (values) ctx.args.values = values
-    return this.callToFunction(ref, ctx.args)
+    return await this.callToFunction(ref, ctx.args)
   }
 
   // Visit a parse tree produced by SintesisParser#expMemberDot.
-  visitExpMemberDot(ctx) {
-    return this.visitExpMemberIndex(ctx)
+  async visitExpMemberDot(ctx) {
+    return await this.visitExpMemberIndex(ctx)
   }
 
 
   // Visit a parse tree produced by SintesisParser#expMemberFunc.
-  visitExpMemberFunc(ctx) {
-    const memoryref = this.visit(ctx.exp)
+  async visitExpMemberFunc(ctx) {
+    const memoryref = await this.visit(ctx.exp)
     if (!memoryref)
       throw new SintesisError(ctx.exp, "Función no encontrada")
 
-    let values = ctx.args ? this.visit(ctx.args).values : []
+    let values = ctx.args ? (await this.visit(ctx.args)).values : []
     if (values) ctx.args.values = values
     let obj = memoryref.variable
     if (obj instanceof Instance) {
       let met = obj.getConstructor(values ? values.length : 0)
-      return this.callToFunction(new MemoryRef(obj, met.name), ctx.args)
+      return await this.callToFunction(new MemoryRef(obj, met.name), ctx.args)
     }
     if (!(obj instanceof Function))
       throw new SintesisError(ctx.exp, "Función no encontrada")
-    return this.callToFunction(memoryref, ctx.args)
+    return await this.callToFunction(memoryref, ctx.args)
 
   }
 
   // Visit a parse tree produced by SintesisParser#memberIdentifier.
-  visitMemberIdentifier(ctx) {
+  async visitMemberIdentifier(ctx) {
     return ctx.children[0].getText()
   }
 
 
   // Visit a parse tree produced by SintesisParser#expAssignment.
-  visitExpAssignment(ctx) {
+  async visitExpAssignment(ctx) {
     this.createIndexIfNotExists = true
     const logD = ctx.dest.getText()
-    let memoryref = this.visit(ctx.dest)
+    let memoryref = await this.visit(ctx.dest)
     this.createIndexIfNotExists = false
 
     if (!memoryref || !(memoryref instanceof MemoryRef) || (memoryref._variable instanceof Error))
       throw new SintesisError(ctx.dest, 'El operador izquierdo de asignación es inválido')
 
-    let result = this.visit(ctx.exp)
+    let result = await this.visit(ctx.exp)
     memoryref.assign(result)
     return memoryref
   }
 
 
   // Visit a parse tree produced by SintesisParser#vectorIndex.
-  visitVectorIndex(ctx) {
+  async visitVectorIndex(ctx) {
     let items = ctx.children.filter(x => x.constructor.name !== 'TerminalNodeImpl')
-    return items.length ? this.visit(items[0]) : null
+    return items.length ? await this.visit(items[0]) : null
   }
 
-  visitVectorDeclaration(ctx) {
-    let indexes = this.visitChildren(ctx.idx)
+  async visitVectorDeclaration(ctx) {
+    let indexes = await this.visitChildren(ctx.idx)
     let defaultValue
     if (ctx.args) {
-      let args = this.visit(ctx.args).values
+      let args = (await this.visit(ctx.args)).values
       defaultValue = args[0]
     }
     return createVectorWithSizes(indexes, defaultValue).value
   }
 
-  visitExpNumberOf(ctx) {
-    var value = this.visit(ctx.exp)
+  async visitExpNumberOf(ctx) {
+    var value = await this.visit(ctx.exp)
     if (!value) return 0
     if (typeof value !== 'object')
       throw new SintesisError(ctx.exp, 'Tipo incorrecto')
@@ -526,36 +292,36 @@ export default class SintesisEval extends SintesisParserVisitor {
 
 
   // Visit a parse tree produced by SintesisParser#mapDeclaration.
-  visitMapDeclaration(ctx) {
+  async visitMapDeclaration(ctx) {
     let args = []
     if (ctx.args) {
-      args = this.visit(ctx.args).values
+      args = (await this.visit(ctx.args)).values
     }
     return args[0] && args[0] instanceof Map ? args[0] : new Map()
   }
 
 
   // Visit a parse tree produced by SintesisParser#vectorLiteral.
-  visitVectorLiteral(ctx) {
-    let values = ctx.children.filter(x => x.constructor.name !== 'TerminalNodeImpl').map(x => this.visit(x))
+  async visitVectorLiteral(ctx) {
+    let values = ctx.children.filter(x => x.constructor.name !== 'TerminalNodeImpl').mapAsyncSequence(async x => {return await this.visit(x)})
     return new Vector(values)
   }
 
   // Visit a parse tree produced by SintesisParser#objectLiteral.
-  visitObjectLiteral(ctx) {
+  async visitObjectLiteral(ctx) {
     // var m = new Map()
     var obj = {}
     var key = ''
     ctx.children.filter(x => x.constructor.name !== 'TerminalNodeImpl')
-      .map(x => {
+      .mapAsyncSequence(async x => {
         switch (x.constructor.name) {
           case 'IdContext':
           case 'KeywContext':
             key = x.getText();
             break
           default:
-            //m.setValue(key, this.visit(x));
-            obj[key] = this.visit(x)
+            //m.setValue(key, await this.visit(x));
+            obj[key] = await this.visit(x)
             break
         }
       })
@@ -563,15 +329,15 @@ export default class SintesisEval extends SintesisParserVisitor {
   }
 
   // Visit a parse tree produced by SintesisParser#expAssignmentOperator.
-  visitExpAssignmentOperator(ctx) {
-    const memoryref = this.visit(ctx.dest)
+  async visitExpAssignmentOperator(ctx) {
+    const memoryref = await this.visit(ctx.dest)
     this.allowSymbolNotFound = false
     if (!memoryref)
       throw new SintesisError(ctx.dest, `Símbolo no encontrado`)
     if (!(memoryref instanceof MemoryRef))
       throw new SintesisError(ctx.dest, `Operador izquierdo es inválido`)
     let e1 = valueOf(memoryref)
-    let e2 = valueOf(this.visit(ctx.exp))
+    let e2 = valueOf(await this.visit(ctx.exp))
     switch (ctx.op.getText()) {
       case '*=':
         e1 *= e2;
@@ -621,9 +387,9 @@ export default class SintesisEval extends SintesisParserVisitor {
 
 
   // Visit a parse tree produced by SintesisParser#expOp.
-  visitExpOp(ctx) {
-    let e1 = valueOf(this.visit(ctx.e1))
-    let e2 = valueOf(this.visit(ctx.e2))
+  async visitExpOp(ctx) {
+    let e1 = valueOf(await this.visit(ctx.e1))
+    let e2 = valueOf(await this.visit(ctx.e2))
     switch (ctx.op.text) {
       case '**':
         e1 = e1 ** e2;
@@ -690,66 +456,66 @@ export default class SintesisEval extends SintesisParserVisitor {
 
   // Visit a parse tree produced by SintesisParser#expConcat.
   /* visitExpConcat(ctx) {
-    let e1 = this.visit(ctx.e1)
-    let e2 = this.visit(ctx.e2)
+    let e1 = await this.visit(ctx.e1)
+    let e2 = await this.visit(ctx.e2)
     return e1 + ' ' + e2
   } */
 
   // Visit a parse tree produced by SintesisParser#expMath.
-  visitExpMath(ctx) {
+  async visitExpMath(ctx) {
     const funcname = ctx.fn.text
-    const args = this.visit(ctx.args).values
+    const args = (await this.visit(ctx.args)).values
     if (!(funcname in Math))
       throw new SintesisError(ctx.fn, "No existe esta función")
     return Math[funcname].apply(this, args)
   }
 
   // Visit a parse tree produced by SintesisParser#ifStatement.
-  visitIfStatement(ctx) {
-    if (valueOf(this.visit(ctx.exp))) {
-      return this.visitChildren(ctx.stmt)
+  async visitIfStatement(ctx) {
+    if (valueOf(await this.visit(ctx.exp))) {
+      return await this.visitChildren(ctx.stmt)
     } else if (ctx.elseifs) {
       for (const cs of ctx.elseifs.children) {
-        if (valueOf(this.visit(cs.exp)))
-          return this.visitChildren(cs.stmt)
+        if (valueOf(await this.visit(cs.exp)))
+          return await this.visitChildren(cs.stmt)
       }
     }
     if (ctx.else_)
-      return this.visit(ctx.else_)
+      return await this.visit(ctx.else_)
   }
 
 
   // Visit a parse tree produced by SintesisParser#repeatStatement.
-  visitRepeatStatement(ctx) {
-    const n = this.visit(ctx.exp)
+  async visitRepeatStatement(ctx) {
+    const n = await this.visit(ctx.exp)
     if (n)
       for (var i = 0; i < n; i++)
-        this.visit(ctx.stmt)
+        await this.visit(ctx.stmt)
   }
 
 
   // Visit a parse tree produced by SintesisParser#repeatWhileStatement.
-  visitRepeatWhileStatement(ctx) {
+  async visitRepeatWhileStatement(ctx) {
     do
-      this.visit(ctx.stmt);
-    while (valueOf(this.visit(ctx.exp)))
+      await this.visit(ctx.stmt);
+    while (valueOf(await this.visit(ctx.exp)))
   }
 
 
   // Visit a parse tree produced by SintesisParser#whileRepeatStatement.
-  visitWhileRepeatStatement(ctx) {
-    while (valueOf(this.visit(ctx.exp)))
-      this.visit(ctx.stmt)
+  async visitWhileRepeatStatement(ctx) {
+    while (valueOf(await this.visit(ctx.exp)))
+      await this.visit(ctx.stmt)
   }
 
 
   // Visit a parse tree produced by SintesisParser#forEachStatement.
-  visitForEachStatement(ctx) {
+  async visitForEachStatement(ctx) {
 
     const iter = ctx.iter
     const value_id = iter.idv ? iter.idv.text : null
     const index_id = iter.idk ? iter.idk.text : null
-    const collection = this.visit(iter.coll)
+    const collection = await this.visit(iter.coll)
 
     if (!Iterator.iterable(collection))
       throw new SintesisError(ctx.dest, `El valor no es iterable`)
@@ -762,7 +528,7 @@ export default class SintesisEval extends SintesisParserVisitor {
       while (!iterator.ended()) {
         mem_item.assign(iterator.current)
         if (mem_idx) mem_idx.assign(iterator.idx)
-        this.visit(ctx.stmt)
+        await this.visit(ctx.stmt)
         iterator.next()
       }
     }
@@ -771,37 +537,37 @@ export default class SintesisEval extends SintesisParserVisitor {
 
 
   // Visit a parse tree produced by SintesisParser#forEachStatement2.
-  visitForEachStatement2(ctx) {
-    return this.visitForEachStatement(ctx);
+  async visitForEachStatement2(ctx) {
+    return await this.visitForEachStatement(ctx);
   }
 
 
   // Visit a parse tree produced by SintesisParser#forFromToStatement.
-  visitForFromToStatement(ctx) {
+  async visitForFromToStatement(ctx) {
     const iter = ctx.iter
-    const from = this.visit(iter.start)
-    const end = this.visit(iter.to)
+    const from = await this.visit(iter.start)
+    const end = await this.visit(iter.to)
     const id_iterator = iter.id.text
 
     let mem_index = SymbolFinder.findSymbol(ctx, id_iterator)
     mem_index.assign(from)
     while ((from < end && valueOf(mem_index.variable) <= end) ||
       (from > end) && mem_index.variable.value >= end) {
-      this.visit(ctx.stmt)
+      await this.visit(ctx.stmt)
       mem_index.increment(from < end ? 1 : -1)
     }
   }
 
 
   // Visit a parse tree produced by SintesisParser#forFromToStatement2.
-  visitForFromToStatement2(ctx) {
-    return this.visitForFromToStatement(ctx);
+  async visitForFromToStatement2(ctx) {
+    return await this.visitForFromToStatement(ctx);
   }
 
 
   // Visit a parse tree produced by SintesisParser#expBasicFunction.
-  visitExpBasicFunction(ctx) {
-    const args = this.visit(ctx.args).values
+  async visitExpBasicFunction(ctx) {
+    const args = (await this.visit(ctx.args)).values
     const a0 = valueOf(args[0])
     const a1 = valueOf(args[1])
     const a2 = valueOf(args[2])
@@ -931,21 +697,21 @@ export default class SintesisEval extends SintesisParserVisitor {
   }
 
   // Visit a parse tree produced by SintesisParser#expMemberMethod.
-  visitExpMemberMethod(ctx) {
-    return this.visitChildren(ctx);
+  async visitExpMemberMethod(ctx) {
+    return await this.visitChildren(ctx);
   }
 
 
   // Visit a parse tree produced by SintesisParser#expTernary.
-  visitExpTernary(ctx) {
-    let cond = valueOf(this.visit(ctx.cond))
-    if (cond) return this.visit(ctx.ok)
-    return this.visit(ctx.no)
+  async visitExpTernary(ctx) {
+    let cond = valueOf(await this.visit(ctx.cond))
+    if (cond) return await this.visit(ctx.ok)
+    return await this.visit(ctx.no)
   }
 
 
   // Visit a parse tree produced by SintesisParser#formalParameterList.
-  visitFormalParameterList(ctx) {
+  async visitFormalParameterList(ctx) {
     ctx.params = []
     for (let i = 0; i < ctx.children.length; i++)
       if (i % 2 == 0)
@@ -954,55 +720,57 @@ export default class SintesisEval extends SintesisParserVisitor {
   }
 
   // Visit a parse tree produced by SintesisParser#arguments.
-  visitArguments(ctx) {
+  async visitArguments(ctx) {
     ctx.values = []
     if (ctx.children.length > 2)
       for (let i = 1; i < ctx.children.length; i++)
         if (i % 2 == 1)
-          ctx.values.push(this.visit(ctx.children[i]))
+          ctx.values.push(await this.visit(ctx.children[i]))
     return ctx;
   }
 
 
   // Visit a parse tree produced by SintesisParser#expMember.
-  visitExpMember(ctx) {
-    return ctx.children.length ? this.visit(ctx.children[0]) : this.visitChildren(ctx);
+  async visitExpMember(ctx) {
+    return ctx.children.length ? await this.visit(ctx.children[0]) : await this.visitChildren(ctx);
   }
 
 
   // Visit a parse tree produced by SintesisParser#expIdentifier.
-  visitExpIdentifier(ctx) {
+  async visitExpIdentifier(ctx) {
     const id = ctx.getText()
+    console.log('ID', id)
     const memoryref = SymbolFinder.findSymbol(ctx, id)
     // comprobamos accesibilidad de atributos métodos
     if (!SymbolFinder.canAccess(memoryref, ctx))
       throw new SintesisError(ctx, "Acceso no permitido")
+    console.log('EXPIDER', memoryref)
     return memoryref
   }
 
   // Visit a parse tree produced by SintesisParser#expVar.
-  visitExpVar(ctx) {
+  async visitExpVar(ctx) {
     const id = ctx.id.getText()
     let mem_id = SymbolFinder.findSymbol(ctx, id)
     if (ctx.exp) {
-      let result = this.visit(ctx.exp)
+      let result = await this.visit(ctx.exp)
       mem_id.assign(result)
     }
     return mem_id
   }
 
   // Visit a parse tree produced by SintesisParser#variableDeclaration.
-  visitVariableDeclaration(ctx) {
-    return this.visitExpVar(ctx)
+  async visitVariableDeclaration(ctx) {
+    return await this.visitExpVar(ctx)
   }
 
-  visitExpAttributes(ctx) {
+  async visitExpAttributes(ctx) {
     if (!SymbolFinder.insideClass(ctx))
       throw new SintesisError(ctx, `Referencia fuera de Clase`)
     return SymbolFinder.findSymbol(ctx, '___attributes')
   }
 
-  visitExpMethods(ctx) {
+  async visitExpMethods(ctx) {
     if (!SymbolFinder.insideClass(ctx))
       throw new SintesisError(ctx, `Referencia fuera de Clase`)
     return SymbolFinder.findSymbol(ctx, '___methods')
@@ -1010,7 +778,7 @@ export default class SintesisEval extends SintesisParserVisitor {
 
 
   // Visit a parse tree produced by SintesisParser#expSuper.
-  visitExpSuper(ctx) {
+  async visitExpSuper(ctx) {
     const class_ctx = SymbolFinder.getClassContext(ctx)
     if (!class_ctx)
       throw new SintesisError(ctx, "Referencia fuera de clase")
@@ -1020,24 +788,26 @@ export default class SintesisEval extends SintesisParserVisitor {
   }
 
   // Visit a parse tree produced by SintesisParser#identifierName.
-  visitIdentifierName(ctx) {
+  async visitIdentifierName(ctx) {
     return ctx.children[0].getText()
   }
 
   // Visit a parse tree produced by SintesisParser#identifierName.
-  visitIdentifier(ctx) {
+  async visitIdentifier(ctx) {
     return ctx.children[0].getText()
   }
 
   // Visit a parse tree produced by SintesisParser#functionBody.
-  visitFunctionBody(ctx) {
-    return ctx.children.length ? this.visit(ctx.children[0]) : this.visitChildren(ctx)
+  async visitFunctionBody(ctx) {
+    return ctx.children.length ? await this.visit(ctx.children[0]) : await this.visitChildren(ctx)
   }
 
 
   // Visit a parse tree produced by SintesisParser#printStatement.
-  visitPrintStatement(ctx) {
-    let args = this.visit(ctx.exp).filter(x => x !== undefined)
+  async visitPrintStatement(ctx) {
+    let args = await this.visit(ctx.exp)
+    console.log('PRINT ARGS', args)
+    args = args.filter(x => x !== undefined)
     let result = []
     for (let r of args) {
       r = printObject(r)
@@ -1049,22 +819,22 @@ export default class SintesisEval extends SintesisParserVisitor {
     // console.log('PRINTING', r);
   }
 
-  visitStepStatement(ctx) {
+  async visitStepStatement(ctx) {
     return null
   }
 
   // Visit a parse tree produced by SintesisParser#expLiteral.
-  visitExpLiteral(ctx) {
-    return ctx.children.length ? this.visit(ctx.children[0]) : this.visitChildren(ctx)
+  async visitExpLiteral(ctx) {
+    return ctx.children.length ? await this.visit(ctx.children[0]) : await this.visitChildren(ctx)
   }
 
   // Visit a parse tree produced by SintesisParser#literal.
-  visitLiteral(ctx) {
-    return ctx.children.length ? this.visit(ctx.children[0]) : this.visitChildren(ctx)
+  async visitLiteral(ctx) {
+    return ctx.children.length ? await this.visit(ctx.children[0]) : await this.visitChildren(ctx)
   }
 
   // Visit a parse tree produced by SintesisParser#booleanLiteral.
-  visitBooleanLiteral(ctx) {
+  async visitBooleanLiteral(ctx) {
     let r = ctx.children[0].getText();
     switch (r) {
       case 'true':
@@ -1083,7 +853,7 @@ export default class SintesisEval extends SintesisParserVisitor {
 
 
   // Visit a parse tree produced by SintesisParser#stringLiteral.
-  visitStringLiteral(ctx) {
+  async visitStringLiteral(ctx) {
     let str = ctx.children[0].getText();
     str = str.substr(1, str.length - 2)
     return str
@@ -1091,19 +861,19 @@ export default class SintesisEval extends SintesisParserVisitor {
 
 
   // Visit a parse tree produced by SintesisParser#expNot.
-  visitExpNot(ctx) {
-    return !valueOf(this.visit(ctx.exp))
+  async visitExpNot(ctx) {
+    return !valueOf(await this.visit(ctx.exp))
   }
 
   // Visit a parse tree produced by SintesisParser#expBitNot.
-  visitExpBitNot(ctx) {
-    return ~valueOf(this.visit(ctx.exp))
+  async visitExpBitNot(ctx) {
+    return ~valueOf(await this.visit(ctx.exp))
   }
 
 
 
-  visitExpIncrement(ctx, pre, inc) {
-    var memoryref = this.visit(ctx.dest)
+  async visitExpIncrement(ctx, pre, inc) {
+    var memoryref = await this.visit(ctx.dest)
     if (!memoryref)
       throw new SintesisError(ctx.dest, `Símbolo no encontrado`)
     if (!(memoryref instanceof MemoryRef))
@@ -1119,31 +889,31 @@ export default class SintesisEval extends SintesisParserVisitor {
   }
 
   // Visit a parse tree produced by SintesisParser#expPreIncrement.
-  visitExpPreIncrement(ctx) {
+  async visitExpPreIncrement(ctx) {
     const inc = ctx.op.text == '++' ? 1 : -1
-    return this.visitExpIncrement(ctx, true, inc)
+    return await this.visitExpIncrement(ctx, true, inc)
   }
 
 
   // Visit a parse tree produced by SintesisParser#expPostIncrement.
-  visitExpPostIncrement(ctx) {
+  async visitExpPostIncrement(ctx) {
     const inc = ctx.op.text == '++' ? 1 : -1
-    return this.visitExpIncrement(ctx, false, inc)
+    return await this.visitExpIncrement(ctx, false, inc)
   }
 
   // Visit a parse tree produced by SintesisParser#expUnaryMinus.
-  visitExpUnaryMinus(ctx) {
-    const value = this.visit(ctx.exp);
+  async visitExpUnaryMinus(ctx) {
+    const value = await this.visit(ctx.exp);
     return -value
   }
 
   // Visit a parse tree produced by SintesisParser#expUnaryPlus.
-  visitExpUnaryPlus(ctx) {
-    return this.visit(ctx.exp);
+  async visitExpUnaryPlus(ctx) {
+    return await this.visit(ctx.exp);
   }
 
   // Visit a parse tree produced by SintesisParser#numericLiteral.
-  visitNumericLiteral(ctx) {
+  async visitNumericLiteral(ctx) {
     let r = ctx.children[0].getText();
     if (r.indexOf('.') >= 0)
       return parseFloat(r)
@@ -1151,9 +921,32 @@ export default class SintesisEval extends SintesisParserVisitor {
   }
 
   // Visit a parse tree produced by SintesisParser#expParenthesis.
-  visitExpParenthesis(ctx) {
-    return this.visit(ctx.exp);
+  async visitExpParenthesis(ctx) {
+    return await this.visit(ctx.exp);
   }
 
+
+
+  // funciones asíncronas
+  async visit(ctx) {
+    if (Array.isArray(ctx)) {
+      return ctx.mapAsyncSequence(child=>child.accept(this))
+    } else {
+      return await ctx.accept(this);
+    }
+  }
+
+  async visitChildren(ctx) {
+    if (ctx.children) {
+      return await this.visit(ctx.children);
+    } else {
+      return null;
+    }
+  }
+
+  async accept(visitor) {
+    return await visitor.visitTerminal(this);
+  }
+  
 
 }

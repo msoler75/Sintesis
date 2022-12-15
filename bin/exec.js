@@ -6,6 +6,7 @@ const {
 import SintesisLexer from '../src/lib/SintesisLexer.js'
 import SintesisParser from '../src/lib/SintesisParser.js'
 import SintesisEval from '../src/SintesisEval.js'
+import SintesisSymbolParser from '../src/SintesisSymbolParser.js'
 import SintesisErrorListener from '../src/SintesisErrorListener.js'
 
 function exec(input) {
@@ -13,6 +14,7 @@ function exec(input) {
     var lexer = new SintesisLexer(chars)
     var tokens = new CommonTokenStream(lexer)
     var parser = new SintesisParser(tokens)
+    var symboly = new SintesisSymbolParser()
     var evaly = new SintesisEval()
     
     parser.buildParseTrees = true
@@ -20,6 +22,9 @@ function exec(input) {
     parser.addErrorListener(new SintesisErrorListener());
 
     const tree = parser.program() // 'program' is the start rule
+    // genera las tablas de símbolos
+    symboly.visitProgram(tree)
+    // ejecuta el programa
     evaly.visitProgram(tree)
     return evaly.output
 }

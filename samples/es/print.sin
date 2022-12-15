@@ -1,0 +1,5 @@
+funcion suma(a,b) {
+    return a+b
+}
+
+imprimir suma(3, 4)
