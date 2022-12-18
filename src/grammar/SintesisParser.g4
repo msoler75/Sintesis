@@ -157,9 +157,9 @@ elseIf
     ;
 
 elseStatement
-    : Else statement
+    : Else Then? stmt=statement
     ;
-
+ 
 iteratorIndexes
     : idv=Identifier op=(In|Of) coll=expression                      
     | idv=Identifier ',' idk=Identifier op=(In|Of) coll=expression  
@@ -189,7 +189,7 @@ formalParameterList
     ;
 
 functionDeclaration
-    : Function_ id=Identifier '(' pl=formalParameterList? ')' stmt=functionBody
+    : dec=Declare? fun=Function_ id=Identifier '(' pl=formalParameterList? ')' stmt=functionBody
     ;
 
 arguments
@@ -203,7 +203,7 @@ visibility
     ;
 
 classDeclaration
-    : Class_ id=Identifier (Extends ext=Identifier)? '{' 
+    : dec=Declare? clas=Class_ id=Identifier (Extends ext=Identifier)? '{' 
         ((Attributes ':')? ('{' atrs=identifiers '}' | atrs=identifiers ))?
         ((mdec=Methods ':')? (methods=methodsList| '{' methods=methodsList '}'))?
         '}'
@@ -218,7 +218,7 @@ classAttributeDecl
     ;
 
 methodDeclaration
-    : vis=visibility? (Method|Function_)? id=(Identifier|Constructor) '(' pl=formalParameterList? ')' stmt=functionBody
+    : vis=visibility? mname=(Method|Function_)? id=(Identifier|Constructor) '(' pl=formalParameterList? ')' stmt=functionBody
     ;
 
 methodsList
@@ -242,15 +242,15 @@ formalParameterArg
     ;
 
 variableStatement
-    : variableDeclarationList 
-    ;
-
-variableDeclarationList
-    : Var_ variableDeclaration (',' variableDeclaration)*
+    : (dec=Declare|dec=Declare? var_=Var_) variableDeclarationList 
     ;
 
 variableDeclaration
     : id=identifier (Assign exp=expression)? 
+    ;
+
+variableDeclarationList
+    : variableDeclaration (',' variableDeclaration)*
     ;
 
 functionBody 
@@ -343,6 +343,7 @@ keyword
     | Var_
     | Methods
     | Attributes
+    | Declare
     ;
 
 eos

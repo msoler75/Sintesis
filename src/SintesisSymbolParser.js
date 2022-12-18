@@ -2,6 +2,7 @@ import Class from './internals/Class.js'
 import RefClass from './internals/RefClass.js'
 import Function from './internals/Function.js'
 
+import SintesisError from './SintesisError.js'
 import {
     SymbolFinder
 } from './internals/Symbols.js'
@@ -121,7 +122,7 @@ class SintesisSymbolParser extends SintesisParserVisitor {
         let extendingWithNoDefaultConstructor = extend && !extend.hasDefaultConstructor()
         let methods = {}
         let numconstruc = 0
-        for (const i in methodList) {
+        for (let i = 0; i < methodList.length; i++) {
             const method = methodList[i]
             let name = method.context.id.text
             const isConstructor = Class.isConstructorName(name)

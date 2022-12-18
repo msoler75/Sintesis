@@ -13,9 +13,10 @@ async function exec(input) {
     var chars = new InputStream(input, true)
     var lexer = new SintesisLexer(chars)
     var tokens = new CommonTokenStream(lexer)
+    // tokens.fill();
     var parser = new SintesisParser(tokens)
     var symboly = new SintesisSymbolParser()
-    var evaly = new SintesisEval()
+    var evaly = new SintesisEval(tokens)
     
     parser.buildParseTrees = true
     parser.removeErrorListeners()

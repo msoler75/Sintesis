@@ -6,10 +6,10 @@
 
 lexer grammar SintesisLexer;
 
-channels { ERROR }
+channels { ERROR, COMMENTS }
 
-MultiLineComment:               '/*' .*? '*/' -> channel(HIDDEN);
-SingleLineComment:              '//' ~[\r\n\u2028\u2029]* -> channel(HIDDEN);
+MultiLineComment:               '/*' .*? '*/' -> channel(2);
+SingleLineComment:              '//' ~[\r\n\u2028\u2029]* -> channel(2);
 
 OpenBracket:                    '[';
 CloseBracket:                   ']';
@@ -233,6 +233,14 @@ Method
               :    'method'
               |    'metodo'
               |    'm\u00E9todo'
+              ;
+
+Declare
+              :    'declare'
+              |    'declarar'
+              |    'dichiarare'
+              |    'declarer '
+              |    'd\u00E9clarer'
               ;
 
 Function_   

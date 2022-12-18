@@ -1,0 +1,23 @@
+a = 1
+declarar b = 2
+ var c = 3
+ var d = 4
+ var e, f = 5, g=6
+ declarar h, i = 7
+ declarar var j = 8
+ declarar var k = 9, l, m=10
+imprimir a, b, c, d, e, f, g, h, i, j, k, l, m
+
+ declarar funcion hola() {
+    imprimir "hola mundo"
+}
+hola()
+
+declarar clase bye {
+    método tellme() {
+        imprimir "adios"
+    }
+}
+
+nt = nuevo bye()
+nt.tellme()

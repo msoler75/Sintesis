@@ -33,6 +33,10 @@ const paramText = ['s', 't', 'string', 'str', 'text', 'texto']
 
 export default class SintesisEval extends SintesisParserVisitor {
 
+  constructor(tokens) {
+    super()
+    this.tokens = tokens
+  }
 
   // Visit a parse tree produced by SintesisParser#program.
   async visitProgram(ctx) {
@@ -164,7 +168,7 @@ export default class SintesisEval extends SintesisParserVisitor {
 
   // Visit a parse tree produced by SintesisParser#expMemberIndex.
   async visitExpMemberIndex(ctx) {
-    const logexp = ctx.exp.getText()
+    // const logexp = ctx.exp.getText()
     let memoryref = await this.visit(ctx.exp)
     if (!memoryref || !(memoryref instanceof MemoryRef))
       throw new SintesisError(ctx.exp, "Operador izquierdo inválido")
@@ -248,7 +252,7 @@ export default class SintesisEval extends SintesisParserVisitor {
   // Visit a parse tree produced by SintesisParser#expAssignment.
   async visitExpAssignment(ctx) {
     this.createIndexIfNotExists = true
-    const logD = ctx.dest.getText()
+    // const logD = ctx.dest.getText()
     let memoryref = await this.visit(ctx.dest)
     this.createIndexIfNotExists = false
 
@@ -932,7 +936,7 @@ export default class SintesisEval extends SintesisParserVisitor {
   // funciones asíncronas
   async visit(ctx) {
     if (Array.isArray(ctx)) {
-      return ctx.mapAsyncSequence(child=>child.accept(this))
+      return await ctx.mapAsyncSequence(async child=>child.accept(this))
     } else {
       return await ctx.accept(this);
     }

@@ -9,15 +9,11 @@ Desarrollado con la librería antlr4
 
 Para compilar la gramática y generar los archivos en la carpeta ./lib
 
-## Paso 1
-
 `yarn generate`
 
-## Paso 2: después de generar, debes cambiar a la versión async/await en el archivo:
+Esto generará los archivos necesarios de lexer y parser. 
 
-`lib/SintesisParser.js`
-
-Para el archivo SintesisParser.js se añade async/await en todos los métodos `accept`
+Además llamará a la utilidad `to_async.js` que convertirá el archivo `lib/SintesisParser.js` a una versión que usa llamadas asíncronas.
 
 Ejemplo:
 
