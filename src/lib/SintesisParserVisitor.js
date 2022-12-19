@@ -408,8 +408,8 @@ export default class SintesisParserVisitor extends antlr4.tree.ParseTreeVisitor 
 	}
 
 
-	// Visit a parse tree produced by SintesisParser#identifiers.
-	visitIdentifiers(ctx) {
+	// Visit a parse tree produced by SintesisParser#attributesList.
+	visitAttributesList(ctx) {
 	  return this.visitChildren(ctx);
 	}
 

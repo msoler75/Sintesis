@@ -17,16 +17,16 @@ async function exec(input) {
     var parser = new SintesisParser(tokens)
     var symboly = new SintesisSymbolParser()
     var evaly = new SintesisEval(tokens)
-    
+
     parser.buildParseTrees = true
     parser.removeErrorListeners()
     parser.addErrorListener(new SintesisErrorListener());
 
-    const tree = parser.program() // 'program' is the start rule
+    const programContext = await parser.program() // 'program' is the start rule
     // genera las tablas de símbolos
-    await symboly.visitProgram(tree)
+    await symboly.visitProgram(programContext)
     // ejecuta el programa
-    await evaly.visitProgram(tree)
+    await evaly.visitProgram(programContext)
     return evaly.output
 }
 

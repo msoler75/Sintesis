@@ -38,7 +38,7 @@ block
     ;
 
 stepStatement
-    : Step exp=( Identifier | DecimalLiteral )
+    : Step exp=(Identifier|DecimalLiteral) 
     ;
 
 printStatement
@@ -204,17 +204,17 @@ visibility
 
 classDeclaration
     : dec=Declare? clas=Class_ id=Identifier (Extends ext=Identifier)? '{' 
-        ((Attributes ':')? ('{' atrs=identifiers '}' | atrs=identifiers ))?
+        ((Attributes ':')? ('{' atrs=attributesList '}' | atrs=attributesList ))? eos
         ((mdec=Methods ':')? (methods=methodsList| '{' methods=methodsList '}'))?
         '}'
     ;
 
-identifiers 
+attributesList 
     : classAttributeDecl+
     ;
 
 classAttributeDecl 
-    :  vis=visibility? identifier (','? identifier)* eos
+    :  vis=visibility? identifier (','? identifier)*
     ;
 
 methodDeclaration
@@ -341,6 +341,7 @@ keyword
     | Vector
     | Map
     | Var_
+    | Method
     | Methods
     | Attributes
     | Declare

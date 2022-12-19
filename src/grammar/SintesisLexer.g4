@@ -29,7 +29,7 @@ MinusMinus:                     '--';
 Plus:                           '+';
 Minus:                          '-';
 BitNot:                         '~';
-Not:                            '!';
+Not:                            '!'|'NO'|'NOT'|'NAO'|'N\u00C3O'|'NON'|'PAS';
 Multiply:                       '*';
 Divide:                         '/';
 Modulus:                        '%';
@@ -50,8 +50,8 @@ IdentityNotEquals:              '!==';
 BitAnd:                         '&';
 BitXOr:                         '^';
 BitOr:                          '|';
-And:                            '&&';
-Or:                             '||';
+And:                            '&&'|'Y'|'AND'|'ET'|'E';
+Or:                             '||'|'O'|'OR'|'OU';
 MultiplyAssign:                 '*=';
 DivideAssign:                   '/=';
 ModulusAssign:                  '%=';
@@ -229,11 +229,6 @@ Return
               |    'ret'
               ;
 
-Method         
-              :    'method'
-              |    'metodo'
-              |    'm\u00E9todo'
-              ;
 
 Declare
               :    'declare'
@@ -399,6 +394,14 @@ Methods
               :     'methods'
               |     'metodos'
               |     'm\u00E9todos'
+              |     'm\u00E9todes'
+              ;
+
+Method         
+              :    'method'
+              |    'metodo'
+              |    'm\u00E9todo'
+              |    'm\u00E9tode'
               ;
 
 Constructor

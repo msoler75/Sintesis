@@ -1,0 +1,16 @@
+c = vero
+f = faux
+
+imp c Y f
+imp c AND f
+imp c ET f
+imp c E f
+
+imp c O f
+imp c OR f
+imp c OU f
+
+imp NOT (c || f)
+imp NAO (c && f)
+imp NON (c || f)
+imp NÃO (c && f)

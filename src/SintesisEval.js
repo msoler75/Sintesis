@@ -307,7 +307,9 @@ export default class SintesisEval extends SintesisParserVisitor {
 
   // Visit a parse tree produced by SintesisParser#vectorLiteral.
   async visitVectorLiteral(ctx) {
-    let values = ctx.children.filter(x => x.constructor.name !== 'TerminalNodeImpl').mapAsyncSequence(async x => {return await this.visit(x)})
+    let values = ctx.children.filter(x => x.constructor.name !== 'TerminalNodeImpl').mapAsyncSequence(async x => {
+      return await this.visit(x)
+    })
     return new Vector(values)
   }
 
@@ -438,9 +440,16 @@ export default class SintesisEval extends SintesisParserVisitor {
         e1 = e1 !== e2;
         break;
       case '&&':
+      case 'Y':
+      case 'AND':
+      case 'ET':
+      case 'E':
         e1 = e1 && e2;
         break;
       case '||':
+      case 'O':
+      case 'OR':
+      case 'OU':
         e1 = e1 || e2;
         break;
       case '&':
@@ -819,15 +828,15 @@ export default class SintesisEval extends SintesisParserVisitor {
       result.push(r)
       // console.log('print '+r)
     }
-    let str = result.join(" ").replace(/\\n/g, '\n') 
+    let str = result.join(" ").replace(/\\n/g, '\n')
     this.output += str + '\n'
     // console.log('PRINTING', r);
     return str
   }
 
-  async visitStepStatement(ctx) {
-    return null
-  }
+  /* async visitStepStatement(ctx) {
+    return await this.visitChildren(ctx)
+  } */
 
   // Visit a parse tree produced by SintesisParser#expLiteral.
   async visitExpLiteral(ctx) {
@@ -936,7 +945,7 @@ export default class SintesisEval extends SintesisParserVisitor {
   // funciones asíncronas
   async visit(ctx) {
     if (Array.isArray(ctx)) {
-      return await ctx.mapAsyncSequence(async child=>child.accept(this))
+      return await ctx.mapAsyncSequence(async child => child.accept(this))
     } else {
       return await ctx.accept(this);
     }
@@ -953,6 +962,6 @@ export default class SintesisEval extends SintesisParserVisitor {
   async accept(visitor) {
     return await visitor.visitTerminal(this);
   }
-  
+
 
 }
