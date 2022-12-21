@@ -253,6 +253,8 @@ export default class SintesisEval extends SintesisParserVisitor {
   async visitExpAssignment(ctx) {
     this.createIndexIfNotExists = true
     // const logD = ctx.dest.getText()
+    // const logE = ctx.exp.getText()
+    
     let memoryref = await this.visit(ctx.dest)
     this.createIndexIfNotExists = false
 
@@ -260,6 +262,7 @@ export default class SintesisEval extends SintesisParserVisitor {
       throw new SintesisError(ctx.dest, 'El operador izquierdo de asignación es inválido')
 
     let result = await this.visit(ctx.exp)
+    // const r = valueOf(result)
     memoryref.assign(result)
     return memoryref
   }
@@ -307,7 +310,7 @@ export default class SintesisEval extends SintesisParserVisitor {
 
   // Visit a parse tree produced by SintesisParser#vectorLiteral.
   async visitVectorLiteral(ctx) {
-    let values = ctx.children.filter(x => x.constructor.name !== 'TerminalNodeImpl').mapAsyncSequence(async x => {
+    let values = await ctx.children.filter(x => x.constructor.name !== 'TerminalNodeImpl').mapAsyncSequence(async x => {
       return await this.visit(x)
     })
     return new Vector(values)
@@ -318,7 +321,7 @@ export default class SintesisEval extends SintesisParserVisitor {
     // var m = new Map()
     var obj = {}
     var key = ''
-    ctx.children.filter(x => x.constructor.name !== 'TerminalNodeImpl')
+    await ctx.children.filter(x => x.constructor.name !== 'TerminalNodeImpl')
       .mapAsyncSequence(async x => {
         switch (x.constructor.name) {
           case 'IdContext':
@@ -553,16 +556,17 @@ export default class SintesisEval extends SintesisParserVisitor {
   // Visit a parse tree produced by SintesisParser#forFromToStatement.
   async visitForFromToStatement(ctx) {
     const iter = ctx.iter
-    const from = await this.visit(iter.start)
-    const end = await this.visit(iter.to)
+    const from = valueOf(await this.visit(iter.start))
+    const end = valueOf(await this.visit(iter.to))
     const id_iterator = iter.id.text
 
     let mem_index = SymbolFinder.findSymbol(ctx, id_iterator)
     mem_index.assign(from)
-    while ((from < end && valueOf(mem_index.variable) <= end) ||
-      (from > end) && mem_index.variable.value >= end) {
+    var val =  valueOf(mem_index.variable)
+    while ((from < end && val <= end) || (from > end && val >= end)) {
       await this.visit(ctx.stmt)
       mem_index.increment(from < end ? 1 : -1)
+      val =  valueOf(mem_index.variable)
     }
   }
 

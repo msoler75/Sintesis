@@ -1,7 +1,7 @@
 import exec from '../bin/exec.js'
 
-test('Clases-1', () => {
-    expect(exec(`
+test('Clases-1', async () => {
+    expect(await exec(`
     clase Persona {
 
         atributos: {
@@ -35,8 +35,8 @@ test('Clases-1', () => {
 })
 
 
-test('Clases-2', () => {
-    expect(exec(`
+test('Clases-2', async () => {
+    expect(await exec(`
     // clase sencilla sin atributos
 
     clase animal {
@@ -69,8 +69,8 @@ test('Clases-2', () => {
 })
 
 
-test('Clases-3 con atributos y constructor', () => {
-    expect(exec(`
+test('Clases-3 con atributos y constructor', async () => {
+    expect(await exec(`
     clase Basica {
         atributos: { contador }
     
@@ -90,8 +90,8 @@ test('Clases-3 con atributos y constructor', () => {
 
 
 
-test('Clases-4 con constructor con parámetros', () => {
-    expect(exec(`
+test('Clases-4 con constructor con parámetros', async () => {
+    expect(await exec(`
     // un atributo y un constructor con parámetro para inicializar ese atributo
 
     clase Persona {
@@ -117,8 +117,8 @@ test('Clases-4 con constructor con parámetros', () => {
 })
 
 
-test('Clases-5 con modificación de atributo y diferenciando parámetros de atributos', () => {
-    expect(exec(`
+test('Clases-5 con modificación de atributo y diferenciando parámetros de atributos', async () => {
+    expect(await exec(`
     class Saludo {
 
         atributos: nombre
@@ -161,8 +161,8 @@ test('Clases-5 con modificación de atributo y diferenciando parámetros de atri
 })
 
 
-test('Clases-6 con herencia y constructor base que usa contador global', () => {
-    expect(exec(`
+test('Clases-6 con herencia y constructor base que usa contador global', async () => {
+    expect(await exec(`
     contador = 1
 
     clase Figura {
@@ -209,8 +209,8 @@ test('Clases-6 con herencia y constructor base que usa contador global', () => {
 })
 
 
-test('Clases-7 con herencia en construcción', () => {
-    expect(exec(`
+test('Clases-7 con herencia en construcción', async () => {
+    expect(await exec(`
     clase Persona {
         nombre
         constructor (nombre) {
@@ -233,8 +233,8 @@ test('Clases-7 con herencia en construcción', () => {
 })
 
 
-test('Clases-8 creación y uso dinámico', () => {
-  expect(exec(`
+test('Clases-8 creación y uso dinámico', async () => {
+  expect(await exec(`
   // clase sin atributos 
 
   clase p 
@@ -250,8 +250,8 @@ test('Clases-8 creación y uso dinámico', () => {
 })
 
 
-test('Clases-9', () => {
-  expect(exec(`
+test('Clases-9', async () => {
+  expect(await exec(`
   b = 1
   e = 2
   
@@ -295,8 +295,8 @@ test('Clases-9', () => {
 `)
 })
 
-test('Clases-10 creación de varias instancias', () => {
-  expect(exec(`
+test('Clases-10 creación de varias instancias', async () => {
+  expect(await exec(`
   clase A {
     b
     constructor(d)
@@ -316,8 +316,8 @@ test('Clases-10 creación de varias instancias', () => {
 })
 
 
-test('Clases-11 constructor & instanceof', () => {
-    expect(exec(`
+test('Clases-11 constructor & instanceof', async () => {
+    expect(await exec(`
     clase Persona {
 
       nombre, apellidos
@@ -453,8 +453,8 @@ test('Clases-11 constructor & instanceof', () => {
 
 
 
-test('Clases-12 métodos heredados', () => {
-  expect(exec(`
+test('Clases-12 métodos heredados', async () => {
+  expect(await exec(`
   clase Animal {
     nombre
     
@@ -498,8 +498,8 @@ test('Clases-12 métodos heredados', () => {
 
 
 
-test('Clases-13 sobrecarga de constructores', () => {
-  expect(exec(`
+test('Clases-13 sobrecarga de constructores', async () => {
+  expect(await exec(`
   class Persona
   {
       nombre, apellidos

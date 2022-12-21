@@ -1,7 +1,7 @@
 import exec from '../bin/exec.js'
 
-test('Cálculos', () => {
-    expect(exec(`
+test('Cálculos', async () => {
+    expect(await exec(`
     a=1
     b=2
     c=3

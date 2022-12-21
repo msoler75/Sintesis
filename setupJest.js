@@ -6,22 +6,22 @@ function tc(received, expected) {
     {
       pass: true,
       message() {
-        return `Expected ${e} contains ${r}`
+        return `Expected "${e}" contains "${r}"`
       }
     } :
     {
       pass: false,
       message() {
-        return `Received ${r} should contain ${e}`
+        return `Received "${r}" should contain "${e}"`
       }
     };
 }
 
 expect.extend({
-  async toContainText(received, expected) {
-    if (received && typeof received === 'object' && typeof received.then === 'function')
-      return await received.then(resolved => tc(resolved, expected))
-    else
+  toContainText(received, expected) {
+    /*if (received && typeof received === 'object' && typeof received.then === 'function')
+      return received.then(resolved => tc(resolved, expected))
+    else*/
       return tc(received, expected)
   },
 });

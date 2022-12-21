@@ -1,8 +1,8 @@
 import exec from '../bin/exec.js'
 
 
-test('map-1', () => {
-    expect(exec(`
+test('map-1', async () => {
+    expect(await exec(`
     usuarios = mapa()
     usuarios[12] = 'jorge'
     usuarios[24] = 'jaime'
@@ -12,8 +12,8 @@ test('map-1', () => {
     `)).toContainText(`{12: jorge, 24: jaime} 2`)
 })
 
-test('map-2', () => {
-    expect(exec(`
+test('map-2', async () => {
+    expect(await exec(`
     a = mapa()
     a['jorge'] = mapa()
     a['jorge']['manuel'] = 123
@@ -21,8 +21,8 @@ test('map-2', () => {
     `)).toContainText(`{jorge: {manuel: 123}}`)
 })
 
-test('map-3', () => {
-    expect(exec(`
+test('map-3', async () => {
+    expect(await exec(`
     a = mapa()
     a['jorge'] = 33
     a['jaime'] = 77

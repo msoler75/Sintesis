@@ -1,7 +1,7 @@
 import exec from '../bin/exec.js'
 
-test('Conditionals-1', () => {
-    expect(exec(`
+test('Conditionals-1', async () => {
+    expect(await exec(`
     si ( falso ) {
         imprimir "es cierto"
     }
@@ -12,8 +12,8 @@ test('Conditionals-1', () => {
 })
 
 
-test('Conditionals-2', () => {
-    expect(exec(`
+test('Conditionals-2', async () => {
+    expect(await exec(`
     a=2
     si (a==1) imp "es 1"
     si a==2 imp "es 2"
@@ -21,8 +21,8 @@ test('Conditionals-2', () => {
     `)).toContainText(`es 2`)
 })
 
-test('Conditionals-3', () => {
-    expect(exec(`
+test('Conditionals-3', async () => {
+    expect(await exec(`
     a = 1
     mientras a < 7 repetir {
         

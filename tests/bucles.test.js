@@ -1,7 +1,7 @@
 import exec from '../bin/exec.js'
 
-test('Bucles-1 repeat', () => {
-    expect(exec(`
+test('Bucles-1 repeat', async () => {
+    expect(await exec(`
     a=1
     repetir 3 {
         imprimir a
@@ -12,8 +12,8 @@ test('Bucles-1 repeat', () => {
 })
 
 
-test('Bucles-2 repeat while', () => {
-    expect(exec(`
+test('Bucles-2 repeat while', async () => {
+    expect(await exec(`
     a=1
     repetir {
         imprimir a
@@ -24,8 +24,8 @@ test('Bucles-2 repeat while', () => {
 })
 
 
-test('Bucles-3 pre and post', () => {
-    expect(exec(`
+test('Bucles-3 pre and post', async () => {
+    expect(await exec(`
     a = 1
     mientras (a < 3)  {
         imprimir a++
@@ -39,8 +39,8 @@ test('Bucles-3 pre and post', () => {
     })
 
 
-test('Bucles-4 while repeat', () => {
-    expect(exec(`
+test('Bucles-4 while repeat', async () => {
+    expect(await exec(`
     a=1
     mientras a<4 repetir {
         imprimir a
@@ -51,8 +51,8 @@ test('Bucles-4 while repeat', () => {
 })
 
 
-test('Bucles-5 para to', () => {
-    expect(exec(`
+test('Bucles-5 para to', async () => {
+    expect(await exec(`
     para a=1 hasta 3 repetir {
         imprimir a
     }
@@ -63,34 +63,37 @@ test('Bucles-5 para to', () => {
     }
     
     para a=1..3 imp a
-    `)).toContainText(`1 2 3 1 2 3 1 2 3 1 2 3`)
+    
+    para a=2+3 hasta 1+2
+    imprimir a
+    `)).toContainText(`1 2 3 1 2 3 1 2 3 1 2 3 5 4 3`)
 })
 
 
-test('Bucles-6 para cada de', () => {
-    expect(exec(`
+test('Bucles-6 para cada de', async () => {
+    expect(await exec(`
     para cada a de [1, 2, 3] repetir {
         imprimir a
     }
     `)).toContainText(`1 2 3`)
     
-    expect(exec(`
+    expect(await exec(`
     para a de [1, 2, 3] imp a
     `)).toContainText(`1 2 3`)
     
-    expect(exec(`
+    expect(await exec(`
     para cada (a en [3, 2, 1]) imp a
     `)).toContainText(`3 2 1`)
     
-    expect(exec(`
+    expect(await exec(`
     para (a en ['r', 'f', 33]) imp a
     `)).toContainText(`r f 33`)
 
 })
 
 
-test('Bucles-7 para modyfing iterator', () => {
-    expect(exec(`
+test('Bucles-7 para modyfing iterator', async () => {
+    expect(await exec(`
     para a=1 .. 3 repetir {
         imprimir a
     }
@@ -101,7 +104,7 @@ test('Bucles-7 para modyfing iterator', () => {
     }
     `)).toContainText(`1 2 3 1 2 6`)
 
-    expect(exec(`
+    expect(await exec(`
     a=1
     mientras a<6 {
         imprimir a
@@ -112,46 +115,46 @@ test('Bucles-7 para modyfing iterator', () => {
 })
 
 
-test('Bucles-8 para cada of', () => {
-    expect(exec(`
+test('Bucles-8 para cada of', async () => {
+    expect(await exec(`
     para cada (a of [1,2,3])
         imp a
     `)).toContainText(`1 2 3`)
 
-    expect(exec(`
+    expect(await exec(`
     paracada (a of [1,2,3]) do
         imp a
     `)).toContainText(`1 2 3`)
 
-    expect(exec(`
+    expect(await exec(`
     paracada (a of [1,2,3]) do
         imp ++a
     `)).toContainText(`2 3 4`)
 
-    expect(exec(`
+    expect(await exec(`
     paracada (a of [1,2,3]) do
         imp a++
     `)).toContainText(`1 2 3`)
 })
 
 
-test('Bucles-9 para cada in', () => {
-    expect(exec(`
+test('Bucles-9 para cada in', async () => {
+    expect(await exec(`
     para cada (a en [7,8,9])
         imp a
     `)).toContainText(`7 8 9`)
 
-    expect(exec(`
+    expect(await exec(`
     paracada a en [7,8,9] do
         imp a
     `)).toContainText(`7 8 9`)
 
-    expect(exec(`
+    expect(await exec(`
     para (a en [1,2,3]) do
         imp ++a
     `)).toContainText(`2 3 4`)
 
-    expect(exec(`
+    expect(await exec(`
     a = diccionario() 
     a['z'] = 1
     a[3] = 99
@@ -161,8 +164,8 @@ test('Bucles-9 para cada in', () => {
     `)).toContainText(`99 1 99 1 3 99 z 1`)
 })
 
-test('Bucles-10 negative values', () => {
-    expect(exec(`
+test('Bucles-10 negative values', async () => {
+    expect(await exec(`
     a = 0 
     mientras a>-4 
     imp a--       
@@ -174,8 +177,8 @@ test('Bucles-10 negative values', () => {
 
 })
 
-test('Bucles-11 paracada variants', () => {
-    expect(exec(`
+test('Bucles-11 paracada variants', async () => {
+    expect(await exec(`
     para cada letra de 'jor' imp letra
     para cada (posicion =>  letra de 'jor') imp posicion, letra    
     para cada letra, posicion de 'jor' imp posicion, letra
@@ -183,8 +186,8 @@ test('Bucles-11 paracada variants', () => {
 })
 
 
-test('Bucles-12-paracada', () => {
-    expect(exec(`
+test('Bucles-12-paracada', async () => {
+    expect(await exec(`
     lugares['casa'] = 11
     lugares['pub'] = 22
     lugares['local'] = 33

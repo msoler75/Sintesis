@@ -1,7 +1,7 @@
 import exec from '../bin/exec.js'
 
-test('Asignaciones-1 tipos simples', () => {
-    expect(exec(`
+test('Asignaciones-1 tipos simples', async () => {
+    expect(await exec(`
     a = 1
     b = 2
     imprimir b
@@ -31,8 +31,8 @@ test('Asignaciones-1 tipos simples', () => {
 
 
 
-test('Asignaciones-2 map', () => {
-    expect(exec(`
+test('Asignaciones-2 map', async () => {
+    expect(await exec(`
     a={r:1}
     b=a
     imprimir b
@@ -45,8 +45,8 @@ test('Asignaciones-2 map', () => {
 })
 
 
-test('Asignaciones-3 vector', () => {
-    expect(exec(`
+test('Asignaciones-3 vector', async () => {
+    expect(await exec(`
     a=[1,2]
     b=a
     imprimir b
@@ -59,8 +59,8 @@ test('Asignaciones-3 vector', () => {
 })
 
 
-test('Asignaciones-4 clase', () => {
-    expect(exec(`
+test('Asignaciones-4 clase', async () => {
+    expect(await exec(`
     clase Usuario {
         atributos: nombre
 

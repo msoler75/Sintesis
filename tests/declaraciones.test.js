@@ -1,7 +1,7 @@
 import exec from '../bin/exec.js'
 
-test('declaraciones-1 variables', () => {
-    expect(exec(`
+test('declaraciones-1 variables', async () => {
+    expect(await exec(`
     a = 1
     declarar b = 2
      var c = 3
@@ -16,8 +16,8 @@ test('declaraciones-1 variables', () => {
 
 
 
-test('declaraciones-2 función', () => {
-    expect(exec(`
+test('declaraciones-2 función', async () => {
+    expect(await exec(`
     declarar funcion hola() {
         imprimir "hola mundo"
     }
@@ -25,8 +25,8 @@ test('declaraciones-2 función', () => {
     `)).toContainText(`hola mundo`)
 })
 
-test('declaraciones-3 clase', () => {
-    expect(exec(`
+test('declaraciones-3 clase', async () => {
+    expect(await exec(`
     declarar clase bye {
         método tellme() {
             imprimir "adios"

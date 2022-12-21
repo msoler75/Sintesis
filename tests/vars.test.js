@@ -1,10 +1,10 @@
 import exec from '../bin/exec.js'
-test('Variables-1', () => {
-    expect(exec(`a=1 imprimir a`)).toContainText('1')
+test('Variables-1', async () => {
+    expect(await exec(`a=1 imprimir a`)).toContainText('1')
 })
 
-test('Variables-2', () => {
-    expect(exec(`
+test('Variables-2', async () => {
+    expect(await exec(`
     // asigna un valor a una variable, y como no existe, la crea
     a = 1
 
@@ -35,8 +35,8 @@ test('Variables-2', () => {
 })
 
 
-test('Variables-3', () => {
-    expect(exec(`
+test('Variables-3', async () => {
+    expect(await exec(`
     a = 3
     {
         var a = [1,2,3]

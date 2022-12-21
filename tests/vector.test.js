@@ -1,35 +1,35 @@
 import exec from '../bin/exec.js'
 
-test('Vector-declaration-1', () => {
-    expect(exec(`
+test('Vector-declaration-1', async () => {
+    expect(await exec(`
     v1 = vector[3]
     imp v1
     `)).toContainText('[, , ]')
 })
 
-test('Vector-declaration-2', () => {
-    expect(exec(`
+test('Vector-declaration-2', async () => {
+    expect(await exec(`
     v1 = vector[2][3](0)
     imp v1
     `)).toContainText('[[0, 0, 0], [0, 0, 0]]')
 })
 
-test('Vector-declaration-3', () => {
-    expect(exec(`
+test('Vector-declaration-3', async () => {
+    expect(await exec(`
     v1 = vector[2][3][4](0)
     imp v1
     `)).toContainText('[[[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]], [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]]')
 })
 
 
-test('Vector-literal-4', () => {
-    expect(exec(`
+test('Vector-literal-4', async () => {
+    expect(await exec(`
     imp [1, 2, "hola"]
     `)).toContainText('[1, 2, hola]')
 })
 
-test('Vector-indirect-initialisation-5', () => {
-    expect(exec(`
+test('Vector-indirect-initialisation-5', async () => {
+    expect(await exec(`
     a[1] = 1
     a[3] = 3
     imp a
@@ -37,8 +37,8 @@ test('Vector-indirect-initialisation-5', () => {
 })
 
 
-test('Vector-declaration-6-initialisation', () => {
-    expect(exec(`
+test('Vector-declaration-6-initialisation', async () => {
+    expect(await exec(`
     a = vector[3]("hola")
     a[0] = 77
     imp a
@@ -46,8 +46,8 @@ test('Vector-declaration-6-initialisation', () => {
 })
 
 
-test('Vector-7-bidimensional', () => {
-    expect(exec(`
+test('Vector-7-bidimensional', async () => {
+    expect(await exec(`
     a=vector[2][2](-1)
     imprimir a
     a[0] = 1
@@ -59,8 +59,8 @@ test('Vector-7-bidimensional', () => {
 })
 
 
-test('Vector-8-for', () => {
-    expect(exec(`
+test('Vector-8-for', async () => {
+    expect(await exec(`
     a=vector[3] 
     para(i en 0..1) 
     a[i]=1
@@ -71,8 +71,8 @@ test('Vector-8-for', () => {
 
 
 
-test('Vector-9-for-2d', () => {
-    expect(exec(`
+test('Vector-9-for-2d', async () => {
+    expect(await exec(`
     a=vector[2][2](0) 
     para(i en 0..1) 
     a[i][1]=1 
@@ -81,8 +81,8 @@ test('Vector-9-for-2d', () => {
 
 })
 
-test('Vector-10-ajedrez', () => {
-    expect(exec(`
+test('Vector-10-ajedrez', async () => {
+    expect(await exec(`
     a=vector[4][4]
     para(i=0..3) {
         para(j=0..3)
@@ -94,8 +94,8 @@ test('Vector-10-ajedrez', () => {
 })
 
 
-test('Vector-11-3d', () => {
-    expect(exec(`
+test('Vector-11-3d', async () => {
+    expect(await exec(`
     a=vector[3][3][3]
     para(i=0..2) {
         para(j=0..2)
@@ -108,8 +108,8 @@ test('Vector-11-3d', () => {
 })
 
 
-test('Vector-12-w-map', () => {
-    expect(exec(`
+test('Vector-12-w-map', async () => {
+    expect(await exec(`
     a = vector[2][2](-2)
     a[1] = 99
     a[2] = {z:'hola'}
@@ -119,8 +119,8 @@ test('Vector-12-w-map', () => {
 })
 
 
-test('Vector-13', () => {
-    expect(exec(`
+test('Vector-13', async () => {
+    expect(await exec(`
     a = [1,2]
     b = [3,4]
     imp a+b

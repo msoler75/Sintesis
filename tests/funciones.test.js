@@ -1,14 +1,14 @@
 import exec from '../bin/exec.js'
 
-test('Funciones-1', () => {
-    expect(exec(`
+test('Funciones-1', async () => {
+    expect(await exec(`
     funcion s() retornar 3
     imprimir s()
 `)).toContainText(`3`)
 })
 
-test('Funciones-2', () => {
-    expect(exec(`
+test('Funciones-2', async () => {
+    expect(await exec(`
     fun s() {imp 1 return 5}
     fun m(a,b) ret a*b
     s()
@@ -18,8 +18,8 @@ test('Funciones-2', () => {
 })
 
 
-test('Funciones-3', () => {
-    expect(exec(`
+test('Funciones-3', async () => {
+    expect(await exec(`
     // factorial
     fun f(n) if n<=1 ret 1 else ret n*f(n-1)
     imp f(4)
@@ -32,8 +32,8 @@ test('Funciones-3', () => {
 
 
 
-test('Funciones-4', () => {
-    expect(exec(`
+test('Funciones-4', async () => {
+    expect(await exec(`
     fun depende(x) ret x-10
     {
         fun depende(x) ret x+10
@@ -44,8 +44,8 @@ test('Funciones-4', () => {
 })
 
 
-test('Funciones-5', () => {
-    expect(exec(`
+test('Funciones-5', async () => {
+    expect(await exec(`
     fun haceralgo(a) {
         fun suma_dos(a) {
             ret a+2
@@ -58,8 +58,8 @@ test('Funciones-5', () => {
 
 
 
-test('Funciones-6', () => {
-    expect(exec(`
+test('Funciones-6', async () => {
+    expect(await exec(`
     fun negativo (x) {
         si(x<0) ret cierto
         o ret falso
@@ -80,8 +80,8 @@ test('Funciones-6', () => {
 })
 
 
-test('Funciones-7', () => {
-    expect(exec(`
+test('Funciones-7', async () => {
+    expect(await exec(`
     // las variables deben conservar su valor local en las llamadas recursivas
     fun f(n) {
         n++
@@ -97,8 +97,8 @@ test('Funciones-7', () => {
 
 
 
-test('Funciones-8', () => {
-    expect(exec(`
+test('Funciones-8', async () => {
+    expect(await exec(`
     // las variables deben conservar su valor local en las llamadas recursivas
     fun f(n) {
         n++
@@ -115,8 +115,8 @@ test('Funciones-8', () => {
 
 
 
-test('Funciones-9', () => {
-    expect(exec(`
+test('Funciones-9', async () => {
+    expect(await exec(`
     class A {
         b
         constructor(c) {

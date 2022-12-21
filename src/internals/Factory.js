@@ -20,42 +20,48 @@ const variableCreate = function (src) {
 
 // extends variable classes
 
-Variable.prototype.text = function () {
-    return printObject(this.value)
-}
-
-
-Map.prototype.getRef = function (key, create) {
-    if (!(key in this._value)) {
-        if (!create)
-            return null
-        this._value[key] = variableCreate(null)
+Object.defineProperty(Variable.prototype, 'text', {
+    value: function () {
+        return printObject(this.value)
     }
-    return this._value[key]
-}
-
-Map.prototype.setValue = function (key, value) {
-    if (value instanceof Variable)
-        // throw new Error('setValue no permite asignar una Variable')
-        return this.setVariable(key, value)
-    this._value[key] = variableCreate(value)
-}
+})
 
 
-
-
-Vector.prototype._initVector = function (obj, arr, defaultValue) {
-    for (const i in arr) {
-        if (arr[i] instanceof Variable)
-            obj.setVariable(i, arr[i])
-        else if (Array.isArray(arr[i]))
-            obj.setVariable(i, new Vector(arr[i], defaultValue))
-        else if (arr[i]!==null && typeof arr[i] === 'object')
-            obj.setVariable(i, new Map(arr[i]))
-        else
-            obj.setValue(i, arr[i])
+Object.defineProperty(Map.prototype, 'getRef', {
+    value: function (key, create) {
+        if (!(key in this._value)) {
+            if (!create)
+                return null
+            this._value[key] = variableCreate(null)
+        }
+        return this._value[key]
     }
-}
+})
+
+Object.defineProperty(Map.prototype, 'setValue', {
+    value: function (key, value) {
+        if (value instanceof Variable)
+            // throw new Error('setValue no permite asignar una Variable')
+            return this.setVariable(key, value)
+        this._value[key] = variableCreate(value)
+    }
+})
+
+Object.defineProperty(Vector.prototype, '_initVector', {
+    value: function (obj, arr, defaultValue) {
+        for (const i in arr) {
+            console.log('_init_vector')
+            if (arr[i] instanceof Variable)
+                obj.setVariable(i, arr[i])
+            else if (Array.isArray(arr[i]))
+                obj.setVariable(i, new Vector(arr[i], defaultValue))
+            else if (arr[i] !== null && typeof arr[i] === 'object')
+                obj.setVariable(i, new Map(arr[i]))
+            else
+                obj.setValue(i, arr[i])
+        }
+    }
+})
 
 const _createEmptyArraySizes = function (sizes, idx, initialValue) {
     let r = []
@@ -87,48 +93,55 @@ function _checkIndex(index) {
     return index
 }
 
-Vector.prototype.getRef = function (index, create) {
-    index = _checkIndex(index)
-    if (!(index in this._value)) {
-        if (!create) return null
-        for (let i = this._value.length; i <= index; i++)
-            this._value[i] = variableCreate(this.defaultValue)
+Object.defineProperty(Vector.prototype, 'getRef', {
+    value: function (index, create) {
+        index = _checkIndex(index)
+        if (!(index in this._value)) {
+            if (!create) return null
+            for (let i = this._value.length; i <= index; i++)
+                this._value[i] = variableCreate(this.defaultValue)
+        }
+        return this._value[index]
     }
-    return this._value[index]
-}
+})
 
-Vector.prototype.setVariable = function (index, vari) {
-    if (!(vari instanceof Variable))
-        throw new Error('setVariable exige una Variable')
-    index = _checkIndex(index)
-    this.getRef(index, true) // para expandir índices si acaso no existen
-    this._value[index] = vari
-}
-
-Vector.prototype.setValue = function (index, value) {
-    if (value instanceof Variable)
-        return this.setVariable(index, value)
-    //throw new Error('setValue no permite asignar una Variable')
-    index = _checkIndex(index)
-    let ref = this.getRef(index, true)
-    if (ref) ref.value = value
-}
-
-
-
-Vector.prototype.delete = function (index) {
-    index = _checkIndex(index)
-    let len = this._value.length
-    if (len <= index)
-        return
-    if (len - 1 == index)
-        this._value.pop()
-    else {
-        delete this._value[index]
-        this._value[index] = variableCreate(this.defaultValue)
+Object.defineProperty(Vector.prototype, 'setVariable', {
+    value: function (index, vari) {
+        if (!(vari instanceof Variable))
+            throw new Error('setVariable exige una Variable')
+        index = _checkIndex(index)
+        this.getRef(index, true) // para expandir índices si acaso no existen
+        this._value[index] = vari
     }
-}
+})
 
+Object.defineProperty(Vector.prototype, 'setValue', {
+    value: function (index, value) {
+        if (value instanceof Variable)
+            return this.setVariable(index, value)
+        //throw new Error('setValue no permite asignar una Variable')
+        index = _checkIndex(index)
+        let ref = this.getRef(index, true)
+        if (ref) ref.value = value
+    }
+})
+
+
+
+Object.defineProperty(Vector.prototype, 'delete', {
+    value: function (index) {
+        index = _checkIndex(index)
+        let len = this._value.length
+        if (len <= index)
+            return
+        if (len - 1 == index)
+            this._value.pop()
+        else {
+            delete this._value[index]
+            this._value[index] = variableCreate(this.defaultValue)
+        }
+    }
+})
 
 export {
     variableCreate,

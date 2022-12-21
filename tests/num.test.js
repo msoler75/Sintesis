@@ -1,7 +1,7 @@
 import exec from '../bin/exec.js'
 
-test('NumberOf-1', () => {
-    expect(exec(`
+test('NumberOf-1', async () => {
+    expect(await exec(`
     a = vector[3]
     b[2] = 'x'
     c[3] = 'y'

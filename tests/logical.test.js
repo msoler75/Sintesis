@@ -1,7 +1,7 @@
 import exec from '../bin/exec.js'
-test('logical-1', () => {
+test('logical-1', async () => {
     
-    expect(exec(
+    expect(await exec(
         `c = cierto
         f = falso
         imp f || f
@@ -10,7 +10,7 @@ test('logical-1', () => {
         imp c || c`
     )).toContainText(`falso cierto cierto cierto`)
 
-    expect(exec(
+    expect(await exec(
         `c = cierto
         f = falso
         imp f && f
@@ -19,7 +19,7 @@ test('logical-1', () => {
         imp c && c`
     )).toContainText(`falso falso falso cierto`)
 
-    expect(exec(
+    expect(await exec(
         `c = cierto
         f = falso
         imp !(f || f)
@@ -28,7 +28,7 @@ test('logical-1', () => {
         imp !(c || c)`
     )).toContainText(`cierto falso falso falso`)
 
-    expect(exec(
+    expect(await exec(
         `c = cierto
         f = falso
         imp !(f && f)
@@ -37,7 +37,7 @@ test('logical-1', () => {
         imp !(c && c)`
     )).toContainText(`cierto cierto cierto falso`)
 
-    expect(exec(
+    expect(await exec(
         `c = cierto
         f = falso
         imp !f || !f
@@ -46,7 +46,7 @@ test('logical-1', () => {
         imp !c || !c`
     )).toContainText(`cierto cierto cierto falso`)
 
-    expect(exec(
+    expect(await exec(
         `c = cierto
         f = falso
         imp !f && !f
@@ -57,8 +57,8 @@ test('logical-1', () => {
 
 })
 
-test('logical-2 reserved words', () => {    
-    expect(exec(
+test('logical-2 reserved words', async () => {    
+    expect(await exec(
         `
         c = vero
         f = faux
