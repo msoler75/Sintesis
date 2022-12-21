@@ -440,16 +440,11 @@ export default class SintesisEval extends SintesisParserVisitor {
         e1 = e1 !== e2;
         break;
       case '&&':
-      case 'Y':
-      case 'AND':
-      case 'ET':
-      case 'E':
+      case 'and':
         e1 = e1 && e2;
         break;
       case '||':
-      case 'O':
-      case 'OR':
-      case 'OU':
+      case 'or':
         e1 = e1 || e2;
         break;
       case '&':

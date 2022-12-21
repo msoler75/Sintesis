@@ -57,25 +57,16 @@ test('logical-1', () => {
 
 })
 
-test('logical-2 tipografic', () => {    
+test('logical-2 reserved words', () => {    
     expect(exec(
-        `c = vero
+        `
+        c = vero
         f = faux
-        
-        imp c Y f
-        imp c AND f
-        imp c ET f
-        imp c E f
-        
-        imp c O f
-        imp c OR f
-        imp c OU f
-        
-        imp NOT (c || f)
-        imp NAO (c && f)
-        imp NON (c || f)
-        imp NÃO (c && f)
-`
-    )).toContainText(`falso falso falso falso cierto cierto cierto falso cierto falso cierto`)
+        imp c and f
+        imp c or f
+        imp not (c or f)
+        imp not (c and f)
+        `
+    )).toContainText(`falso cierto falso cierto`)
 
 })

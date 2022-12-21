@@ -1376,7 +1376,7 @@ export default class SintesisParser extends SintesisParserBase {
 	            this._ctx = localctx;
 	            _prevctx = localctx;
 	            this.state = 231;
-	            this.match(SintesisParser.Not);
+	            localctx.op = this.match(SintesisParser.Not);
 	            this.state = 232;
 	            localctx.exp = this.expression(20);
 	            break;
@@ -5480,6 +5480,7 @@ class ExpNotContext extends ExpressionContext {
 
     constructor(parser, ctx) {
         super(parser);
+        this.op = null; // Token;
         this.exp = null; // ExpressionContext;
         super.copyFrom(ctx);
     }

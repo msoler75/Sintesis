@@ -85,7 +85,7 @@ expression
     |    Plus exp=expression                                                #expUnaryPlus
     |    Minus exp=expression                                               #expUnaryMinus
     |    BitNot exp=expression                                              #expBitNot
-    |    Not exp=expression                                                 #expNot
+    |    op=Not exp=expression                                              #expNot
     |    e1=expression op=(Modulus|Multiply|Divide) e2=expression           #expOp
     |    e1=expression op=('+'|'-') e2=expression                           #expOp
     |    e1=expression op=('>>'|'<<'|'>>>') e2=expression                   #expOp
