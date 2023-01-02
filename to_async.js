@@ -50,7 +50,7 @@ function convert(fileOriginal) {
       .replace(/this\.visit/g, 'await this.visit')
       .replace(/[\t\s]accept\b/g, 'async accept')
       .replace(/return\s+visitor\./g, 'return await visitor.')
-      .replace(/ctx\.(.*?[\r\n]*.*?)mapSequence\s*\(/g, 'await ctx.$1mapAsyncSequence(async ')
+      .replace(/ctx\.(.*?[\r\n]*.*?)map(Async)?Sequence\s*\(/g, 'await ctx.$1mapAsyncSequence(async ')
       .replace(/SintesisParser(\.a?sync)?\.js/g, 'SintesisParser.async.js')
 
     const fileToWrite = fileOriginal.replace(/\.(js|sync)/g, '') + '.async.js'

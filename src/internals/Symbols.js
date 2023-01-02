@@ -3,6 +3,8 @@ import Variable from './Variable.js'
 import RefClass from './RefClass.js'
 import Instance from './Instance.js'
 import Function from './Function.js'
+import Single from './Single.js'
+import Vector from './Vector.js'
 import valueOf from './ValueOf.js'
 import Class from './Class.js'
 
@@ -72,18 +74,6 @@ class SymbolTable {
     if (this.memory.length <= 1)
       throw new Error("popStack invalid")
     this.memory.pop()
-  }
-
-  static clearValues(ctx) {
-    if (!ctx || !ctx.symbolTable) return
-    const symbols = ctx.symbolTable.getMemory()
-    for (const symbol in symbols) {
-      const v = symbols[symbol].variable
-      if (v instanceof Single) v._value = undefined
-      else if (v instanceof Instance) v._value = undefined
-      else if (v instanceof Vector) v._value = undefined
-      else if (v instanceof Map) v._value = undefined
-    }
   }
 
   setReturnValue(value) {
@@ -237,6 +227,18 @@ class SymbolFinder {
       })
   }
 
+  static clearValues(ctx) {
+    if (!ctx || !ctx.symbolTable) return
+    const symbols = ctx.symbolTable.getMemory()
+    for (const symbol in symbols) {
+      const v = symbols[symbol].variable
+      if (v instanceof Single) v._value = undefined
+      else if (v instanceof Instance) v._value = undefined
+      else if (v instanceof Vector) v._value = undefined
+      else if (v instanceof Map) v._value = undefined
+    }
+  }
+
   static setReturnValue(ctx, value) {
     ctx = this.findTable(ctx)
     while (ctx) {
@@ -356,10 +358,63 @@ class SymbolFinder {
   }
 
 
+  static print(ctx, tabs) {
+    if (!tabs) tabs = 0;
+    let str = ""
+    if (ctx.children && Array.isArray(ctx.children))
+      ctx.children.forEach(x => {
+        str += SymbolFinder.print(x, tabs)
+      })
+    if (ctx.symbolTable) {
+      const m0 = ctx.symbolTable.getMemory()
+      // console.log(ctx.symbolTable)
+      if (m0 === null || m0 === undefined) {
+        str = ''
+        // console.log('ERROR', m0)
+      } else
+        str =
+        '{\n' +
+        TAB + Object.keys(m0)
+        .map(id =>
+          id + ': {' +
+          ctx.symbolTable.memory.map(m => printValueOf(m[id])).join(', ') +
+          '}'
+        )
+        .join(', ') + '\n' +
+        tabulate(str, 1) + '\n' +
+        '}\n'
+    }
+    return tabulate(str, tabs)
+  }
+
+  // return all symbols in ascendent to ctx direction
+  static listSymbols(ctx) {
+    let ctxs = []
+    let cur = ctx
+    while (true) {
+      cur = SymbolFinder.findTable(cur)
+      if (cur) {
+        ctxs.unshift(cur)
+        cur = cur.parentCtx
+      } else break
+    }
+    const result = []
+    for (var ctx of ctxs)
+      result.push({
+        context: ctx,
+        symbols: ctx.symbolTable.getMemory()
+      })
+    return result;
+  }
+
 
 }
 
-
+// to-do translate all print to Print.js
+function tabulate(str, tabs) {
+  var lines = str.split('\n')
+  return lines.map(x => TAB.repeat(tabs) + x).join('\n')
+}
 
 
 export {
