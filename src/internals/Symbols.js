@@ -74,6 +74,18 @@ class SymbolTable {
     this.memory.pop()
   }
 
+  static clearValues(ctx) {
+    if (!ctx || !ctx.symbolTable) return
+    const symbols = ctx.symbolTable.getMemory()
+    for (const symbol in symbols) {
+      const v = symbols[symbol].variable
+      if (v instanceof Single) v._value = undefined
+      else if (v instanceof Instance) v._value = undefined
+      else if (v instanceof Vector) v._value = undefined
+      else if (v instanceof Map) v._value = undefined
+    }
+  }
+
   setReturnValue(value) {
     const m = this.getMemory()
     m['___result'] = value
