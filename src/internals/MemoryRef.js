@@ -1,4 +1,6 @@
 import Variable from './Variable.js'
+import Vector from './Vector.js'
+import Map from './Map.js'
 import Instance from './Instance.js'
 import Function from './Function.js'
 import valueOf from './ValueOf.js'
@@ -6,6 +8,7 @@ import Class from './Class.js'
 import {
     variableCreate,
 } from './Factory.js'
+import Single from './Single.js'
 // import Map from './Map.js'
 
 
@@ -13,6 +16,8 @@ class MemoryRef {
     constructor(variable, index) {
         if (variable)
             this.variable = variable
+        // else 
+        //  console.warn('memoryref with undefined variable?')
         this._index = index
     }
 
@@ -31,7 +36,7 @@ class MemoryRef {
         else
             this._variable = vari
     }
-    
+
     assign(value) {
         //if(this._variable instanceof RefClass)
         //  console.error("No puede asignar a RefClass")
@@ -45,17 +50,25 @@ class MemoryRef {
             this._variable = value
         } else if (typeof literal === 'object' && valueIsVarType) {
             this.variable = value
-        } else {
+        } else if ((
+                (this.variable instanceof Instance) ||
+                (this.variable instanceof Vector && !Array.isArray(literal)) ||
+                (this.variable instanceof Map && (Array.isArray(literal) || typeof literal !== 'object')) ||
+                (this.variable instanceof Single && (Array.isArray(literal) || !['number', 'string', 'object'].includes(typeof literal))))) {
+            this.variable = variableCreate(literal)
+        } else
             this.variable.value = literal
-        }
     }
 
+
     increment(inc) {
+        if (!this.variable)
+            this.variable = variableCreate(0)
         this.variable.value += inc
     }
 
     get value() {
-        return this.variable.value
+        return this.variable ? this.variable.value : null
     }
 
 }

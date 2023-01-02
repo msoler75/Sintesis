@@ -1,4 +1,4 @@
-fun s() {imp 1 return 5}
+fun s() {imprimir 1 return 5}
 fun m(a,b) ret a*b
 s()
 imprimir m(2,3)

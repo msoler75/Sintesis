@@ -3,28 +3,28 @@ import exec from '../bin/exec.js'
 test('Vector-declaration-1', async () => {
     expect(await exec(`
     v1 = vector[3]
-    imp v1
+    imprimir v1
     `)).toContainText('[, , ]')
 })
 
 test('Vector-declaration-2', async () => {
     expect(await exec(`
     v1 = vector[2][3](0)
-    imp v1
+    imprimir v1
     `)).toContainText('[[0, 0, 0], [0, 0, 0]]')
 })
 
 test('Vector-declaration-3', async () => {
     expect(await exec(`
     v1 = vector[2][3][4](0)
-    imp v1
+    imprimir v1
     `)).toContainText('[[[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]], [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]]')
 })
 
 
 test('Vector-literal-4', async () => {
     expect(await exec(`
-    imp [1, 2, "hola"]
+    imprimir [1, 2, "hola"]
     `)).toContainText('[1, 2, hola]')
 })
 
@@ -32,7 +32,7 @@ test('Vector-indirect-initialisation-5', async () => {
     expect(await exec(`
     a[1] = 1
     a[3] = 3
-    imp a
+    imprimir a
     `)).toContainText('[, 1, , 3]')
 })
 
@@ -41,7 +41,7 @@ test('Vector-declaration-6-initialisation', async () => {
     expect(await exec(`
     a = vector[3]("hola")
     a[0] = 77
-    imp a
+    imprimir a
     `)).toContainText('[77, hola, hola]')
 })
 
@@ -114,7 +114,7 @@ test('Vector-12-w-map', async () => {
     a[1] = 99
     a[2] = {z:'hola'}
     a[3] = ['a', 'b', 'c']
-    imp a
+    imprimir a
     `)).toContainText('[[-2, -2], 99, {z: hola}, [a, b, c]]')
 })
 
@@ -123,6 +123,6 @@ test('Vector-13', async () => {
     expect(await exec(`
     a = [1,2]
     b = [3,4]
-    imp a+b
+    imprimir a+b
     `)).toContainText('[1, 2, 3, 4]')
 })

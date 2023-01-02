@@ -1,3 +1,4 @@
+import words from '../lang/words.es.js'
 import Variable from './Variable.js'
 import Class from './Class.js'
 
@@ -20,8 +21,9 @@ class Function extends Variable {
           this.params.push(ctx.pl.children[i].getText())
   }
 
-  text() {
-    return '(' + this.params.join(', ') + ')'
+  toString() {
+    // return `${words.FUNCTION} (${this.params.join(', ')})`
+    return `${words.FUNCTION_SHORT}(${this.params.join(', ')})`
   }
 }
 

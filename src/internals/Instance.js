@@ -1,7 +1,7 @@
-import printObject from './Print.js'
 import Variable from './Variable.js'
 import Class from "./Class.js"
 import Map from "./Map.js"
+import {printObject} from '../utils/Print.js'
 
 
 class Instance extends Variable {
@@ -79,7 +79,7 @@ class Instance extends Variable {
     }
 
 
-    text() {
+    toString() {
         const a = []
         // const m = []
         let ref = this

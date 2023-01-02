@@ -1,0 +1,9 @@
+declarar clase bye {
+    método tellme() {
+        imprimir "adios"
+    }
+}
+
+nt = nuevo bye()
+nt.tellme()
+

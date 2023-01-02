@@ -1,3 +1,8 @@
+import words from '../lang/words.es.js'
+import {
+    printObject
+} from '../utils/Print.js'
+
 class Class {
     constructor(ctx, name, superClass, attributes, methods) {
         this.context = ctx
@@ -40,7 +45,7 @@ class Class {
         while (ref) {
             if (id in ref.attributes)
                 return ref.attributes[id]
-            if(id in ref.methods)
+            if (id in ref.methods)
                 return ref.methods[id].visibility || 'public'
             ref = ref.superClass
         }
@@ -59,31 +64,45 @@ class Class {
     }
     */
 
+    toString() {
+        return `${words.CLASS} ${this.name} { ${words.ATTRIBUTES}: ${printObject(this.attributes)}, ${words.METHODS}: ${printObject(this.methods)}}`
+    }
+
 }
 
 
 Class.isConstructorName = function (name) {
     // to-do: lang
+    if (!name)
+        return false
     return ['constructor', 'construct'].includes(name) || name.startsWith('__construct')
 }
 
 Class.isAttributesName = function (name) {
     // to-do: lang
+    if (!name)
+        return false
     return ['__attributes', '___attributes', 'attributes', 'atributos'].includes(name)
 }
 
 Class.isMethodsName = function (name) {
     // to-do: lang
+    if (!name)
+        return false
     return ['__methods', '___methods', 'methods', 'metodos', 'métodos'].includes(name)
 }
 
 Class.isSuperName = function (name) {
     // to-do: lang
+    if (!name)
+        return false
     return ['__super', '___super'].includes(name)
 }
 
 Class.isInstance = function (name) {
     // to-do: lang
+    if (!name)
+        return false
     return ['__instance', '___instance'].includes(name)
 }
 

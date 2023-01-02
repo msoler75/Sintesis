@@ -12,7 +12,7 @@ function backspace2(s, t) {
 
         if(1) {
             var spaces = sub("                      ", long(secuencia))
-            imp objetivo, secuencia,spaces+palabra
+            imprimir objetivo, secuencia,spaces+palabra
         }
 
         var resultados = []
@@ -75,4 +75,4 @@ function backspace2(s, t) {
     return false
 }
 
-imp backspace2('ababaa', 'aba')
+imprimir backspace2('ababaa', 'aba')

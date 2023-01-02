@@ -20,7 +20,7 @@ a = nueva Persona()
 b = nueva Persona("Jorge")
 c = nueva Persona("Juan", "García")
 
-imp a
-imp b
-imp c
-imp a.metodos
+imprimir a
+imprimir b
+imprimir c
+imprimir a.metodos

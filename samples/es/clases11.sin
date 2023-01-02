@@ -16,7 +16,7 @@ clase Persona {
     }
     
     texto() {
-        retorna 'Persona (nombre#'+nombre+', apellidos#'+apellidos+')'
+        retornar 'Persona (nombre#'+nombre+', apellidos#'+apellidos+')'
     }  
 }
     
@@ -31,7 +31,7 @@ clase Cliente extiende Persona {
     
     
     constructor (dni, nombre, apellidos) {
-        padre(nombre, apellidos)
+        super(nombre, apellidos)
         asignaDNI(dni)
     }
     
@@ -40,7 +40,7 @@ clase Cliente extiende Persona {
     }
     
     texto() {
-        retorna 'Cliente (dni -> '+dni+', '+'nombre -> '+nombre+', apellidos -> '+apellidos+')'
+        retornar 'Cliente (dni -> '+dni+', '+'nombre -> '+nombre+', apellidos -> '+apellidos+')'
     }
     
     // además hereda los métodos del padre (clase Persona)

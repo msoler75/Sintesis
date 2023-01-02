@@ -2,8 +2,8 @@ para cada a de [1, 2, 3] repetir {
     imprimir a
 }
 
-para a de [1, 2, 3] imp a
+para a de [1, 2, 3] imprimir a
 
-para cada (a en [3, 2, 1]) imp a
+para cada (a en [3, 2, 1]) imprimir a
 
-para (a en ['r', 'f', 33]) imp a
+para (a en ['r', 'f', 33]) imprimir a

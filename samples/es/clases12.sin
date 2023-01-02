@@ -12,7 +12,7 @@ clase Perro extiende Animal {
     }
 
     accion() {
-        imp nombre, "ladra"
+        imprimir nombre, "ladra"
     }
 }
 
@@ -22,7 +22,7 @@ clase Gato extiende Animal {
     }
 
     accion() {
-        imp nombre, "maúlla"
+        imprimir nombre, "maúlla"
     }
 }
 

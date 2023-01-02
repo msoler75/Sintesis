@@ -3,7 +3,7 @@
 clase p 
 {
     x() {
-        imp 'funciona!' 
+        imprimir 'funciona!' 
     } 
 }
 

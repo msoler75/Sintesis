@@ -8,25 +8,29 @@ import SintesisParser from '../src/lib/SintesisParser.js'
 import SintesisEval from '../src/SintesisEval.js'
 import SintesisSymbolParser from '../src/SintesisSymbolParser.js'
 import SintesisErrorListener from '../src/SintesisErrorListener.js'
+import {printTree, printSymbolsTree} from '../src/utils/Print.js'
 
-async function exec(input) {
+function exec(input) {
     var chars = new InputStream(input, true)
     var lexer = new SintesisLexer(chars)
     var tokens = new CommonTokenStream(lexer)
     // tokens.fill();
     var parser = new SintesisParser(tokens)
     var symboly = new SintesisSymbolParser()
-    var evaly = new SintesisEval(tokens)
+    var evaly = new SintesisEval()
 
     parser.buildParseTrees = true
     parser.removeErrorListeners()
     parser.addErrorListener(new SintesisErrorListener());
 
-    const programContext = await parser.program() // 'program' is the start rule
-    // genera las tablas de símbolos
-    await symboly.visitProgram(programContext)
+    const programContext = parser.program() // 'program' is the start rule
+    // genera las tablas de símbolos:
+    symboly.visitProgram(programContext)
+    // console.log(printTree(programContext))
+    // console.log(printSymbols(programContext))
     // ejecuta el programa
-    await evaly.visitProgram(programContext)
+    evaly.visitProgram(programContext)
+    // console.log(printTree(programContext))
     return evaly.output
 }
 

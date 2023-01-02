@@ -15,9 +15,9 @@ test('Conditionals-1', async () => {
 test('Conditionals-2', async () => {
     expect(await exec(`
     a=2
-    si (a==1) imp "es 1"
-    si a==2 imp "es 2"
-    si a==3 imp "es 3"
+    si (a==1) imprimir "es 1"
+    si a==2 imprimir "es 2"
+    si a==3 imprimir "es 3"
     `)).toContainText(`es 2`)
 })
 

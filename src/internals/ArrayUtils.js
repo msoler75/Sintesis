@@ -17,7 +17,8 @@ Object.defineProperty(Array.prototype, 'mapAsyncSequence', {
         const arr = this
         const result = [];
         for (var i = 0; i < arr.length; i++) {
-            result.push(await predicate(arr[i]));
+            const r = await predicate(arr[i])
+            result.push(r);
         }
         return result;
     }

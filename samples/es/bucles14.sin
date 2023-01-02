@@ -1,0 +1,14 @@
+x=2
+for(;x<5;x++) 
+imprimir x
+
+imprimir x
+
+for(j=33;j>30;j--)
+imprimir j
+
+imprimir j
+
+for(var x=100;x<102;) {imprimir x++}
+
+imprimir x

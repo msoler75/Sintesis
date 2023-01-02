@@ -1,0 +1,28 @@
+//variables
+a=1
+imprimir a
+
+// objetos
+var persona={nombre: "Jorge", apellidos: "Lopez"}
+
+// vectores
+var v = [1,2,5,3]
+
+// bucles
+para b=1 hasta 3
+    imprimir a+b
+
+var c = 3
+mientras c>0 
+{
+    c--
+    imprimir c + "."
+}
+
+// condicionales
+si a==2 entonces
+    imprimir "caso 1"
+o si a==3 entonces
+    imprimir "caso 2"
+y si no
+    imprimir "caso 3"

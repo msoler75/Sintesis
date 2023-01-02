@@ -37,13 +37,13 @@ clase Cliente extiende Persona {
 p = nueva Persona("Juan", "López")
 c = nuevo Cliente("Jorge", "Pérez")
 
-imp p
-imp p.dimeContraseña()
-imp p.dimeFrase()
+imprimir p
+imprimir p.dimeContraseña()
+imprimir p.dimeFrase()
 
 // no accesible
-imp p.contraseña 
-imp p.frase
-imp c.contraseña
-imp c.frase
-imp c.dameContraseña()
+imprimir p.contraseña 
+imprimir p.frase
+imprimir c.contraseña
+imprimir c.frase
+imprimir c.dameContraseña()

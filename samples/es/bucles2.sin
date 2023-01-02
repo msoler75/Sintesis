@@ -4,4 +4,4 @@ repetir {
     a=a+1
 } mientras a<4
 
-a=1 rep imp a++ mientras a<4
+a=1 ; repetir imprimir a++ mientras a<4

@@ -1,4 +1,4 @@
-import printObject from './Print.js'
+import {printObject} from '../utils/Print.js'
 import Variable from './Variable.js'
 import Vector from './Vector.js'
 import Single from './Single.js'
@@ -20,7 +20,7 @@ const variableCreate = function (src) {
 
 // extends variable classes
 
-Object.defineProperty(Variable.prototype, 'text', {
+Object.defineProperty(Variable.prototype, 'toString', {
     value: function () {
         return printObject(this.value)
     }
@@ -50,7 +50,7 @@ Object.defineProperty(Map.prototype, 'setValue', {
 Object.defineProperty(Vector.prototype, '_initVector', {
     value: function (obj, arr, defaultValue) {
         for (const i in arr) {
-            console.log('_init_vector')
+            // console.log('_init_vector')
             if (arr[i] instanceof Variable)
                 obj.setVariable(i, arr[i])
             else if (Array.isArray(arr[i]))
@@ -79,6 +79,8 @@ const createVectorWithSizes = function (sizes, defaultValue) {
     else {
         if (typeof sizes == 'number')
             sizes = [sizes]
+        if(!Array.isArray(sizes))
+            throw new Error("Error creating Vector: arg must be an array");
         vec._value = new Vector(_createEmptyArraySizes(sizes, 0, vec.defaultValue))
     }
     return vec
@@ -125,7 +127,6 @@ Object.defineProperty(Vector.prototype, 'setValue', {
         if (ref) ref.value = value
     }
 })
-
 
 
 Object.defineProperty(Vector.prototype, 'delete', {

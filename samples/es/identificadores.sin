@@ -1,0 +1,16 @@
+var ..=4
+di=1
+of=2
+imprimir di+of+..
+mientras=1
+repetir 3 {
+    imprimir mientras
+    mientras=mientras+1
+}    
+mientras=1 
+mientras mientras < 3 {
+    imprimir "dentro"
+    mientras++
+}
+repetir 3 
+imprimir mientras++

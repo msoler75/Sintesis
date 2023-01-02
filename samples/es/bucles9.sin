@@ -1,15 +1,15 @@
 para cada (a en [7,8,9])
-    imp a
+    imprimir a
 
 paracada a en [7,8,9] do
-    imp a
+    imprimir a
 
 para (a en [1,2,3]) do
-    imp ++a
+    imprimir ++a
 
-a = diccionario() 
+a = mapa() 
 a['z'] = 1
 a[3] = 99
-para x en a imp x
-para x de a imp x
-para x,i de a imp i, x
+para x en a imprimir x
+para x de a imprimir x
+para x,i de a imprimir i, x

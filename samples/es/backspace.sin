@@ -9,7 +9,7 @@ fun backspace(s, t) {
         
         si (encontrado!=0) ret
 
-        imp palabra
+        imprimir palabra
 
         si (pos == ls)
         { 
@@ -36,4 +36,4 @@ fun backspace(s, t) {
     ret encontrado!=0
 }
 
-imp backspace("aaaaabaaaaaabaaa", "baaab")
+imprimir backspace("aaaaabaaaaaabaaa", "baaab")

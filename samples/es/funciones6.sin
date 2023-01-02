@@ -7,10 +7,10 @@ fun positivo (x) {
     ret x>=0
 }
 
-imp negativo(3)
-imp negativo(-2)
-imp negativo(0)
+imprimir negativo(3)
+imprimir negativo(-2)
+imprimir negativo(0)
 
-imp positivo(3)
-imp positivo(-2)
-imp positivo(0)
+imprimir positivo(3)
+imprimir positivo(-2)
+imprimir positivo(0)

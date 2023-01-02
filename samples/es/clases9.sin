@@ -12,21 +12,21 @@ clase A {       // [0]=>{b:2} [1]=>{b:3} [2]=>{b:4} [3]=>{b:7}
 clase B extiende A {   // [0]=> {b:4, e:5}  [1]=>{b:7, e:8}
     e
     constructor(d, x) {
-        padre(d)
+        super(d)
         e = x
     }
 }
 
 z = nueva A(2)
-imp z
+imprimir z
 y = nueva A(3)
-imp y
+imprimir y
 k = nueva B(4, 5)
-imp k
+imprimir k
 m = nueva B(7, 8)
-imp m
+imprimir m
 m.b=1
 m.e=2
-imp k
-imp m
-imp b, e 
+imprimir k
+imprimir m
+imprimir b, e 

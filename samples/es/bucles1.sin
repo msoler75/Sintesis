@@ -3,4 +3,6 @@ repetir 3 {
     imprimir a
     a=a+1
 }    
-a=1 rep 3 imp a++
+a=1 
+repetir 3 
+imprimir a++

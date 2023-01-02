@@ -12,15 +12,15 @@ test('Vector-class-with-map', () => {
     })
     v.setVariable(3, m)
     m.setValue('k', 77)
-    expect(v.text()).toContainText('[10, 20, -1, {j: 1, p: 2, k: 77}]')
-    expect(v.getRef(3).getRef('p').text()).toContainText('2')
+    expect(v.toString()).toContainText('[10, 20, -1, {j: 1, p: 2, k: 77}]')
+    expect(v.getRef(3).getRef('p').toString()).toContainText('2')
     
     m.delete('j')
-    expect(v.getRef(3).text()).toContainText('{p: 2, k: 77}')
+    expect(v.getRef(3).toString()).toContainText('{p: 2, k: 77}')
     
     let x = new Variable(55)
     m.setVariable('fifty', x)
-    expect(v.getRef(3).text()).toContainText('{p: 2, k: 77, fifty: 55}')
+    expect(v.getRef(3).toString()).toContainText('{p: 2, k: 77, fifty: 55}')
 })
 
 
@@ -35,5 +35,5 @@ test('Map-class-with-Vector', () => {
 
     n.setVariable('x', new Vector([7, 8]))
 
-    expect(m.text()).toContainText('{j: 1, k: 2, dicc: {i: 3, z: 99, x: [7, 8]}}')
+    expect(m.toString()).toContainText('{j: 1, k: 2, dicc: {i: 3, z: 99, x: [7, 8]}}')
 })

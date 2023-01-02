@@ -7,7 +7,8 @@ test('Bucles-1 repeat', async () => {
         imprimir a
         a=a+1
     }    
-    a=1 rep 3 imp a++
+    a=1 ; repetir 3 
+    imprimir a++
     `)).toContainText(`1 2 3 1 2 3`)
 })
 
@@ -19,7 +20,7 @@ test('Bucles-2 repeat while', async () => {
         imprimir a
         a=a+1
     } mientras a<4
-    a=1 rep imp a++ mientras a<4
+    a=1 ; repetir imprimir a++ mientras a<4
     `)).toContainText(`1 2 3 1 2 3`)
 })
 
@@ -46,7 +47,7 @@ test('Bucles-4 while repeat', async () => {
         imprimir a
         a=a+1
     }    
-    a=1 mientras a<4 imp a++
+    a=1 ; mientras a<4 imprimir a++
     `)).toContainText(`1 2 3 1 2 3`)
 })
 
@@ -56,17 +57,26 @@ test('Bucles-5 para to', async () => {
     para a=1 hasta 3 repetir {
         imprimir a
     }
-    para a=1 hasta 3 imp a
+    para a=1 hasta 3 imprimir a
 
     para a=1..3 repetir {
         imprimir a
     }
     
-    para a=1..3 imp a
+    para a=1..3 imprimir a
     
     para a=2+3 hasta 1+2
     imprimir a
-    `)).toContainText(`1 2 3 1 2 3 1 2 3 1 2 3 5 4 3`)
+
+    imprimir a
+
+    declarar var b
+
+    para b = 1 hasta 2
+        imprimir b
+
+    imprimir b
+    `)).toContainText(`1 2 3 1 2 3 1 2 3 1 2 3 5 4 3 nulo 1 2 3`)
 })
 
 
@@ -78,15 +88,15 @@ test('Bucles-6 para cada de', async () => {
     `)).toContainText(`1 2 3`)
     
     expect(await exec(`
-    para a de [1, 2, 3] imp a
+    para a de [1, 2, 3] imprimir a
     `)).toContainText(`1 2 3`)
     
     expect(await exec(`
-    para cada (a en [3, 2, 1]) imp a
+    para cada (a en [3, 2, 1]) imprimir a
     `)).toContainText(`3 2 1`)
     
     expect(await exec(`
-    para (a en ['r', 'f', 33]) imp a
+    para (a en ['r', 'f', 33]) imprimir a
     `)).toContainText(`r f 33`)
 
 })
@@ -118,22 +128,22 @@ test('Bucles-7 para modyfing iterator', async () => {
 test('Bucles-8 para cada of', async () => {
     expect(await exec(`
     para cada (a of [1,2,3])
-        imp a
+        imprimir a
     `)).toContainText(`1 2 3`)
 
     expect(await exec(`
     paracada (a of [1,2,3]) do
-        imp a
+        imprimir a
     `)).toContainText(`1 2 3`)
 
     expect(await exec(`
     paracada (a of [1,2,3]) do
-        imp ++a
+        imprimir ++a
     `)).toContainText(`2 3 4`)
 
     expect(await exec(`
     paracada (a of [1,2,3]) do
-        imp a++
+        imprimir a++
     `)).toContainText(`1 2 3`)
 })
 
@@ -141,26 +151,26 @@ test('Bucles-8 para cada of', async () => {
 test('Bucles-9 para cada in', async () => {
     expect(await exec(`
     para cada (a en [7,8,9])
-        imp a
+        imprimir a
     `)).toContainText(`7 8 9`)
 
     expect(await exec(`
     paracada a en [7,8,9] do
-        imp a
+        imprimir a
     `)).toContainText(`7 8 9`)
 
     expect(await exec(`
     para (a en [1,2,3]) do
-        imp ++a
+        imprimir ++a
     `)).toContainText(`2 3 4`)
 
     expect(await exec(`
-    a = diccionario() 
+    a = mapa() 
     a['z'] = 1
     a[3] = 99
-    para x in a imp x
-    para x of a imp x
-    para x,i of a imp i, x
+    para x in a imprimir x
+    para x of a imprimir x
+    para x,i of a imprimir i, x
     `)).toContainText(`99 1 99 1 3 99 z 1`)
 })
 
@@ -168,20 +178,20 @@ test('Bucles-10 negative values', async () => {
     expect(await exec(`
     a = 0 
     mientras a>-4 
-    imp a--       
+    imprimir a--       
 
     b = 0 
-    rep 4 
-    imp b--    
+    repetir 4 
+    imprimir b--    
     `)).toContainText(`0 -1 -2 -3 0 -1 -2 -3`)
 
 })
 
 test('Bucles-11 paracada variants', async () => {
     expect(await exec(`
-    para cada letra de 'jor' imp letra
-    para cada (posicion =>  letra de 'jor') imp posicion, letra    
-    para cada letra, posicion de 'jor' imp posicion, letra
+    para cada letra de 'jor' imprimir letra
+    para cada (posicion =>  letra de 'jor') imprimir posicion, letra    
+    para cada letra, posicion de 'jor' imprimir posicion, letra
     `)).toContainText(`j o r 0 j 1 o 2 r 0 j 1 o 2 r `)
 })
 
@@ -212,4 +222,51 @@ test('Bucles-12-paracada', async () => {
     - 22
     - 33
     `)
+})
+
+
+test('Bucles-13 for clásico', async () => {
+    expect(await exec(`
+    for(var i=0;i<3;i++)
+    imprimir i
+    
+    for(k=3;k>0;k--)
+    imprimir k
+    
+    for(z=0;z<3;)
+    imprimir z++
+    `)).toContainText(`0 1 2 3 2 1 0 1 2`)
+})
+
+
+test('Bucles-14 contextos/inicialización', async () => {
+    expect(await exec(`
+    x=2
+    for(;x<5;x++) 
+    imprimir x
+
+    imprimir x
+
+    for(j=33;j>30;j--)
+    imprimir j
+
+    imprimir j
+
+    for(var x=100;x<102;) {imprimir x++}
+
+    imprimir x
+    `)).toContainText(`2 3 4 5 33 32 31 nulo 100 101 5`)
+})
+
+
+
+test('Bucles-15 secuencias de exp', async () => {
+    expect(await exec(`
+    // secuencias de expresiones
+    for(a=1,b=2;a<3,b<7;a--,b++)
+    {
+        imprimir "b=" + b++
+        imprimir "a=" + a
+    }
+    `)).toContainText(`b=2 a=1 b=4 a=0 b=6 a=-1`)
 })

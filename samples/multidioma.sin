@@ -1,0 +1,122 @@
+// la declaración de variables se puede hacer de varias formas:
+a // poniendo una variable tal cual
+var a // con la palabra 'var'
+declare var a // usando 'declare'
+declare a // omitiendo 'var'
+
+// también se puede inicializar con un valor. Por ejemplo
+declarar var a = 1
+
+// se permite la traducción de los términos clave
+declarer a = 1
+
+// tipos de datos:
+
+//booleanos
+
+// en inglés
+declarar var a=true
+b=false
+
+// en español
+var a=cierto
+declarar b=falso 
+
+// francés
+var a=vrai
+declarer b=faux
+
+// Portugués:
+
+var a=verdadeiro
+declarar b=falso
+
+// Italiano:
+
+var a=vero
+declarar b=falso
+
+
+// si condicional
+si a==1 entonces
+    imprimir "caso 1"
+o si a==2 entonces
+    imprimir "caso 2"
+y si no
+    imprimir "caso 3"
+
+
+// Francés:
+
+si a==1 alors
+imprimer "cas 1"
+ou si a==2 alors
+imprimer "cas 2"
+et sinon
+imprimer "cas 3"
+
+// Portugués:
+
+se a==1 então
+imprimir "caso 1"
+ou se a==2 então
+imprimir "caso 2"
+senão
+imprimir "caso 3"
+
+// Italiano:
+
+se a==1 allora
+stampare "caso 1"
+oppure se a==2 allora
+stampare "caso 2"
+altrimenti
+stampare "caso 3"
+
+
+// switch
+a=2
+switch(a) {
+    case 1: print "caso 1"; break;
+    case 2: print "caso 2"; break;
+    default: print "otros";
+}
+
+// español
+a=2
+elegir(a) {
+caso 1: imprimir "caso 1"; salir;
+caso 2: imprimir "caso 2"; salir;
+defecto: imprimir "otros";
+}
+
+Francés:
+
+// switch
+a=2
+choisir(a) {
+cas 1: imprimer "cas 1"; sortir;
+cas 2: imprimer "cas 2"; sortir;
+par défaut: imprimer "autres";
+}
+
+Portugués:
+
+// switch
+a=2
+selecionar(a) {
+caso 1: imprimir "caso 1"; sair;
+caso 2: imprimir "caso 2"; sair;
+padrão: imprimir "outros";
+}
+
+Italiano:
+
+// switch
+a=2
+scegliere(a) {
+caso 1: stampare "caso 1"; uscire;
+caso 2: stampare "caso 2"; uscire;
+default: stampare "altri";
+}
+

@@ -1,2 +1,2 @@
 v1 = vector[2][3][4](0)
-imp v1
+imprimir v1

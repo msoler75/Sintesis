@@ -6,7 +6,7 @@ import Function from './Function.js'
 import valueOf from './ValueOf.js'
 import Class from './Class.js'
 
-const TAB = '  '
+const dbgadd = false
 
 class SymbolTable {
   constructor(function_or_class) {
@@ -133,27 +133,6 @@ class SymbolTable {
 
 }
 
-
-
-
-function printValueOf(v) {
-  if (v instanceof MemoryRef) {
-    if (!v._variable) return ''
-    v = v.variable
-  }
-  if (v instanceof Class) {
-    return "(clase)"
-  }
-  if (v instanceof RefClass) {
-    if (v.value.classInstance instanceof Class) {
-      return v.value.classInstance.name + '.' + v.value.id
-    } else
-      return v.value.classInstance.class.name + '.' + v.value.id
-  }
-  if (v instanceof Function)
-    return "()";
-  return valueOf(v)
-}
 
 class SymbolFinder {
 
@@ -308,6 +287,7 @@ class SymbolFinder {
   static addSymbol(ctx, id) {
     ctx = this.findTable(ctx)
     if (!ctx) return null
+    if(dbgadd)console.log('+ símbolo', id, '-', ctx.constructor.name)
     return ctx.symbolTable.addSymbol(id)
   }
 
@@ -315,6 +295,7 @@ class SymbolFinder {
   static addVariable(ctx, id, value) {
     ctx = this.findTable(ctx)
     if (!ctx) return null
+    if(dbgadd)console.log('+', value instanceof RefClass ? 'Refclass': value instanceof Instance ? 'Instance' : 'variable', id, '-', ctx.constructor.name)
     return ctx.symbolTable.addVariable(id, value)
   }
 
@@ -322,6 +303,7 @@ class SymbolFinder {
   static addFunction(ctx, id, value) {
     ctx = this.findTable(ctx)
     if (!ctx) return null
+    if(dbgadd)console.log('+ función', id, '-', ctx.constructor.name)
     return ctx.symbolTable.addFunction(id, value)
   }
 
@@ -329,6 +311,7 @@ class SymbolFinder {
   static addClass(ctx, id, value) {
     ctx = this.findTable(ctx)
     if (!ctx) return null
+    if(dbgadd)console.log('+ clase', id, '-', ctx.constructor.name)
     return ctx.symbolTable.addClass(id, value)
   }
 
@@ -360,41 +343,12 @@ class SymbolFinder {
     return true
   }
 
-  static print(ctx, tabs) {
-    if (!tabs) tabs = 0;
-    let str = ""
-    if (ctx.children && Array.isArray(ctx.children))
-      ctx.children.forEach(x => {
-        str += SymbolFinder.print(x, tabs)
-      })
-    if (ctx.symbolTable) {
-      const m0 = ctx.symbolTable.getMemory()
-      // console.log(ctx.symbolTable)
-      if (m0 === null || m0 === undefined) {
-        str = ''
-        // console.log('ERROR', m0)
-      } else
-        str =
-        '{\n' +
-        TAB + Object.keys(m0)
-        .map(id =>
-          id + ': {' +
-          ctx.symbolTable.memory.map(m => printValueOf(m[id])).join(', ') +
-          '}'
-        )
-        .join(', ') + '\n' +
-        tabulate(str, 1) + '\n' +
-        '}\n'
-    }
-    return tabulate(str, tabs)
-  }
+
 
 }
 
-function tabulate(str, tabs) {
-  var lines = str.split('\n')
-  return lines.map(x => TAB.repeat(tabs) + x).join('\n')
-}
+
+
 
 export {
   SymbolTable,

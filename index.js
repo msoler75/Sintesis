@@ -44,7 +44,7 @@ if (input) {
   }
 
   try {
-    console.log(await await exec(input))
+    console.log(exec(input))
   } catch (err) {
     if (err instanceof SyntaxError) {
       const data = JSON.parse(err.message)

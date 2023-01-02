@@ -65,7 +65,7 @@ test('Clases-2', async () => {
     saltando...
     animal {}
     {}
-    {correr: (), saltar: (), constructor: ()}`)
+    {correr: f(), saltar: f(), constructor: f()}`)
 })
 
 
@@ -156,7 +156,7 @@ test('Clases-5 con modificación de atributo y diferenciando parámetros de atri
     ¡Hola Jorge!
     ¡Adiós Juan!
     Saludo {nombre: Juan}
-    {constructor: (nombre), hola: (nombre), adios: (nombre)}
+    {constructor: f(nombre), hola: f(nombre), adios: f(nombre)}
     `)
 })
 
@@ -221,12 +221,12 @@ test('Clases-7 con herencia en construcción', async () => {
       clase Cliente extiende Persona {
         dni
         constructor (nombre, dni) {
-          padre(nombre)
+          super(nombre)
           atributos.dni = dni
         }
       }
       p = nuevo Cliente ('Javier', 1234567)
-      imp p
+      imprimir p
       `)).toContainText(`
       Cliente {dni: 1234567, nombre: Javier}
       `)
@@ -240,7 +240,7 @@ test('Clases-8 creación y uso dinámico', async () => {
   clase p 
   {
       x() {
-          imp 'funciona!' 
+          imprimir 'funciona!' 
       } 
   }
 
@@ -266,24 +266,24 @@ test('Clases-9', async () => {
   clase B extiende A {   // [0]=> {b:4, e:5}  [1]=>{b:7, e:8}
       e
       constructor(d, x) {
-          padre(d)
+          super(d)
           e = x
       }
   }
   
   z = nueva A(2)
-  imp z
+  imprimir z
   y = nueva A(3)
-  imp y
+  imprimir y
   k = nueva B(4, 5)
-  imp k
+  imprimir k
   m = nueva B(7, 8)
-  imp m
+  imprimir m
   m.b=1
   m.e=2
-  imp k
-  imp m
-  imp b, e 
+  imprimir k
+  imprimir m
+  imprimir b, e 
   `)).toContainText(`
   A {b: 2}
   A {b: 3}
@@ -307,8 +307,8 @@ test('Clases-10 creación de varias instancias', async () => {
   
   k = nueva A(4)
   m = nueva A(7)
-  imp k
-  imp m
+  imprimir k
+  imprimir m
   `)).toContainText(`
   A {b: 4}
   A {b: 7}
@@ -336,7 +336,7 @@ test('Clases-11 constructor & instanceof', async () => {
       }
       
       texto() {
-          retorna 'Persona (nombre#'+nombre+', apellidos#'+apellidos+')'
+          retornar 'Persona (nombre#'+nombre+', apellidos#'+apellidos+')'
       }  
     }
         
@@ -351,7 +351,7 @@ test('Clases-11 constructor & instanceof', async () => {
       
       
       constructor (dni, nombre, apellidos) {
-          padre(nombre, apellidos)
+          super(nombre, apellidos)
           asignaDNI(dni)
       }
       
@@ -360,7 +360,7 @@ test('Clases-11 constructor & instanceof', async () => {
       }
       
       texto() {
-          retorna 'Cliente (dni -> '+dni+', '+'nombre -> '+nombre+', apellidos -> '+apellidos+')'
+          retornar 'Cliente (dni -> '+dni+', '+'nombre -> '+nombre+', apellidos -> '+apellidos+')'
       }
       
       // además hereda los métodos del padre (clase Persona)
@@ -469,7 +469,7 @@ test('Clases-12 métodos heredados', async () => {
       }
 
       accion() {
-          imp nombre, "ladra"
+          imprimir nombre, "ladra"
       }
   }
 
@@ -479,7 +479,7 @@ test('Clases-12 métodos heredados', async () => {
       }
 
       accion() {
-          imp nombre, "maúlla"
+          imprimir nombre, "maúlla"
       }
   }
 
@@ -522,14 +522,14 @@ test('Clases-13 sobrecarga de constructores', async () => {
   b = nueva Persona("Jorge")
   c = nueva Persona("Juan", "García")
 
-  imp a
-  imp b
-  imp c
-  imp a.metodos
+  imprimir a
+  imprimir b
+  imprimir c
+  imprimir a.metodos
   `)).toContainText(`
   Persona {nombre: nulo, apellidos: nulo}
   Persona {nombre: Jorge, apellidos: nulo}
   Persona {nombre: Juan, apellidos: García}
-  {constructor: (), constructor2: (nombre), constructor3: (nombre, apellidos)}
+  {constructor: f(), constructor2: f(nombre), constructor3: f(nombre, apellidos)}
   `)
 })

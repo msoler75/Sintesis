@@ -8,9 +8,9 @@ class A {
 contador = 33
 
 fun crear() {
-    retorna nuevo A(contador++)
+    retornar nuevo A(contador++)
 }
 
 z = crear()
-imp z
-imp crear()
+imprimir z
+imprimir crear()

@@ -1,4 +1,4 @@
 
 método heredado
 
-padre.metodo
+super.metodo

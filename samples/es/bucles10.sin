@@ -1,7 +1,7 @@
 a = 0 
 mientras a>-4 
-imp a--    
+imprimir a--    
 
 b = 0 
-rep 4 
-imp b--    
+repetir 4 
+imprimir b--    

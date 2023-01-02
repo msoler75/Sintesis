@@ -9,7 +9,7 @@ test('Funciones-1', async () => {
 
 test('Funciones-2', async () => {
     expect(await exec(`
-    fun s() {imp 1 return 5}
+    fun s() {imprimir 1 return 5}
     fun m(a,b) ret a*b
     s()
     imprimir m(2,3)
@@ -22,11 +22,11 @@ test('Funciones-3', async () => {
     expect(await exec(`
     // factorial
     fun f(n) if n<=1 ret 1 else ret n*f(n-1)
-    imp f(4)
+    imprimir f(4)
     // suma
     fun s(a,b) ret a+b
     fun m(a,b) ret a*b
-    imp s(7, m(2, 3))
+    imprimir s(7, m(2, 3))
 `)).toContainText(`24 13`)
 })
 
@@ -69,13 +69,13 @@ test('Funciones-6', async () => {
         ret x>=0
     }
     
-    imp negativo(3)
-    imp negativo(-2)
-    imp negativo(0)
+    imprimir negativo(3)
+    imprimir negativo(-2)
+    imprimir negativo(0)
     
-    imp positivo(3)
-    imp positivo(-2)
-    imp positivo(0)    
+    imprimir positivo(3)
+    imprimir positivo(-2)
+    imprimir positivo(0)    
 `)).toContainText(`falso cierto falso cierto falso cierto`)
 })
 
@@ -86,10 +86,10 @@ test('Funciones-7', async () => {
     fun f(n) {
         n++
         if(n<3) f(n)
-        imp n
+        imprimir n
     }
     f(0)
-    imp n
+    imprimir n
     `)).toContainText(`3 2 1 nulo`)
 })
 
@@ -127,12 +127,12 @@ test('Funciones-9', async () => {
     contador = 33
 
     fun crear() {
-        retorna nuevo A(contador++)
+        retornar nuevo A(contador++)
     }
 
     z = crear()
-    imp z
-    imp crear()
+    imprimir z
+    imprimir crear()
     `)).toContainText(`
     A {b: 33}
     A {b: 34}

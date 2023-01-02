@@ -8,10 +8,10 @@ clase Persona {
 clase Cliente extiende Persona {
     dni
     constructor (nombre, dni) {
-        padre(nombre)
+        super(nombre)
         atributos.dni = dni
     }
 }
 
 p = nuevo Cliente ('Javier', 1234567)
-imp p
+imprimir p

@@ -1,6 +1,6 @@
 c = vero
 f = faux
-imp c and f
-imp c or f
-imp not (c or f)
-imp not (c and f)
+imprimir c and f
+imprimir c or f
+imprimir not (c or f)
+imprimir not (c and f)

@@ -1,5 +1,5 @@
 fun a(b) {
-  imp b  
+  imprimir b  
 } 
 
 a(1)

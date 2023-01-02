@@ -2,4 +2,4 @@ a = vector[2][2](-2)
 a[1] = 99
 a[2] = {z:'hola'}
 a[3] = ['a', 'b', 'c']
-imp a
+imprimir a

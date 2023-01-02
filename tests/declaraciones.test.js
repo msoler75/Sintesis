@@ -18,11 +18,16 @@ test('declaraciones-1 variables', async () => {
 
 test('declaraciones-2 función', async () => {
     expect(await exec(`
-    declarar funcion hola() {
-        imprimir "hola mundo"
+    declarar función hola() {
+        imprimir "hola"
     }
     hola()
-    `)).toContainText(`hola mundo`)
+    
+    declarar función adiós() {
+        imprimir "adiós"
+    }
+    adiós()
+    `)).toContainText(`hola adiós`)
 })
 
 test('declaraciones-3 clase', async () => {
@@ -37,3 +42,4 @@ test('declaraciones-3 clase', async () => {
     nt.tellme()
     `)).toContainText(`adios`)
 })
+

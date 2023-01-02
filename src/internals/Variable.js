@@ -14,6 +14,10 @@ class Variable {
             this._value = value instanceof Variable ? value.value : value
     }
 
+    toString() {
+        return this._value
+    }
+
     
 }
 

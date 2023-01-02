@@ -35,7 +35,7 @@ clase Cliente extiende Persona {
 
 p = nueva Persona("Juan", "López")
 c = nuevo Cliente("Jorge", "Pérez")
-imp c.cualFrase()
-imp c.dameContraseña()
+imprimir c.cualFrase()
+imprimir c.dameContraseña()
 // no accesible
-// imp p.dimeFrase(
+// imprimir p.dimeFrase(

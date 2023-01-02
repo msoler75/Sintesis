@@ -4,7 +4,7 @@ fun a() {
 
 fun c() {
   fun b() {
-      imp "!!" 
+      imprimir "!!" 
   }
   a()
 }

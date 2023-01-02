@@ -1,30 +1,18 @@
 class Saludo {
 
-    atributos: nombre
+    atributos: nombre, apellidos
 
     métodos: 
 
     constructor(nombre) {
         atributos.nombre = nombre
-        imprimir "Creando saludo con", nombre
     }
 
-    hola(nombre) {
-        imprimir "¡Hola " + nombre + "!"
+    test(nombre) {
+        imprimir atributos.nombre
     }
 
-    adios(nombre) {
-        imprimir "¡Adiós " + atributos.nombre + "!"
-    }
-    
 }
 
 s=nuevo Saludo("María")
-imprimir s
-// modificamos atributo
-s.nombre="Juan"
-imprimir s
-s.hola("Jorge")
-s.adios("Jorge")
-imprimir s
-imprimir s.metodos
+print s

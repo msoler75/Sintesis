@@ -1,0 +1,12 @@
+var para = 1
+var cada = 2
+var hasta = 3
+var mapa = 4
+var mientras = 5
+var paso = 6
+var continuar = 7
+var break = 8
+var es = 9
+var de = 10
+
+imprimir para, cada, hasta, mapa, mientras, paso, continuar, break, es, de

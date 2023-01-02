@@ -98,6 +98,7 @@ BooleanLiteral:   'true'
               |   'cierto'
               |   'falso'
               |   'vero'
+              |   'verdadeiro'
               |   'faux'
               |   'vrai'
               |   'certo'
@@ -105,23 +106,23 @@ BooleanLiteral:   'true'
 
 /// Instructions
 
-Step          
-              :   'step'
-              |   'paso'
-              |   'passo'
-              |   'pas'
-              ;
+Step
+: 'step'
+| 'paso'
+| 'passo'
+| 'etape'
+| '\u00E9tape'
+;
 
-Print                   
-              :   'print'
-              |   'imprimir'
-              |   'stampa'
-              |   'imprimer' 
-              |   'imp'
-              |   'impr'
-              |   'prt'
-              |   'prn'
-              ;
+Print
+: 'print'
+| 'imprimir'
+| 'stampare'
+| 'imprimer'
+| 'imprimi'
+| 'ecrire'
+| '\u00E9crire'
+;
 
 While
               :   'while'
@@ -131,48 +132,101 @@ While
               |   'enquanto'
               ;
 
-Repeat      
-              :   'repeat'
+Repeat         :   'repeat'
               |   'repetir'
               |   'repeteix'
               |   'repeter'
-              |   'r\u00E9p\u00E9ter'
               |   'ripetere'
-              |   'rep'
+              |   'r\u00E9p\u00E9ter'
               ;
 
 Times
-              :   'times'
-              |   'veces'
-              ;
+: 'times'
+| 'veces'
+| 'volte'
+| 'fois'
+| 'vezes'
+;
 
 Do
-              :   'do'
-              |   'hacer'
-              ;
+: 'do'
+| 'hacer'
+| 'faire'
+| 'fazer'
+| 'agire'
+;
 
-For
-              :   'for'
-              |   'para'
-              ;
+Continue
+: 'continue'
+| 'continuar'
+| 'continuez'
+| 'prosseguir'
+| 'continua'
+;
+
+Break
+: 'break'
+| 'salir'
+| 'sortir'
+| 'sair'
+| 'uscire'
+;
+
+Switch
+: 'switch'
+| 'elegir'
+| 'choisir'
+| 'selecionar'
+| 'scegliere'
+;
+
+Case
+: 'case'
+| 'caso'
+| 'cas'
+;
+
+Default
+: 'default'
+| 'defecto'
+| 'defaut'
+| 'd\u00E9faut'
+| 'padrao'
+| 'padr\u00E3o'
+;
 
 Each            
               :   'each'
               |   'cada'
+              |   'chaque'
+              |   'ogni'
               ;
 
 ForEach
-              :   'foreach'
-              |   'paracada'
+              :   'for'[\t ]*'each'
+              |   'para'[\t ]*'cada'
+              |   'pour'[\t ]*'chaque'
+              |   'per'[\t ]*'ogni'
               ;
+
+For
+              : 'for'
+              | 'para'
+              | 'pour'
+              | 'per'
+              ;
+
 In
               :   'in'
               |   'en'
+              |   'dans'
+              |   'em'
               ;
 
 Of
               :   'of'
               |   'de'
+              |   'di'
               ;
 
 To
@@ -181,8 +235,7 @@ To
               |   'hasta'
               ;
 
-If     
-              :    'if'
+If            :    'if'
               |    'si'
               |    'se'
               |    'sì'
@@ -194,9 +247,10 @@ Then
               |    'llavors'
               |    'poi'
               |    'ensuite'
+              |    'allora'
+              |    'alors'
               |    'entao'
               |    'ent\u00E3o'
-              |    'ent'
               ;
 
 ElseIf
@@ -208,24 +262,24 @@ ElseIf
               |    'o'[ \t\n]+'se'
               ;
 
+
+
 Else
               :    'else'
-              |    [yio][ \t\n]+'si'[ \t\n]+'no'
-              |    'o'
-              |    'altrament'
+              |     [yio][ \t\n]+'si'[ \t\n]+'no'
+              |    'sino'
               |    'sinon'
               |    'altrimenti'
-              |    'sen\u00E3'[ \t\n]+'o'
-              |    'sena'[ \t\n]+'o'
+              |    'sen\u00E3o'
+              |    'senao'
               ;
+
 
 Return
               :    'return'
-              |    'retorna'
               |    'retornar'
-              |    'retourner'
-              |    'restituisce'
-              |    'renvoie'
+              |    'ritornare '
+              |    'renvoyer'
               |    'ret'
               ;
 
@@ -236,6 +290,7 @@ Declare
               |    'dichiarare'
               |    'declarer '
               |    'd\u00E9clarer'
+              |    'def'
               ;
 
 Function_   
@@ -309,12 +364,18 @@ Sub
 
 Lower
               :     'lower'
-              |     'min'[u\u00FA]'scula''s'?
+              |     'minusculas'
+              |     'min\u00FAsculas'
+              |     'minuscule'
+              |     'minuscolo'
               ;
 
 Upper
               :     'upper'
-              |     'may'[u\u00FA]'scula''s'?
+              |     'mayusculas'
+              |     'may\u00FAsculas'
+              |     'maiusculas'
+              |     'mai\u00FAsculas'
               ;
 
 Math            
@@ -325,12 +386,10 @@ Math
 Min         
               :     'min'
               |     'm'[i\u00ED]'nimo'
-              |     'm'[i\u00ED]'n'
               ;
 
 Max         
-              :     'max'
-              |     'm'[a\u00E1]'ximo'
+              :     'm'[a\u00E1]'ximo'
               |     'm'[a\u00E1]'x'
               ;
 
@@ -349,11 +408,11 @@ Ord
 
 Prompt
               :     'prompt'
-              |     'keyboard'
               |     'input'
               |     'preguntar'
-              |     'entrada'
-              |     'teclado'
+              |     'demander'
+              |     'chiedere'
+              |     'perguntar'
               ;
 
 Convert
@@ -366,35 +425,45 @@ Convert
 Class_
               :     'class'
               |     'clase'
+              |     'classe'
               ;
 
 Instance
               :     'instance'
               |     'instancia'
+              |     'istanza'
               ;
 
 New_           
               :     'new'
-              |     'nuevo'
-              |     'nueva'
+              |     'nuev'[oa]
+              |     'nouvelle'
+              |     'nouveau'
+              |     'nuov'[oa]
+              |     'nov'[oa]
               ;
 
 Extends     
               :     'extends'
               |     'extiende'
+              |     'extende'
+              |     'herda'
               ;
 
 Attributes  
               :     'attributes'
               |     'atributos'
+              |     'attributs'
+              |     'attributi'
               |     'attrib'    
               ;
 
 Methods
               :     'methods'
               |     'metodos'
-              |     'm\u00E9todos'
-              |     'm\u00E9todes'
+              |     'm'[e\u00E9]'tod'[oe]'s'
+              |     'm'[e\u00E9]'todes'
+              |     'metodi'
               ;
 
 Method         
@@ -411,13 +480,18 @@ Constructor
 
 Super
               :      'super'
-              |      'padre'
               ;
 
 InstanceOf
-               :      'is'
-               |      'es'
+              :     'instanceof'
+              |     'instanciade'
+              |     'instancede'
+              |     'istanzadi'
+              |     'inst'[a\u00E2]'nciade' 
+              |     'is'
+              |     'es'
                ;
+
 
 
 // Mapa
@@ -426,8 +500,6 @@ Map
               |    'mapa'
               |    'carte'
               |    'mappa'
-              |    'diccionario'
-              |    'dictionary'
               ;
 
 Get  
@@ -456,8 +528,13 @@ Var_
               |      'let'
               ;
 
+Const_ 
+              :  'const'
+              |  'final'
+              ;
 
-Private:                        'private' | 'privad'[oa];
+
+Private:                        'private' | 'privad'[oa] | 'privé' | 'priv\u00E9';
 Public:                         'public' | 'p'[u\u00FA]'blic'[oa];
 Protected:                      'protected' | 'protegid'[oa];
 
@@ -469,7 +546,7 @@ Protected:                      'protected' | 'protegid'[oa];
 
 /// Identifier Names and Identifiers
 
-Identifier:                     [a-zA-Z$_áéíóúÁÉÍÓÚàèìòùÀÈÌÒÙñÑ][a-zA-Z$_áéíóúÁÉÍÓÚàèìòùÀÈÌÒÙñÑ0-9]* ;
+Identifier:                     [a-zA-Z$_áéíóúÁÉÍÓÚàèìòùÀÈÌÒÙñÑ][a-zA-Z$_áéíóúÁÉÍÓÚàèìòùÀÈÌÒÙñÑçÇ0-9]* ;
 
 // Strings
 

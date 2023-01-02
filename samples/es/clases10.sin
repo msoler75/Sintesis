@@ -8,5 +8,5 @@
   
   k = nueva A(4)
   m = nueva A(7)
-  imp k
-  imp m
+  imprimir k
+  imprimir m

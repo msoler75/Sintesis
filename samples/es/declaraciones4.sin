@@ -1,0 +1,6 @@
+var else = "else"
+    fun if() {
+        imprimir "if"
+    }
+    if()
+    imprimir else

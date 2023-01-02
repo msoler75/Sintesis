@@ -9,9 +9,9 @@ test('NumberOf-1', async () => {
     d = map()
     d[1] = 1
     d['h'] = 5
-    imp num(a)
-    imp num(b)
-    imp num(c)
-    imp num(d)
+    imprimir num(a)
+    imprimir num(b)
+    imprimir num(c)
+    imprimir num(d)
 `)).toContainText(`3 3 8 2`)
 })

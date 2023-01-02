@@ -1,0 +1,9 @@
+declarar función hola() {
+    imprimir "hola"
+}
+hola()
+
+declarar función adiós() {
+    imprimir "adiós"
+}
+adiós()

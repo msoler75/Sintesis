@@ -1,11 +1,31 @@
 para cada (a of [1,2,3])
-    imp a
+    imprimir a
 
 para cada (a of [1,2,3]) do
-    imp a
+    imprimir a
 
 paracada (a of [1,2,3]) do
-    imp ++a
+    imprimir ++a
 
 paracada (a of [1,2,3]) do
-    imp a++
+    imprimir a++
+
+
+
+// inglés
+    vector = [1,2,3]
+    for each (value of vector)
+    imprimir a
+
+// español
+  para cada (valor de vector)
+  imprimir valoe
+  
+// francés 
+    pour chaque (valeur de vector)
+    
+// italiano 
+    per ogni (valore di vector)
+
+// portugués
+    para cada (valor de vector)

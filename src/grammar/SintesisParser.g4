@@ -22,15 +22,19 @@ statementList
 
 statement
     : block
+    | variableStatement
+    | emptyStatement_
     | stepStatement
     | printStatement
+    | classDeclaration    
     | ifStatement
     | iterationStatement
+    | continueStatement
+    | breakStatement
     | returnStatement
-    | classDeclaration
+    | switchStatement
     | functionDeclaration
-    | variableStatement
-    | expression
+    | expressionStatement
     ;
 
 block
@@ -41,19 +45,27 @@ stepStatement
     : Step exp=(Identifier|DecimalLiteral) 
     ;
 
+emptyStatement_
+    : SemiColon
+    ;
+
 printStatement
     : Print exp=expressionSequence
     ;
 
+expressionStatement
+    : {this.notOpenBraceAndNotFunction()}? expressionSequence eos
+    ;
+
 
 methodCall
-    : identifierWithKeywords arguments
+    : identifier arguments
     | Super arguments
     ;
 
 superSuffix
     : arguments
-    | Dot identifierWithKeywords arguments?
+    | Dot identifier arguments?
     ;
 
 member 
@@ -61,11 +73,11 @@ member
     | Methods                                                                #expMethods
     | Super                                                                  #expSuper
     | New_ Instance? (Of Class_?)? id=Identifier args=arguments              #expNew
-    | exp=member '.' idx=memberIdentifier  args=arguments                    #expMemberDot
-    | exp=member '.' idx=memberIdentifier                                    #expMemberDot
-    | exp=member '[' idx=expression ']'   args=arguments                     #expMemberIndex
-    | exp=member '[' idx=expression ']'                                      #expMemberIndex
-    | exp=member args=arguments                                              #expMemberFunc
+    | mem=member '.' idx=memberIdentifier  args=arguments                    #expMemberDot
+    | mem=member '.' idx=memberIdentifier                                    #expMemberDot
+    | mem=member '[' idx=singleExpression ']'   args=arguments               #expMemberIndex
+    | mem=member '[' idx=singleExpression ']'                                #expMemberIndex
+    | mem=member args=arguments                                              #expMemberFunc
     | identifier                                                             #expIdentifier
     ;
 
@@ -74,35 +86,35 @@ memberIdentifier
     | Methods
     | Super
     | Constructor
-    | identifierWithKeywords
+    | identifier
     ;
 
-expression     
+singleExpression     
     :    fn=basicFunction args=arguments                                    #expBasicFunction
     |    Math Dot fn=(Identifier|Min|Max|Random) args=arguments             #expMath
-    |    dest=expression op=(PlusPlus|MinusMinus)                           #expPostIncrement
-    |    op=(PlusPlus | MinusMinus) dest=expression                         #expPreIncrement
-    |    Plus exp=expression                                                #expUnaryPlus
-    |    Minus exp=expression                                               #expUnaryMinus
-    |    BitNot exp=expression                                              #expBitNot
-    |    op=Not exp=expression                                              #expNot
-    |    e1=expression op=(Modulus|Multiply|Divide) e2=expression           #expOp
-    |    e1=expression op=('+'|'-') e2=expression                           #expOp
-    |    e1=expression op=('>>'|'<<'|'>>>') e2=expression                   #expOp
-    |    <assoc=right> e1=expression op=Power e2=expression                 #expOp
-    |    e1=expression op=('<'|'>') e2=expression                           #expOp
-    |    e1=expression op=LessThanEquals e2=expression                      #expOp
-    |    e1=expression op=GreaterThanEquals e2=expression                   #expOp
-    |    e1=expression InstanceOf e2=identifier                             #expInstanceOf
-    |    e1=expression op=(IdentityEquals|IdentityNotEquals) e2=expression  #expOp
-    |    e1=expression op=(Equals_|NotEquals) e2=expression                 #expOp
-    |    e1=expression op=(BitAnd|BitOr|BitXOr) e2=expression               #expOp
-    |    e1=expression op=(And|Or) e2=expression                            #expOp
-    |    cond=expression '?' ok=expression ':' no=expression                #expTernary
-    |    <assoc=right> dest=member Assign exp=expression                    #expAssignment
-    |    <assoc=right> dest=member op=assignmentOperator exp=expression     #expAssignmentOperator
-    |    Var_ id=Identifier                                                 #expVar
-    |    '(' exp=expression ')'                                             #expParenthesis
+    |    dest=singleExpression op=(PlusPlus|MinusMinus)                           #expPostIncrement
+    |    op=(PlusPlus | MinusMinus) dest=singleExpression                         #expPreIncrement
+    |    Plus exp=singleExpression                                                #expUnaryPlus
+    |    Minus exp=singleExpression                                               #expUnaryMinus
+    |    BitNot exp=singleExpression                                              #expBitNot
+    |    op=Not exp=singleExpression                                              #expNot
+    |    e1=singleExpression op=(Modulus|Multiply|Divide) e2=singleExpression           #expOp
+    |    e1=singleExpression op=('+'|'-') e2=singleExpression                           #expOp
+    |    e1=singleExpression op=('>>'|'<<'|'>>>') e2=singleExpression                   #expOp
+    |    <assoc=right> e1=singleExpression op=Power e2=singleExpression                 #expOp
+    |    e1=singleExpression op=('<'|'>') e2=singleExpression                           #expOp
+    |    e1=singleExpression op=LessThanEquals e2=singleExpression                      #expOp
+    |    e1=singleExpression op=GreaterThanEquals e2=singleExpression                   #expOp
+    |    e1=singleExpression InstanceOf e2=identifier                             #expInstanceOf
+    |    e1=singleExpression op=(IdentityEquals|IdentityNotEquals) e2=singleExpression  #expOp
+    |    e1=singleExpression op=(Equals_|NotEquals) e2=singleExpression                 #expOp
+    |    e1=singleExpression op=(BitAnd|BitOr|BitXOr) e2=singleExpression               #expOp
+    |    e1=singleExpression op=(And|Or) e2=singleExpression                            #expOp
+    |    cond=singleExpression '?' ok=singleExpression ':' no=singleExpression                #expTernary
+    |    <assoc=right> dest=member Assign exp=singleExpression                    #expAssignment
+    |    <assoc=right> dest=member op=assignmentOperator exp=singleExpression     #expAssignmentOperator
+    |    variableDeclarationList                                                  #expVar
+    |    '(' exp=singleExpression ')'                                             #expParenthesis
     |    member                                                             #expMember
     |    literal                                                            #expLiteral
     ;
@@ -121,6 +133,7 @@ basicFunction1
     | Ord                           #ord
     | Chr                           #chr
     | Prompt                        #prompt
+    | Map                           #map
     ;
 
 
@@ -141,11 +154,11 @@ basicFunction
     ;
 
 expressionSequence
-    : expression (',' expression)*
+    : singleExpression (',' singleExpression)*
     ;
 
 ifStatement
-    :  If exp=expression Then? stmt=statement elseifs=elseIfs? else_=elseStatement?
+    :  If exp=singleExpression Then? stmt=statement elseifs=elseIfs? (Else Then? elsestmt_=statement)?
     ;    
 
 elseIfs 
@@ -153,47 +166,81 @@ elseIfs
     ;
 
 elseIf
-    : ElseIf exp=expression Then? stmt=statement
+    : ElseIf exp=singleExpression Then? stmt=statement
     ;
 
-elseStatement
-    : Else Then? stmt=statement
-    ;
  
 iteratorIndexes
-    : idv=Identifier op=(In|Of) coll=expression                      
-    | idv=Identifier ',' idk=Identifier op=(In|Of) coll=expression  
-    | idk=Identifier ARROW idv=Identifier op=(In|Of) coll=expression 
+    : idv=Identifier op=(In|Of) coll=singleExpression                      
+    | idv=Identifier ',' idk=Identifier op=(In|Of) coll=singleExpression  
+    | idk=Identifier ARROW idv=Identifier op=(In|Of) coll=singleExpression 
     ;
 
 iteratorRange
-    :  vvar=Var_? id=Identifier (Assign|In) start=expression To to=expression 
+    :  vvar=Var_? id=identifier (Assign|In) start=singleExpression To to=singleExpression 
     ;
 
 iterationStatement
-    : Repeat exp=expression Times? stmt=statement                   #repeatStatement
-    | (Repeat|Do) stmt=statement While exp=expression               #repeatWhileStatement
-    | Repeat? While exp=expression (Repeat|Do)? stmt=statement      #whileRepeatStatement
+    : Repeat exp=singleExpression Times? stmt=statement                   #repeatStatement
+    | (Repeat|Do) stmt=statement While exp=singleExpression               #repeatWhileStatement
+    | Repeat? While exp=singleExpression (Repeat|Do)? stmt=statement      #whileRepeatStatement
+    | For '(' pre=forPre? ';' exp=expressionSequence? ';' post=expressionSequence? ')' stmt=statement  #forClassic
     | For iter=iteratorRange (Repeat|Do)? stmt=statement                            #forFromToStatement
     | For '(' iter=iteratorRange ')' (Repeat|Do)? stmt=statement                    #forFromToStatement2
     | (For Each?|ForEach) iter=iteratorIndexes (Repeat|Do)? stmt=statement          #forEachStatement
     | (For Each?|ForEach) '(' iter=iteratorIndexes ')' (Repeat|Do)? stmt=statement  #forEachStatement2
     ;
 
-returnStatement
-    : Return (exp=expression|eos)
+forPre 
+    : expressionSequence                                    
+    | variableDeclarationList                               
+;
+
+continueStatement
+    : Continue eos
     ;
+
+breakStatement
+    : Break eos
+    ;
+
+returnStatement
+    : Return (exp=singleExpression|eos)
+    ;
+
+
+switchStatement
+    : Switch '(' expressionSequence ')' caseBlock
+    ;
+
+caseBlock
+    : '{' caseClauses? (defaultClause caseClauses?)? '}'
+    ;
+
+caseClauses
+    : caseClause+
+    ;
+
+caseClause
+    : Case expressionSequence ':' statementList?
+    ;
+
+defaultClause
+    : Default ':' statementList?
+    ;
+    
+
 
 formalParameterList
     : formalParameterArg (',' formalParameterArg)* 
     ;
 
 functionDeclaration
-    : dec=Declare? fun=Function_ id=Identifier '(' pl=formalParameterList? ')' stmt=functionBody
+    : dec=Declare? fun=Function_ id=identifier '(' pl=formalParameterList? ')' stmt=functionBody
     ;
 
 arguments
-    : '(' (expression (',' expression)* )? ')'
+    : '(' (singleExpression (',' singleExpression)* )? ')'
     ;
 
 visibility
@@ -203,7 +250,7 @@ visibility
     ;
 
 classDeclaration
-    : dec=Declare? clas=Class_ id=Identifier (Extends ext=Identifier)? '{' 
+    : dec=Declare? clas=Class_ id=identifier (Extends ext=identifier)? '{' 
         ((Attributes ':')? ('{' atrs=attributesList '}' | atrs=attributesList ))? eos
         ((mdec=Methods ':')? (methods=methodsList| '{' methods=methodsList '}'))?
         '}'
@@ -214,11 +261,16 @@ attributesList
     ;
 
 classAttributeDecl 
-    :  vis=visibility? identifier (','? identifier)*
+    :  vis=visibility? variableDeclaration (',' variableDeclaration)*
     ;
 
 methodDeclaration
-    : vis=visibility? mname=(Method|Function_)? id=(Identifier|Constructor) '(' pl=formalParameterList? ')' stmt=functionBody
+    : vis=visibility? mname=(Method|Function_)? id=methodName '(' pl=formalParameterList? ')' stmt=functionBody
+    ;
+
+methodName
+    :   identifier
+    |   Constructor
     ;
 
 methodsList
@@ -230,7 +282,7 @@ classExp
     ;
 
 vectorIndex
-    : '[' expression? ']'
+    : '[' singleExpression? ']'
     ;
 
 vectorIndexes
@@ -238,19 +290,27 @@ vectorIndexes
     ;
 
 formalParameterArg
-    : id=identifier (Assign expression)?      
+    : id=identifier (Assign exp=singleExpression)?      
     ;
 
 variableStatement
-    : (dec=Declare|dec=Declare? var_=Var_) variableDeclarationList 
+    : variableDeclarationList eos
     ;
 
 variableDeclaration
-    : id=identifier (Assign exp=expression)? 
+    : id=identifier (Assign exp=singleExpression)? 
     ;
 
 variableDeclarationList
-    : variableDeclaration (',' variableDeclaration)*
+    : varModifier variableDeclaration (',' variableDeclaration)*
+    ;
+
+varModifier 
+    : Declare
+    | Declare Var_
+    | Declare Const_
+    | Var_
+    | Const_
     ;
 
 functionBody 
@@ -276,7 +336,7 @@ assignmentOperator
 
 
 reservedWord
-    : keyword
+    : safeKeyword
     | NullLiteral
     | BooleanLiteral
     ;
@@ -285,17 +345,13 @@ vectorDeclaration
     : Vector idx=vectorIndexes args=arguments?
     ;
 
-mapDeclaration
-    : Map args=arguments
-    ;
-
 
 vectorLiteral
-    : '[' (expression (',' expression)*)? ']'
+    : '[' (singleExpression (',' singleExpression)*)? ']'
     ;
 
 objectLiteral
-    : '{' (identifierWithKeywords ':' expression (',' identifierWithKeywords ':' expression)*)? '}'
+    : '{' (identifier ':' singleExpression (',' identifier ':' singleExpression)*)? '}'
     ;
 
 
@@ -307,7 +363,6 @@ literal
     | vectorLiteral 
     | objectLiteral
     | vectorDeclaration
-    | mapDeclaration   
     ;
 
 
@@ -323,28 +378,41 @@ numericLiteral
     | BinaryIntegerLiteral
     ;
 
-identifier : Identifier;
+identifier 
+    : Identifier ;
 
-identifierWithKeywords 
-    : Identifier     #id
-    | reservedWord   #keyw
-    ;
 
-keyword
-    :
-    | Else
-    | Then
-    | Return
+/*
+Vector not included as keyword
+Var_ not included
+Method not included
+Class not included
+Function_
+Methods
+Attributes
+
+*/
+safeKeyword
+    : Return
     | While
-    | Function_
+    | Continue
+    | Break
+    | Each
+    | For
+    | Of
+    | In
+    | Do
+    | InstanceOf
+    | Default
+    | Case
+    | Times
+    | Switch
+    | Print
     | If
-    | Vector
-    | Map
-    | Var_
-    | Method
-    | Methods
-    | Attributes
-    | Declare
+    | ElseIf
+    | Else
+    | Repeat
+    | While
     ;
 
 eos

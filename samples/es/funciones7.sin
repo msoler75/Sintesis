@@ -2,7 +2,7 @@
 fun f(n) {
     n++
     if(n<3) f(n)
-    imp n
+    imprimir n
 }
 f(0)
-imp n
+imprimir n

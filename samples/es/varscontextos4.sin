@@ -1,6 +1,6 @@
 fun a(b) {
   fun c(d) {
-      imp d
+      imprimir d
   }
   c(b+1)
 }
