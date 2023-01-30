@@ -13,7 +13,7 @@ fs.readFile(fileParser, 'utf8', function (err, data) {
 
   var result = data
     .replace(/\basync\b/g, '')
-    .replace(/\bwait\b/g, '')
+    .replace(/\bawait\b/g, '')
     .replace(/SintesisParser(\.a?sync)?\.js/g, 'SintesisParser.sync.js')
 
   const fileToWrite = fileParser.replace(/\.(js|async)/g, '') + '.sync.js'

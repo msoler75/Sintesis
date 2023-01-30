@@ -14,6 +14,7 @@ fs.readFile(fileParser, 'utf8', function (err, data) {
   var result = data
     .replace(/accept\(visitor\)/g, 'async accept(visitor)')
     .replace(/visitor\.visit/g, 'await visitor.visit')
+    .replace(/(await )+/g, 'await ')
 
   const fileToWrite = fileParser.replace(/\.(js|sync)/g, '') + '.async.js'
   fs.writeFile(fileToWrite, result, 'utf8', function (err) {
