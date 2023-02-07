@@ -96,7 +96,7 @@ singleExpression
     |    op=(PlusPlus | MinusMinus) dest=singleExpression                         #expPreIncrement
     |    Plus exp=singleExpression                                                #expUnaryPlus
     |    Minus exp=singleExpression                                               #expUnaryMinus
-    |    BitNot exp=singleExpression                                              #expBitNot
+    |    op=BitNot exp=singleExpression                                           #expBitNot
     |    op=Not exp=singleExpression                                              #expNot
     |    e1=singleExpression op=(Modulus|Multiply|Divide) e2=singleExpression           #expOp
     |    e1=singleExpression op=('+'|'-') e2=singleExpression                           #expOp
@@ -298,7 +298,7 @@ variableStatement
     ;
 
 variableDeclaration
-    : id=identifier (Assign exp=singleExpression)? 
+    : dest=identifier (Assign exp=singleExpression)? 
     ;
 
 variableDeclarationList

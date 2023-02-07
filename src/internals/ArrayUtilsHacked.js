@@ -12,7 +12,7 @@
     }
 })*/
 
-Object.defineProperty(Array.prototype, 'mapSequence', {
+Object.defineProperty(Array.prototype, 'mapAsyncSequence', {
     value:  function (predicate) {
         return this.map(predicate)
         const arr = this

@@ -14,7 +14,8 @@ fs.readFile(fileParser, 'utf8', function (err, data) {
   var result = data
     .replace(/accept\(visitor\)/g, 'async accept(visitor)')
     .replace(/visitor\.visit/g, 'await visitor.visit')
-    .replace(/(await )+/g, 'await ')
+    .replace(/(async\s+){2,8}/g, 'async ')
+    .replace(/(await\s+){2,8}/g, 'await ')
 
   const fileToWrite = fileParser.replace(/\.(js|sync)/g, '') + '.async.js'
   fs.writeFile(fileToWrite, result, 'utf8', function (err) {
@@ -52,7 +53,10 @@ function convert(fileOriginal) {
       .replace(/[\t\s]accept\b/g, 'async accept')
       .replace(/return\s+visitor\./g, 'return await visitor.')
       .replace(/ctx\.(.*?[\r\n]*.*?)map(Async)?Sequence\s*\(/g, 'await ctx.$1mapAsyncSequence(async ')
+      .replace(/\.mapAsyncSequence\(\(/g, '.mapAsyncSequence(async(')
       .replace(/SintesisParser(\.a?sync)?\.js/g, 'SintesisParser.async.js')
+      .replace(/(async\s+){2,8}/g, 'async ')
+      .replace(/(await\s+){2,8}/g, 'await ')
 
     const fileToWrite = fileOriginal.replace(/\.(js|sync)/g, '') + '.async.js'
     fs.writeFile(fileToWrite, result, 'utf8', function (err) {

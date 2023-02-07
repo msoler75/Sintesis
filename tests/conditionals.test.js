@@ -30,7 +30,7 @@ test('Conditionals-3', async () => {
         osi a == 2 imprimir "2"
         o si a == 3 imprimir "3"
         osi (a == 4) imprimir "4"
-        o imprimir ">4"
+        y si no imprimir ">4"
     
         a++
     }

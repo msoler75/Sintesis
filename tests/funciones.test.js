@@ -62,11 +62,11 @@ test('Funciones-6', async () => {
     expect(await exec(`
     fun negativo (x) {
         si(x<0) ret cierto
-        o ret falso
+        y si no return falso
     }
     
     fun positivo (x) {
-        ret x>=0
+        return x>=0
     }
     
     imprimir negativo(3)
