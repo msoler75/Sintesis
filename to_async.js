@@ -45,6 +45,8 @@ function convert(fileOriginal) {
     var result = data
       .replace(/\basync\b/g, '')
       .replace(/\bawait\b/g, '')
+      .replace(/(\s+[a-zA-Z]+)\.mapAsyncSequence/g, ' await $1.mapAsyncSequence')
+      .replace(/await\s*[\r\n]+/g, '\nawait ')
       .replace(/ArrayUtilsHacked/, 'ArrayUtils')
       .replace(/[\t\s]visit([A-Z])/g, ' async visit$1')
       .replace(/[\t\s]callToFunction/g, 'async callToFunction')
@@ -54,10 +56,9 @@ function convert(fileOriginal) {
       .replace(/return\s+visitor\./g, 'return await visitor.')
       .replace(/ctx\.(.*?[\r\n]*.*?)map(Async)?Sequence\s*\(/g, 'await ctx.$1mapAsyncSequence(async ')
       .replace(/\.mapAsyncSequence\(\(/g, '.mapAsyncSequence(async(')
-      .replace(/=(\s*[^\.]+\.)mapAsyncSequence\(\(/g, '= await $1.mapAsyncSequence(async(')
       .replace(/SintesisParser(\.a?sync)?\.js/g, 'SintesisParser.async.js')
-      .replace(/(async\s+){2,8}/g, 'async ')
-      .replace(/(await\s+){2,8}/g, 'await ')
+      .replace(/(async\s*){2,8}/g, 'async ')
+      .replace(/(await\s*){2,8}/g, 'await ')
 
     const fileToWrite = fileOriginal.replace(/\.(js|sync)/g, '') + '.async.js'
     fs.writeFile(fileToWrite, result, 'utf8', function (err) {
