@@ -68,7 +68,11 @@ ARROW:                          '=>' | '->';
 
 /// Null Literals
 
-NullLiteral:                    'null';
+NullLiteral:                    'null'
+                                |'nul'
+                                |'nulo'
+                                |'nullo'
+                                |'void';
 
 
 /// Numeric Literals

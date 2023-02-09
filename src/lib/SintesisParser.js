@@ -573,7 +573,7 @@ export default class SintesisParser extends SintesisParserBase {
                             "'<='", "'>='", "'=='", null, "'==='", "'!=='", 
                             "'&'", "'^'", "'|'", null, null, "'*='", "'/='", 
                             "'%='", "'+='", "'-='", "'<<='", "'>>='", "'>>>='", 
-                            "'&='", "'^='", "'|='", "'**='", null, "'null'", 
+                            "'&='", "'^='", "'|='", "'**='", null, null, 
                             null, null, null, null, null, null, null, null, 
                             null, null, null, null, null, null, null, null, 
                             null, null, null, null, null, null, null, null, 
@@ -4562,11 +4562,11 @@ class ProgramContext extends antlr4.ParserRuleContext {
 	    return this.getTypedRuleContext(StatementListContext,0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitProgram(this);
+	        return await visitor.visitProgram(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -4600,11 +4600,11 @@ class StatementListContext extends antlr4.ParserRuleContext {
 	    }
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitStatementList(this);
+	        return await visitor.visitStatementList(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -4683,11 +4683,11 @@ class StatementContext extends antlr4.ParserRuleContext {
 	    return this.getTypedRuleContext(ExpressionStatementContext,0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitStatement(this);
+	        return await visitor.visitStatement(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -4723,11 +4723,11 @@ class BlockContext extends antlr4.ParserRuleContext {
 	    return this.getTypedRuleContext(StatementListContext,0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitBlock(this);
+	        return await visitor.visitBlock(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -4763,11 +4763,11 @@ class StepStatementContext extends antlr4.ParserRuleContext {
 	    return this.getToken(SintesisParser.DecimalLiteral, 0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitStepStatement(this);
+	        return await visitor.visitStepStatement(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -4794,11 +4794,11 @@ class EmptyStatement_Context extends antlr4.ParserRuleContext {
 	    return this.getToken(SintesisParser.SemiColon, 0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitEmptyStatement_(this);
+	        return await visitor.visitEmptyStatement_(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -4830,11 +4830,11 @@ class PrintStatementContext extends antlr4.ParserRuleContext {
 	    return this.getTypedRuleContext(ExpressionSequenceContext,0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitPrintStatement(this);
+	        return await visitor.visitPrintStatement(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -4865,11 +4865,11 @@ class ExpressionStatementContext extends antlr4.ParserRuleContext {
 	    return this.getTypedRuleContext(EosContext,0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitExpressionStatement(this);
+	        return await visitor.visitExpressionStatement(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -4904,11 +4904,11 @@ class MethodCallContext extends antlr4.ParserRuleContext {
 	    return this.getToken(SintesisParser.Super, 0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitMethodCall(this);
+	        return await visitor.visitMethodCall(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -4943,11 +4943,11 @@ class SuperSuffixContext extends antlr4.ParserRuleContext {
 	    return this.getTypedRuleContext(IdentifierContext,0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitSuperSuffix(this);
+	        return await visitor.visitSuperSuffix(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -4990,11 +4990,11 @@ class ExpAttributesContext extends MemberContext {
 	    return this.getToken(SintesisParser.Attributes, 0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitExpAttributes(this);
+	        return await visitor.visitExpAttributes(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -5014,11 +5014,11 @@ class ExpSuperContext extends MemberContext {
 	    return this.getToken(SintesisParser.Super, 0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitExpSuper(this);
+	        return await visitor.visitExpSuper(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -5057,11 +5057,11 @@ class ExpMemberIndexContext extends MemberContext {
 	    return this.getTypedRuleContext(ArgumentsContext,0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitExpMemberIndex(this);
+	        return await visitor.visitExpMemberIndex(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -5081,11 +5081,11 @@ class ExpIdentifierContext extends MemberContext {
 	    return this.getTypedRuleContext(IdentifierContext,0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitExpIdentifier(this);
+	        return await visitor.visitExpIdentifier(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -5105,11 +5105,11 @@ class ExpMethodsContext extends MemberContext {
 	    return this.getToken(SintesisParser.Methods, 0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitExpMethods(this);
+	        return await visitor.visitExpMethods(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -5151,11 +5151,11 @@ class ExpNewContext extends MemberContext {
 	    return this.getToken(SintesisParser.Class_, 0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitExpNew(this);
+	        return await visitor.visitExpNew(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -5181,11 +5181,11 @@ class ExpMemberFuncContext extends MemberContext {
 	    return this.getTypedRuleContext(ArgumentsContext,0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitExpMemberFunc(this);
+	        return await visitor.visitExpMemberFunc(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -5220,11 +5220,11 @@ class ExpMemberDotContext extends MemberContext {
 	    return this.getTypedRuleContext(ArgumentsContext,0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitExpMemberDot(this);
+	        return await visitor.visitExpMemberDot(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -5267,11 +5267,11 @@ class MemberIdentifierContext extends antlr4.ParserRuleContext {
 	    return this.getTypedRuleContext(IdentifierContext,0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitMemberIdentifier(this);
+	        return await visitor.visitMemberIdentifier(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -5314,11 +5314,11 @@ class ExpVarContext extends SingleExpressionContext {
 	    return this.getTypedRuleContext(VariableDeclarationListContext,0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitExpVar(this);
+	        return await visitor.visitExpVar(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -5344,11 +5344,11 @@ class ExpBitNotContext extends SingleExpressionContext {
 	    return this.getTypedRuleContext(SingleExpressionContext,0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitExpBitNot(this);
+	        return await visitor.visitExpBitNot(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -5378,11 +5378,11 @@ class ExpAssignmentContext extends SingleExpressionContext {
 	    return this.getTypedRuleContext(SingleExpressionContext,0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitExpAssignment(this);
+	        return await visitor.visitExpAssignment(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -5408,11 +5408,11 @@ class ExpBasicFunctionContext extends SingleExpressionContext {
 	    return this.getTypedRuleContext(ArgumentsContext,0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitExpBasicFunction(this);
+	        return await visitor.visitExpBasicFunction(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -5458,11 +5458,11 @@ class ExpMathContext extends SingleExpressionContext {
 	    return this.getToken(SintesisParser.Random, 0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitExpMath(this);
+	        return await visitor.visitExpMath(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -5492,11 +5492,11 @@ class ExpPreIncrementContext extends SingleExpressionContext {
 	    return this.getToken(SintesisParser.MinusMinus, 0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitExpPreIncrement(this);
+	        return await visitor.visitExpPreIncrement(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -5521,11 +5521,11 @@ class ExpUnaryMinusContext extends SingleExpressionContext {
 	    return this.getTypedRuleContext(SingleExpressionContext,0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitExpUnaryMinus(this);
+	        return await visitor.visitExpUnaryMinus(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -5563,11 +5563,11 @@ class ExpTernaryContext extends SingleExpressionContext {
 	    }
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitExpTernary(this);
+	        return await visitor.visitExpTernary(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -5596,11 +5596,11 @@ class ExpParenthesisContext extends SingleExpressionContext {
 	    return this.getTypedRuleContext(SingleExpressionContext,0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitExpParenthesis(this);
+	        return await visitor.visitExpParenthesis(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -5630,11 +5630,11 @@ class ExpPostIncrementContext extends SingleExpressionContext {
 	    return this.getToken(SintesisParser.MinusMinus, 0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitExpPostIncrement(this);
+	        return await visitor.visitExpPostIncrement(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -5664,11 +5664,11 @@ class ExpInstanceOfContext extends SingleExpressionContext {
 	    return this.getTypedRuleContext(IdentifierContext,0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitExpInstanceOf(this);
+	        return await visitor.visitExpInstanceOf(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -5699,11 +5699,11 @@ class ExpAssignmentOperatorContext extends SingleExpressionContext {
 	    return this.getTypedRuleContext(SingleExpressionContext,0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitExpAssignmentOperator(this);
+	        return await visitor.visitExpAssignmentOperator(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -5728,11 +5728,11 @@ class ExpUnaryPlusContext extends SingleExpressionContext {
 	    return this.getTypedRuleContext(SingleExpressionContext,0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitExpUnaryPlus(this);
+	        return await visitor.visitExpUnaryPlus(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -5752,11 +5752,11 @@ class ExpLiteralContext extends SingleExpressionContext {
 	    return this.getTypedRuleContext(LiteralContext,0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitExpLiteral(this);
+	        return await visitor.visitExpLiteral(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -5776,11 +5776,11 @@ class ExpMemberContext extends SingleExpressionContext {
 	    return this.getTypedRuleContext(MemberContext,0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitExpMember(this);
+	        return await visitor.visitExpMember(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -5898,11 +5898,11 @@ class ExpOpContext extends SingleExpressionContext {
 	    return this.getToken(SintesisParser.Or, 0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitExpOp(this);
+	        return await visitor.visitExpOp(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -5928,11 +5928,11 @@ class ExpNotContext extends SingleExpressionContext {
 	    return this.getTypedRuleContext(SingleExpressionContext,0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitExpNot(this);
+	        return await visitor.visitExpNot(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -5975,11 +5975,11 @@ class RandomContext extends BasicFunction0Context {
 	    return this.getToken(SintesisParser.Random, 0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitRandom(this);
+	        return await visitor.visitRandom(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -6022,11 +6022,11 @@ class OrdContext extends BasicFunction1Context {
 	    return this.getToken(SintesisParser.Ord, 0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitOrd(this);
+	        return await visitor.visitOrd(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -6046,11 +6046,11 @@ class MinContext extends BasicFunction1Context {
 	    return this.getToken(SintesisParser.Min, 0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitMin(this);
+	        return await visitor.visitMin(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -6070,11 +6070,11 @@ class MaxContext extends BasicFunction1Context {
 	    return this.getToken(SintesisParser.Max, 0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitMax(this);
+	        return await visitor.visitMax(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -6094,11 +6094,11 @@ class LowerContext extends BasicFunction1Context {
 	    return this.getToken(SintesisParser.Lower, 0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitLower(this);
+	        return await visitor.visitLower(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -6118,11 +6118,11 @@ class UpperContext extends BasicFunction1Context {
 	    return this.getToken(SintesisParser.Upper, 0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitUpper(this);
+	        return await visitor.visitUpper(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -6142,11 +6142,11 @@ class ChrContext extends BasicFunction1Context {
 	    return this.getToken(SintesisParser.Chr, 0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitChr(this);
+	        return await visitor.visitChr(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -6166,11 +6166,11 @@ class PromptContext extends BasicFunction1Context {
 	    return this.getToken(SintesisParser.Prompt, 0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitPrompt(this);
+	        return await visitor.visitPrompt(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -6190,11 +6190,11 @@ class MapContext extends BasicFunction1Context {
 	    return this.getToken(SintesisParser.Map, 0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitMap(this);
+	        return await visitor.visitMap(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -6214,11 +6214,11 @@ class NumberOfContext extends BasicFunction1Context {
 	    return this.getToken(SintesisParser.NumberOf, 0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitNumberOf(this);
+	        return await visitor.visitNumberOf(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -6261,11 +6261,11 @@ class ConvertContext extends BasicFunction2Context {
 	    return this.getToken(SintesisParser.Convert, 0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitConvert(this);
+	        return await visitor.visitConvert(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -6285,11 +6285,11 @@ class IndexOfContext extends BasicFunction2Context {
 	    return this.getToken(SintesisParser.IndexOf, 0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitIndexOf(this);
+	        return await visitor.visitIndexOf(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -6332,11 +6332,11 @@ class SubContext extends BasicFunction3Context {
 	    return this.getToken(SintesisParser.Sub, 0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitSub(this);
+	        return await visitor.visitSub(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -6375,11 +6375,11 @@ class BasicFunctionContext extends antlr4.ParserRuleContext {
 	    return this.getTypedRuleContext(BasicFunction3Context,0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitBasicFunction(this);
+	        return await visitor.visitBasicFunction(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -6425,11 +6425,11 @@ class ExpressionSequenceContext extends antlr4.ParserRuleContext {
 	};
 
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitExpressionSequence(this);
+	        return await visitor.visitExpressionSequence(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -6495,11 +6495,11 @@ class IfStatementContext extends antlr4.ParserRuleContext {
 	    return this.getTypedRuleContext(ElseIfsContext,0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitIfStatement(this);
+	        return await visitor.visitIfStatement(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -6533,11 +6533,11 @@ class ElseIfsContext extends antlr4.ParserRuleContext {
 	    }
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitElseIfs(this);
+	        return await visitor.visitElseIfs(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -6578,11 +6578,11 @@ class ElseIfContext extends antlr4.ParserRuleContext {
 	    return this.getToken(SintesisParser.Then, 0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitElseIf(this);
+	        return await visitor.visitElseIf(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -6641,11 +6641,11 @@ class IteratorIndexesContext extends antlr4.ParserRuleContext {
 	    return this.getToken(SintesisParser.ARROW, 0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitIteratorIndexes(this);
+	        return await visitor.visitIteratorIndexes(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -6703,11 +6703,11 @@ class IteratorRangeContext extends antlr4.ParserRuleContext {
 	    return this.getToken(SintesisParser.Var_, 0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitIteratorRange(this);
+	        return await visitor.visitIteratorRange(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -6768,11 +6768,11 @@ class RepeatWhileStatementContext extends IterationStatementContext {
 	    return this.getTypedRuleContext(SingleExpressionContext,0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitRepeatWhileStatement(this);
+	        return await visitor.visitRepeatWhileStatement(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -6806,11 +6806,11 @@ class RepeatStatementContext extends IterationStatementContext {
 	    return this.getToken(SintesisParser.Times, 0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitRepeatStatement(this);
+	        return await visitor.visitRepeatStatement(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -6856,11 +6856,11 @@ class ForEachStatementContext extends IterationStatementContext {
 	    return this.getToken(SintesisParser.Each, 0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitForEachStatement(this);
+	        return await visitor.visitForEachStatement(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -6914,11 +6914,11 @@ class ForEachStatement2Context extends IterationStatementContext {
 	    return this.getToken(SintesisParser.Each, 0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitForEachStatement2(this);
+	        return await visitor.visitForEachStatement2(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -6981,11 +6981,11 @@ class ForClassicContext extends IterationStatementContext {
 	    }
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitForClassic(this);
+	        return await visitor.visitForClassic(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -7031,11 +7031,11 @@ class ForFromToStatement2Context extends IterationStatementContext {
 	    return this.getToken(SintesisParser.Do, 0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitForFromToStatement2(this);
+	        return await visitor.visitForFromToStatement2(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -7081,11 +7081,11 @@ class WhileRepeatStatementContext extends IterationStatementContext {
 	    return this.getToken(SintesisParser.Do, 0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitWhileRepeatStatement(this);
+	        return await visitor.visitWhileRepeatStatement(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -7123,11 +7123,11 @@ class ForFromToStatementContext extends IterationStatementContext {
 	    return this.getToken(SintesisParser.Do, 0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitForFromToStatement(this);
+	        return await visitor.visitForFromToStatement(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -7158,11 +7158,11 @@ class ForPreContext extends antlr4.ParserRuleContext {
 	    return this.getTypedRuleContext(VariableDeclarationListContext,0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitForPre(this);
+	        return await visitor.visitForPre(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -7193,11 +7193,11 @@ class ContinueStatementContext extends antlr4.ParserRuleContext {
 	    return this.getTypedRuleContext(EosContext,0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitContinueStatement(this);
+	        return await visitor.visitContinueStatement(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -7228,11 +7228,11 @@ class BreakStatementContext extends antlr4.ParserRuleContext {
 	    return this.getTypedRuleContext(EosContext,0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitBreakStatement(this);
+	        return await visitor.visitBreakStatement(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -7268,11 +7268,11 @@ class ReturnStatementContext extends antlr4.ParserRuleContext {
 	    return this.getTypedRuleContext(SingleExpressionContext,0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitReturnStatement(this);
+	        return await visitor.visitReturnStatement(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -7315,11 +7315,11 @@ class SwitchStatementContext extends antlr4.ParserRuleContext {
 	    return this.getTypedRuleContext(CaseBlockContext,0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitSwitchStatement(this);
+	        return await visitor.visitSwitchStatement(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -7365,11 +7365,11 @@ class CaseBlockContext extends antlr4.ParserRuleContext {
 	    return this.getTypedRuleContext(DefaultClauseContext,0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitCaseBlock(this);
+	        return await visitor.visitCaseBlock(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -7403,11 +7403,11 @@ class CaseClausesContext extends antlr4.ParserRuleContext {
 	    }
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitCaseClauses(this);
+	        return await visitor.visitCaseClauses(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -7446,11 +7446,11 @@ class CaseClauseContext extends antlr4.ParserRuleContext {
 	    return this.getTypedRuleContext(StatementListContext,0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitCaseClause(this);
+	        return await visitor.visitCaseClause(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -7485,11 +7485,11 @@ class DefaultClauseContext extends antlr4.ParserRuleContext {
 	    return this.getTypedRuleContext(StatementListContext,0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitDefaultClause(this);
+	        return await visitor.visitDefaultClause(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -7535,11 +7535,11 @@ class FormalParameterListContext extends antlr4.ParserRuleContext {
 	};
 
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitFormalParameterList(this);
+	        return await visitor.visitFormalParameterList(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -7595,11 +7595,11 @@ class FunctionDeclarationContext extends antlr4.ParserRuleContext {
 	    return this.getTypedRuleContext(FormalParameterListContext,0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitFunctionDeclaration(this);
+	        return await visitor.visitFunctionDeclaration(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -7653,11 +7653,11 @@ class ArgumentsContext extends antlr4.ParserRuleContext {
 	};
 
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitArguments(this);
+	        return await visitor.visitArguments(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -7692,11 +7692,11 @@ class VisibilityContext extends antlr4.ParserRuleContext {
 	    return this.getToken(SintesisParser.Protected, 0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitVisibility(this);
+	        return await visitor.visitVisibility(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -7805,11 +7805,11 @@ class ClassDeclarationContext extends antlr4.ParserRuleContext {
 	    return this.getToken(SintesisParser.Methods, 0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitClassDeclaration(this);
+	        return await visitor.visitClassDeclaration(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -7843,11 +7843,11 @@ class AttributesListContext extends antlr4.ParserRuleContext {
 	    }
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitAttributesList(this);
+	        return await visitor.visitAttributesList(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -7898,11 +7898,11 @@ class ClassAttributeDeclContext extends antlr4.ParserRuleContext {
 	    return this.getTypedRuleContext(VisibilityContext,0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitClassAttributeDecl(this);
+	        return await visitor.visitClassAttributeDecl(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -7962,11 +7962,11 @@ class MethodDeclarationContext extends antlr4.ParserRuleContext {
 	    return this.getToken(SintesisParser.Function_, 0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitMethodDeclaration(this);
+	        return await visitor.visitMethodDeclaration(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -7997,11 +7997,11 @@ class MethodNameContext extends antlr4.ParserRuleContext {
 	    return this.getToken(SintesisParser.Constructor, 0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitMethodName(this);
+	        return await visitor.visitMethodName(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -8035,11 +8035,11 @@ class MethodsListContext extends antlr4.ParserRuleContext {
 	    }
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitMethodsList(this);
+	        return await visitor.visitMethodsList(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -8087,11 +8087,11 @@ class ClassExpContext extends antlr4.ParserRuleContext {
 	    return this.getToken(SintesisParser.Class_, 0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitClassExp(this);
+	        return await visitor.visitClassExp(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -8126,11 +8126,11 @@ class VectorIndexContext extends antlr4.ParserRuleContext {
 	    return this.getTypedRuleContext(SingleExpressionContext,0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitVectorIndex(this);
+	        return await visitor.visitVectorIndex(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -8164,11 +8164,11 @@ class VectorIndexesContext extends antlr4.ParserRuleContext {
 	    }
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitVectorIndexes(this);
+	        return await visitor.visitVectorIndexes(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -8205,11 +8205,11 @@ class FormalParameterArgContext extends antlr4.ParserRuleContext {
 	    return this.getTypedRuleContext(SingleExpressionContext,0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitFormalParameterArg(this);
+	        return await visitor.visitFormalParameterArg(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -8240,11 +8240,11 @@ class VariableStatementContext extends antlr4.ParserRuleContext {
 	    return this.getTypedRuleContext(EosContext,0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitVariableStatement(this);
+	        return await visitor.visitVariableStatement(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -8281,11 +8281,11 @@ class VariableDeclarationContext extends antlr4.ParserRuleContext {
 	    return this.getTypedRuleContext(SingleExpressionContext,0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitVariableDeclaration(this);
+	        return await visitor.visitVariableDeclaration(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -8335,11 +8335,11 @@ class VariableDeclarationListContext extends antlr4.ParserRuleContext {
 	};
 
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitVariableDeclarationList(this);
+	        return await visitor.visitVariableDeclarationList(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -8374,11 +8374,11 @@ class VarModifierContext extends antlr4.ParserRuleContext {
 	    return this.getToken(SintesisParser.Const_, 0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitVarModifier(this);
+	        return await visitor.visitVarModifier(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -8409,11 +8409,11 @@ class FunctionBodyContext extends antlr4.ParserRuleContext {
 	    return this.getTypedRuleContext(StatementContext,0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitFunctionBody(this);
+	        return await visitor.visitFunctionBody(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -8484,11 +8484,11 @@ class AssignmentOperatorContext extends antlr4.ParserRuleContext {
 	    return this.getToken(SintesisParser.PowerAssign, 0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitAssignmentOperator(this);
+	        return await visitor.visitAssignmentOperator(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -8523,11 +8523,11 @@ class ReservedWordContext extends antlr4.ParserRuleContext {
 	    return this.getToken(SintesisParser.BooleanLiteral, 0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitReservedWord(this);
+	        return await visitor.visitReservedWord(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -8564,11 +8564,11 @@ class VectorDeclarationContext extends antlr4.ParserRuleContext {
 	    return this.getTypedRuleContext(ArgumentsContext,0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitVectorDeclaration(this);
+	        return await visitor.visitVectorDeclaration(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -8622,11 +8622,11 @@ class VectorLiteralContext extends antlr4.ParserRuleContext {
 	};
 
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitVectorLiteral(this);
+	        return await visitor.visitVectorLiteral(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -8703,11 +8703,11 @@ class ObjectLiteralContext extends antlr4.ParserRuleContext {
 	};
 
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitObjectLiteral(this);
+	        return await visitor.visitObjectLiteral(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -8758,11 +8758,11 @@ class LiteralContext extends antlr4.ParserRuleContext {
 	    return this.getTypedRuleContext(VectorDeclarationContext,0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitLiteral(this);
+	        return await visitor.visitLiteral(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -8789,11 +8789,11 @@ class BooleanLiteralContext extends antlr4.ParserRuleContext {
 	    return this.getToken(SintesisParser.BooleanLiteral, 0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitBooleanLiteral(this);
+	        return await visitor.visitBooleanLiteral(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -8820,11 +8820,11 @@ class StringLiteralContext extends antlr4.ParserRuleContext {
 	    return this.getToken(SintesisParser.StringLiteral, 0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitStringLiteral(this);
+	        return await visitor.visitStringLiteral(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -8851,11 +8851,11 @@ class NullLiteralContext extends antlr4.ParserRuleContext {
 	    return this.getToken(SintesisParser.NullLiteral, 0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitNullLiteral(this);
+	        return await visitor.visitNullLiteral(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -8898,11 +8898,11 @@ class NumericLiteralContext extends antlr4.ParserRuleContext {
 	    return this.getToken(SintesisParser.BinaryIntegerLiteral, 0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitNumericLiteral(this);
+	        return await visitor.visitNumericLiteral(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -8929,11 +8929,11 @@ class IdentifierContext extends antlr4.ParserRuleContext {
 	    return this.getToken(SintesisParser.Identifier, 0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitIdentifier(this);
+	        return await visitor.visitIdentifier(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -9032,11 +9032,11 @@ class SafeKeywordContext extends antlr4.ParserRuleContext {
 	    return this.getToken(SintesisParser.Repeat, 0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitSafeKeyword(this);
+	        return await visitor.visitSafeKeyword(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 
@@ -9067,11 +9067,11 @@ class EosContext extends antlr4.ParserRuleContext {
 	    return this.getToken(SintesisParser.EOF, 0);
 	};
 
-	     async accept(visitor) {
+	async accept(visitor) {
 	    if ( visitor instanceof SintesisParserVisitor ) {
-	        return      await visitor.visitEos(this);
+	        return await visitor.visitEos(this);
 	    } else {
-	        return      await visitor.visitChildren(this);
+	        return await visitor.visitChildren(this);
 	    }
 	}
 

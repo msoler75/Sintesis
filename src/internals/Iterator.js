@@ -11,7 +11,7 @@ class Iterator {
 
     reset() {
         let coll = valueOf(this._collection)
-        this.idx = Array.isArray(coll) ? 0 :
+        this.index = Array.isArray(coll) ? 0 :
             typeof coll === 'object' ? Object.keys(coll)[0] :
             0
     }
@@ -19,20 +19,20 @@ class Iterator {
     next() {
         if (this.ended()) return null
         let coll = valueOf(this._collection)
-        if (typeof this.idx == 'number') {
-            this.idx++
-            if (this.idx >= this.size) {
+        if (typeof this.index == 'number') {
+            this.index++
+            if (this.index >= this.size) {
                 this._ended = true
-                this.idx = null
+                this.index = null
             }
         } else {
             const keys = Object.keys(coll)
-            let curIdx = keys.indexOf(this.idx)
+            let curIdx = keys.indexOf(this.index)
             if (curIdx === -1 || curIdx === keys.length - 1) {
                 this._ended = true
-                this.idx = null
+                this.index = null
             } else {
-                this.idx = keys[curIdx + 1]
+                this.index = keys[curIdx + 1]
             }
         }
         return this.current
@@ -72,10 +72,10 @@ class Iterator {
     get current() {
         if (this.ended()) return null
         let coll = valueOf(this._collection)
-        return Array.isArray(coll) ? coll[this.idx] :
-            coll instanceof Vector ? coll.getValueFrom([this.idx]) :
-            typeof coll === 'string' ? coll.charAt(this.idx) :
-            coll[this.idx]
+        return Array.isArray(coll) ? coll[this.index] :
+            coll instanceof Vector ? coll.getValueFrom([this.index]) :
+            typeof coll === 'string' ? coll.charAt(this.index) :
+            coll[this.index]
     }
 }
 

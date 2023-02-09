@@ -136,3 +136,11 @@ test('Vector-14', async () => {
     imprimir colores
     `)).toContainText('[rojo, azul]')
 })
+
+test('Vector-15',  async () => {
+    expect(await exec(`
+    a = [1, "hola"]
+    para cada x en a
+    imprimir x
+    `)).toContainText('1 hola')
+})

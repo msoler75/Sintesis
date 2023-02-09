@@ -1,0 +1,5 @@
+a = [1, "hola"]
+a[5] = 22
+para cada x en a
+imprimir x
+  imprimir a
