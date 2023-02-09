@@ -126,3 +126,13 @@ test('Vector-13', async () => {
     imprimir a+b
     `)).toContainText('[1, 2, 3, 4]')
 })
+
+test('Vector-14', async () => {
+    expect(await exec(`
+    colores = ["azul", "rojo"]
+    c = colores[0]
+    colores[0] = colores[1]
+    colores[1] = c
+    imprimir colores
+    `)).toContainText('[rojo, azul]')
+})

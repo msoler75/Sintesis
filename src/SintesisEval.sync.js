@@ -60,7 +60,7 @@ export default class SintesisEval extends SintesisParserVisitor {
    visitStatement(ctx) {
     // console.log('statement', ctx.getText())
     return ctx.children.length ?  this.visit(ctx.children[0]) : null;
-    //return                this.visitChildren(ctx);
+    //return                 this.visitChildren(ctx);
   }
 
   // Visit a parse tree produced by SintesisParser#classDeclaration.
@@ -101,7 +101,7 @@ export default class SintesisEval extends SintesisParserVisitor {
     return new MemoryRef(obj);
   }
 
-  callToFunction(memoryref, ctxArgs) {
+   callToFunction(memoryref, ctxArgs) {
     const fn = memoryref.variable;
     const inst = memoryref._variable;
     const ctx = fn.context;
@@ -457,9 +457,9 @@ export default class SintesisEval extends SintesisParserVisitor {
   }
 
   // Visit a parse tree produced by SintesisParser#expConcat.
-  /*               visitExpConcat(ctx) {
-    let e1 =                this.visit(ctx.e1)
-    let e2 =                this.visit(ctx.e2)
+  /*                visitExpConcat(ctx) {
+    let e1 =                 this.visit(ctx.e1)
+    let e2 =                 this.visit(ctx.e2)
     return e1 + ' ' + e2
   } */
 
@@ -478,7 +478,8 @@ export default class SintesisEval extends SintesisParserVisitor {
       return  this.visitChildren(ctx.stmt);
     } else if (ctx.elseifs) {
       for (const cs of ctx.elseifs.children) {
-        if (valueOf( this.visit(cs.exp))) return  this.visitChildren(cs.stmt);
+        if (valueOf( this.visit(cs.exp)))
+          return  this.visitChildren(cs.stmt);
       }
     }
     if (ctx.elsestmt_) return  this.visit(ctx.elsestmt_);
@@ -791,11 +792,11 @@ export default class SintesisEval extends SintesisParserVisitor {
   }
 
   // Visit a parse tree produced by SintesisParser#expVar.
-  /*               visitExpVar(ctx) {
+  /*                visitExpVar(ctx) {
     const id = ctx.id.getText()
     let mem_id = SymbolFinder.findSymbol(ctx, id)
     if (ctx.exp) {
-      let result =                this.visit(ctx.exp)
+      let result =                 this.visit(ctx.exp)
       mem_id.assign(result)
     }
     return mem_id
@@ -803,7 +804,7 @@ export default class SintesisEval extends SintesisParserVisitor {
 
   // Visit a parse tree produced by SintesisParser#variableDeclaration.
    visitVariableDeclaration(ctx) {
-    // return                this.visitExpVar(ctx)
+    // return                 this.visitExpVar(ctx)
     const id = ctx.dest.getText();
     let mem_id = SymbolFinder.findSymbol(ctx, id);
     if (ctx.exp) {
@@ -874,8 +875,8 @@ export default class SintesisEval extends SintesisParserVisitor {
     return str;
   }
 
-  /*                visitStepStatement(ctx) {
-    return                this.visitChildren(ctx)
+  /*                 visitStepStatement(ctx) {
+    return                 this.visitChildren(ctx)
   } */
 
   // Visit a parse tree produced by SintesisParser#expLiteral.
@@ -920,9 +921,9 @@ export default class SintesisEval extends SintesisParserVisitor {
 
   // Visit a parse tree produced by SintesisParser#vectorLiteral.
    visitVectorLiteral(ctx) {
-    let values = ctx.children
+    let values =  ctx.children
       .filter((x) => x.constructor.name !== "TerminalNodeImpl")
-      .mapAsyncSequence((x) => {
+      .mapAsyncSequence( (x) => {
         return  this.visit(x);
       });
     return new Vector(values);
@@ -935,7 +936,7 @@ export default class SintesisEval extends SintesisParserVisitor {
     var key = "";
     ctx.children
       .filter((x) => x.constructor.name !== "TerminalNodeImpl")
-      .mapAsyncSequence((x) => {
+      .mapAsyncSequence( (x) => {
         switch (x.constructor.name) {
           case "IdentifierContext":
           case "IdContext":
@@ -943,7 +944,7 @@ export default class SintesisEval extends SintesisParserVisitor {
             key = getId(x);
             break;
           default:
-            //m.setValue(key,                this.visit(x));
+            //m.setValue(key,                 this.visit(x));
             obj[key] =  this.visit(x);
             break;
         }
@@ -951,7 +952,7 @@ export default class SintesisEval extends SintesisParserVisitor {
     return new Map(obj);
   }
 
-    visitNullLiteral(ctx) {
+   visitNullLiteral(ctx) {
     return null;
   }
 
@@ -1021,12 +1022,12 @@ export default class SintesisEval extends SintesisParserVisitor {
     return  this.visit(ctx.exp);
   }
 
-  visit(ctx) {
+   visit(ctx) {
     return "hola";
   }
 
   // funciones asíncronas
-  visit(ctx) {
+   visit(ctx) {
     if (Array.isArray(ctx)) {
       return  ctx.mapAsyncSequence( (child) => child.accept(this));
     } else {
@@ -1043,7 +1044,7 @@ export default class SintesisEval extends SintesisParserVisitor {
     }
   }
 
-  accept(visitor) {
+   accept(visitor) {
     return  visitor.visitTerminal(this);
   }
 }

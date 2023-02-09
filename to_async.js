@@ -54,6 +54,7 @@ function convert(fileOriginal) {
       .replace(/return\s+visitor\./g, 'return await visitor.')
       .replace(/ctx\.(.*?[\r\n]*.*?)map(Async)?Sequence\s*\(/g, 'await ctx.$1mapAsyncSequence(async ')
       .replace(/\.mapAsyncSequence\(\(/g, '.mapAsyncSequence(async(')
+      .replace(/=(\s*[^\.]+\.)mapAsyncSequence\(\(/g, '= await $1.mapAsyncSequence(async(')
       .replace(/SintesisParser(\.a?sync)?\.js/g, 'SintesisParser.async.js')
       .replace(/(async\s+){2,8}/g, 'async ')
       .replace(/(await\s+){2,8}/g, 'await ')

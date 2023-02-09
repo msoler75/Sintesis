@@ -24,7 +24,12 @@ class MemoryRef {
     get variable() {
         if (this._variable === undefined) return undefined
         if (this._index !== undefined)
-            return this._variable.getRef(this._index)
+            {
+                var r = this._variable.getRef(this._index)
+                // if(this._variable instanceof Vector)
+                   // r = variableCreate(r.value) // copia
+                return r
+            }
         return this._variable
     }
 
@@ -44,6 +49,8 @@ class MemoryRef {
             value = value.variable
         let literal = valueOf(value)
         let valueIsVarType = value instanceof Variable || value instanceof Function || value instanceof Instance
+        if(['number', 'string', 'boolean'].includes(typeof literal))
+            value = variableCreate(literal)
         if (!this._variable) {
             if (!valueIsVarType)
                 value = variableCreate(value)
@@ -54,7 +61,7 @@ class MemoryRef {
                 (this.variable instanceof Instance) ||
                 (this.variable instanceof Vector && !Array.isArray(literal)) ||
                 (this.variable instanceof Map && (Array.isArray(literal) || typeof literal !== 'object')) ||
-                (this.variable instanceof Single && (Array.isArray(literal) || !['number', 'string', 'object'].includes(typeof literal))))) {
+                (this.variable instanceof Single && (Array.isArray(literal) || !['number', 'string', 'boolean', 'object'].includes(typeof literal))))) {
             this.variable = variableCreate(literal)
         } else
             this.variable.value = literal
