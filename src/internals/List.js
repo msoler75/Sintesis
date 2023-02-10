@@ -2,18 +2,15 @@ import Variable from './Variable.js'
 
 
 
-class Vector extends Variable {
+class List extends Variable {
 
-  constructor(arr, defaultValue) {
+  constructor(arr) {
     super()
     this._value = []
     if (arr === undefined) arr = []
     if (!Array.isArray(arr))
-      throw new Error('Valor inválido al inicializar un vector')
-    if (!['number', 'string', 'boolean'].includes(typeof defaultValue))
-      defaultValue = null
-    this.defaultValue = defaultValue
-    this._initVector(this, arr, defaultValue)
+      throw new Error('Valor inválido al inicializar una lista')
+    this._initList(this, arr)
   }
 
   size() {
@@ -21,7 +18,7 @@ class Vector extends Variable {
   }
 
   toString() {
-    if (!Array.isArray(this._value) && (typeof this._value !== 'object' || !(this._value instanceof Vector)))
+    if (!Array.isArray(this._value) && (typeof this._value !== 'object' || !(this._value instanceof List)))
       throw new Error("May be an error here!")
     let arr = this._value
     if (!Array.isArray(arr))
@@ -37,4 +34,4 @@ class Vector extends Variable {
 
 
 
-export default Vector
+export default List

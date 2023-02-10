@@ -1,7 +1,7 @@
 import MemoryRef from './MemoryRef.js'
-import Vector from './Vector.js'
 import Variable from './Variable.js'
-import Map from './Map.js'
+import Dictionary from './Dictionary.js'
+import List from "./List.js"
 
 const valueOf = function (obj) {
     if (Array.isArray(obj)) {
@@ -12,14 +12,14 @@ const valueOf = function (obj) {
     }
     if (obj instanceof MemoryRef)
         obj = obj.variable
-    if (obj instanceof Map) {
+    if (obj instanceof Dictionary) {
         let r = {}
         for (const key in obj._value) {
             r[key] = valueOf(obj._value[key])
         }
         obj = r
     }
-    else if(obj instanceof Vector) {
+    else if(obj instanceof List) {
         let r = []
         for(const key in obj._value) {
             r[key] = valueOf(obj._value[key])

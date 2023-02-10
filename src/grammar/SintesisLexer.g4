@@ -308,19 +308,6 @@ Function_
               |    'fun'
               ;
 
-Vector
-              :    'vector'
-              |    'array'
-              |    'matriu'
-              |    'arreglo'
-              |    'vecteur'
-              |    'deployer'
-              |    'd\u00E9ployer'
-              |    'vettore'
-              |    'vetor'
-              |    'variedade'
-              ;    
-
 Delete          
               :     'delete'
               |     'eliminar'
@@ -496,14 +483,19 @@ InstanceOf
               |     'es'
                ;
 
+List
+              :    'List'
+              |    'Lista'
+              |    'Elenco'
+              |    'Liste'
+              ;    
 
-
-// Mapa
-Map
-              :    'map'
-              |    'mapa'
-              |    'carte'
-              |    'mappa'
+Dictionary
+              :    'Dictionary'
+              |    'Diccionario'
+              |    'Dizionario'
+              |    'Dictionnaire'
+              |    'Dicion[a\u00E2]rio'
               ;
 
 Get  

@@ -3,7 +3,7 @@ import exec from '../bin/exec.js'
 
 test('map-1', async () => {
     expect(await exec(`
-    usuarios = mapa()
+    usuarios = {}
     usuarios[12] = 'jorge'
     usuarios[24] = 'jaime'
 
@@ -14,8 +14,8 @@ test('map-1', async () => {
 
 test('map-2', async () => {
     expect(await exec(`
-    a = mapa()
-    a['jorge'] = mapa()
+    a = {}
+    a['jorge'] = {}
     a['jorge']['manuel'] = 123
     imprimir a
     `)).toContainText(`{jorge: {manuel: 123}}`)
@@ -23,7 +23,7 @@ test('map-2', async () => {
 
 test('map-3', async () => {
     expect(await exec(`
-    a = mapa()
+    a = {}
     a['jorge'] = 33
     a['jaime'] = 77
     imprimir buscar(a, 77), buscar(a, 99)

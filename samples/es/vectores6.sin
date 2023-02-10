@@ -1,3 +1,0 @@
- a = vector[3]("hola")
-a[0] = 77
-imprimir a

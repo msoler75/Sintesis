@@ -16,7 +16,7 @@ test('acentos-2', async () => {
 
 test('acentos-3', async () => {
     expect(await exec(`
-    fun ímpetu(único) { imprimir único+"!"}
+    función ímpetu(único) { imprimir único+"!"}
     ímpetu("adelante")
     `)).toContainText(`adelante!`)
 })

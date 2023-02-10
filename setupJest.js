@@ -1,7 +1,7 @@
 function tc(received, expected) {
   received = '' + received
-  const r = received.replace(/([\W^áéíóúÁÉÍÓÚñÑ]+)/g, ' $1 ').split(/[\s\t\r\n]/).filter(x => !!x).join(" ").replace(/ , /g, ',').replace(/- /g, '-')
-  const e = expected.replace(/([\W^áéíóúÁÉÍÓÚñÑ]+)/g, ' $1 ').split(/[\s\t\r\n]/).filter(x => !!x).join(" ").replace(/ , /g, ',').replace(/- /g, '-')
+  const r = received.replace(/([\W^áéíóúÁÉÍÓÚñÑ]+)/g, ' $1 ').split(/[\s\t\r\n]/).filter(x => !!x).join(" ").replace(/\s*,\s*/g, ',').replace(/- /g, '-')
+  const e = expected.replace(/([\W^áéíóúÁÉÍÓÚñÑ]+)/g, ' $1 ').split(/[\s\t\r\n]/).filter(x => !!x).join(" ").replace(/\s*,\s*/g, ',').replace(/- /g, '-')
   return r === e ?
     {
       pass: true,

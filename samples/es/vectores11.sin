@@ -1,7 +1,0 @@
-a=vector[3][3][3]
-para(i=0..2) {
-    para(j=0..2)
-        para(k=0..2)
-            a[i][j][k] = ((i+j+k)%3)-1    
-}
-imprimir a

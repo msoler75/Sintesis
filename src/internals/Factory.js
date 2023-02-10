@@ -1,14 +1,15 @@
 import { printObject } from "../utils/Print.js";
+import Dictionary from "./Dictionary.js";
 import Variable from "./Variable.js";
-import Vector from "./Vector.js";
 import Single from "./Single.js";
-import Map from "./Map.js";
+import List from "./List.js";
+import MemoryRef from "./MemoryRef.js"
 
 const variableCreate = function (src) {
   if (src instanceof Variable) return src;
   if (src === undefined || src === null) return new Variable();
-  if (Array.isArray(src)) return new Vector(src, 0);
-  if (typeof src === "object") return new Map(src);
+  if (Array.isArray(src)) return new List(src);
+  if (typeof src === "object") return new Dictionary(src);
   return new Single(src);
 };
 
@@ -20,7 +21,7 @@ Object.defineProperty(Variable.prototype, "toString", {
   },
 });
 
-Object.defineProperty(Map.prototype, "getRef", {
+Object.defineProperty(Dictionary.prototype, "getRef", {
   value: function (key, create) {
     if (!(key in this._value)) {
       if (!create) return null;
@@ -30,7 +31,7 @@ Object.defineProperty(Map.prototype, "getRef", {
   },
 });
 
-Object.defineProperty(Map.prototype, "setValue", {
+Object.defineProperty(Dictionary.prototype, "setValue", {
   value: function (key, value) {
     if (value instanceof Variable)
       // throw new Error('setValue no permite asignar una Variable')
@@ -39,20 +40,20 @@ Object.defineProperty(Map.prototype, "setValue", {
   },
 });
 
-Object.defineProperty(Vector.prototype, "_initVector", {
-  value: function (obj, arr, defaultValue) {
+Object.defineProperty(List.prototype, "_initList", {
+  value: function (obj, arr) {
     for (const i in arr) {
-      // console.log('_init_vector')
       if (arr[i] instanceof Variable) obj.setVariable(i, arr[i]);
       else if (Array.isArray(arr[i]))
-        obj.setVariable(i, new Vector(arr[i], defaultValue));
+        obj.setVariable(i, new List(arr[i]));
       else if (arr[i] !== null && typeof arr[i] === "object")
-        obj.setVariable(i, new Map(arr[i]));
+        obj.setVariable(i, new Dictionary(arr[i]));
       else obj.setValue(i, arr[i]);
     }
   },
 });
 
+/*
 const _createEmptyArraySizes = function (sizes, idx, initialValue) {
   let r = [];
   for (let i = 0; i < sizes[idx]; i++)
@@ -62,9 +63,10 @@ const _createEmptyArraySizes = function (sizes, idx, initialValue) {
         : new Variable(initialValue);
   return r;
 };
+*/
 
-const createVectorWithSizes = function (sizes, defaultValue) {
-  const vec = new Vector([], defaultValue);
+/*const createVectorWithSizes = function (sizes) {
+  const vec = new Vector([]);
   if (!sizes) return vec;
   if (typeof sizes == "string") vec._value = sizes.split("");
   else {
@@ -74,34 +76,29 @@ const createVectorWithSizes = function (sizes, defaultValue) {
     vec._value = new Vector(_createEmptyArraySizes(sizes, 0, vec.defaultValue));
   }
   return vec;
-};
+};*/
 
 function _checkIndex(index) {
   if (typeof index === "string" && index.match(/^\d+$/))
     index = parseInt(index);
   if (typeof index === "string")
-    throw new Error("Los vectores solo aceptan índices numéricos");
+    throw new Error("índices no numérico");
   return index;
 }
 
-Object.defineProperty(Vector.prototype, "getRef", {
+Object.defineProperty(List.prototype, "getRef", {
   value: function (index, create) {
     index = _checkIndex(index);
     if (!(index in this._value)) {
-      if (!create) return null;
+      if (!create) return new SintesisError("out of range");
       for (let i = this._value.length; i <= index; i++)
-        this._value[i] = variableCreate(this.defaultValue);
+        this._value[i] = variableCreate(null);
     }
-    /*if (Array.isArray(this._value)) {
-      var r = this._value[index];
-      if (r instanceof Variable) r = r.value;
-      return r;
-    }*/
     return this._value[index];
   },
 });
 
-Object.defineProperty(Vector.prototype, "setVariable", {
+Object.defineProperty(List.prototype, "setVariable", {
   value: function (index, vari) {
     if (!(vari instanceof Variable))
       throw new Error("setVariable exige una Variable");
@@ -111,7 +108,20 @@ Object.defineProperty(Vector.prototype, "setVariable", {
   },
 });
 
-Object.defineProperty(Vector.prototype, "setValue", {
+Object.defineProperty(List.prototype, "appendVariable", {
+  value: function (value) {
+    return this.setVariable(this.size(), value)
+  },
+});
+
+Object.defineProperty(List.prototype, "insertVariable", {
+  value: function (value) {
+    this._value.unshift(new Variable())
+    return this.setVariable(0, value)
+  },
+});
+
+Object.defineProperty(List.prototype, "setValue", {
   value: function (index, value) {
     if (value instanceof Variable) return this.setVariable(index, value);
     //throw new Error('setValue no permite asignar una Variable')
@@ -121,17 +131,29 @@ Object.defineProperty(Vector.prototype, "setValue", {
   },
 });
 
-Object.defineProperty(Vector.prototype, "delete", {
+Object.defineProperty(List.prototype, "insertValue", {
+  value: function (value) {
+    this._value.unshift(new Variable())
+    return this.setValue(0, value)
+  },
+});
+
+Object.defineProperty(List.prototype, "appendValue", {
+  value: function (value) {
+    return this.setValue(this.size(), value)
+  },
+});
+
+Object.defineProperty(List.prototype, "delete", {
   value: function (index) {
     index = _checkIndex(index);
     let len = this._value.length;
     if (len <= index) return;
     if (len - 1 == index) this._value.pop();
     else {
-      delete this._value[index];
-      this._value[index] = variableCreate(this.defaultValue);
+      this._value.splice(index, 1)
     }
   },
 });
 
-export { variableCreate, createVectorWithSizes };
+export { variableCreate };

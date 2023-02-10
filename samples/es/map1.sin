@@ -1,4 +1,4 @@
-usuarios = mapa()
+usuarios = {}
 usuarios[12] = 'jorge'
 usuarios[24] = 'jaime'
 

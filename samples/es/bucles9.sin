@@ -7,7 +7,7 @@ paracada a en [7,8,9] do
 para (a en [1,2,3]) do
     imprimir ++a
 
-a = mapa() 
+a = {} 
 a['z'] = 1
 a[3] = 99
 para x en a imprimir x

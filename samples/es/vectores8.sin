@@ -1,4 +1,0 @@
-a=vector[3] 
-para(i en 0..1) 
-a[i]=1
-imprimir a

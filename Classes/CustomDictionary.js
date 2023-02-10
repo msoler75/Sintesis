@@ -1,4 +1,4 @@
-class Dictionary {
+class CustomDictionary {
 
   constructor() {
     this.data = {}
@@ -17,4 +17,4 @@ class Dictionary {
   }
 }
 
-export default Dictionary
+export default CustomDictionary

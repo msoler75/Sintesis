@@ -1,6 +1,6 @@
 import MemoryRef from './MemoryRef.js'
 import valueOf from './ValueOf.js'
-import Vector from './Vector.js'
+import List from "./List.js"
 
 class Iterator {
     constructor(collection) {
@@ -58,7 +58,7 @@ class Iterator {
         if (Array.isArray(coll)) {
             return coll.length
         }
-        if (coll instanceof Vector) {
+        if (coll instanceof List) {
             return coll.value.length
         }
         if (coll instanceof Object) {
@@ -73,14 +73,14 @@ class Iterator {
         if (this.ended()) return null
         let coll = valueOf(this._collection)
         return Array.isArray(coll) ? coll[this.index] :
-            coll instanceof Vector ? coll.getValueFrom([this.index]) :
+            coll instanceof List ? coll.getValueFrom([this.index]) :
             typeof coll === 'string' ? coll.charAt(this.index) :
             coll[this.index]
     }
 }
 
 Iterator.iterable = (obj) => {
-    return (obj instanceof MemoryRef) || (obj instanceof Vector) || Array.isArray(obj) || (typeof obj === 'object') || (typeof obj === 'string')
+    return (obj instanceof MemoryRef) || (obj instanceof List) || Array.isArray(obj) || (typeof obj === 'object') || (typeof obj === 'string')
 }
 
 export default Iterator

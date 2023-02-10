@@ -4,9 +4,11 @@ import RefClass from './RefClass.js'
 import Instance from './Instance.js'
 import Function from './Function.js'
 import Single from './Single.js'
-import Vector from './Vector.js'
 import valueOf from './ValueOf.js'
 import Class from './Class.js'
+import List from "./List.js"
+import Dictionary from "./Dictionary.js"
+
 
 const dbgadd = false
 
@@ -234,8 +236,8 @@ class SymbolFinder {
       const v = symbols[symbol].variable
       if (v instanceof Single) v._value = undefined
       else if (v instanceof Instance) v._value = undefined
-      else if (v instanceof Vector) v._value = undefined
-      else if (v instanceof Map) v._value = undefined
+      else if (v instanceof List) v._value = undefined
+      else if (v instanceof Dictionary) v._value = undefined
     }
   }
 

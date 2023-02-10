@@ -1,8 +1,8 @@
 const imprimirCadaLinea = 0;
 
-import Map from "./internals/Map.js";
+import Dictionary from "./internals/Dictionary.js";
+import List from "./internals/List.js";
 import Class from "./internals/Class.js";
-import Vector from "./internals/Vector.js";
 import valueOf from "./internals/ValueOf.js";
 import Variable from "./internals/Variable.js";
 import Function from "./internals/Function.js";
@@ -15,7 +15,7 @@ import "./internals/ArrayUtilsHacked.js";
 // import SintesisSymbolParser from './SintesisSymbolParser.js'
 import { SymbolFinder } from "./internals/Symbols.js";
 import SintesisParserVisitor from "./lib/SintesisParserVisitor.js";
-import { variableCreate, createVectorWithSizes } from "./internals/Factory.js";
+import { variableCreate } from "./internals/Factory.js";
 import getId from "./internals/GetId.js";
 
 import promptSync from "prompt-sync";
@@ -60,7 +60,7 @@ export default class SintesisEval extends SintesisParserVisitor {
    visitStatement(ctx) {
     // console.log('statement', ctx.getText())
     return ctx.children.length ?  this.visit(ctx.children[0]) : null;
-    //return                         this.visitChildren(ctx);
+    //return                           this.visitChildren(ctx);
   }
 
   // Visit a parse tree produced by SintesisParser#classDeclaration.
@@ -200,11 +200,11 @@ export default class SintesisEval extends SintesisParserVisitor {
     // si no existe la variable de referencia, creamos la variable dinámicamente
     // to-do: mover este código a memoryref.assign ??
     if (!memoryref._variable) {
-      let v = typeof index === "number" ? new Vector() : new Map();
+      let v = typeof index === "number" ? new List() : new Dictionary();
       memoryref.assign(v);
     }
 
-    // es un tipo de datos válido? Vector / Map
+    // es un tipo de datos válido? List / Dictionary
     if (!memoryref || !memoryref.variable || !memoryref.variable.getRef)
       throw new SintesisError(
         ctx.mem,
@@ -301,22 +301,19 @@ export default class SintesisEval extends SintesisParserVisitor {
     return memoryref;
   }
 
-  // Visit a parse tree produced by SintesisParser#vectorIndex.
-   visitVectorIndex(ctx) {
+  // Visit a parse tree produced by SintesisParser#listIndex.
+   visitListIndex(ctx) {
     let items = ctx.children.filter(
       (x) => x.constructor.name !== "TerminalNodeImpl"
     );
     return items.length ?  this.visit(items[0]) : null;
   }
 
-   visitVectorDeclaration(ctx) {
-    let indexes =  this.visitChildren(ctx.idx);
-    let defaultValue;
-    if (ctx.args) {
-      let args =  this.visit(ctx.args).values;
-      defaultValue = args[0];
-    }
-    return createVectorWithSizes(indexes, defaultValue).value;
+   visitListDeclaration(ctx) {
+    var literalList = ctx.exp ? this.visit(ctx.exp) : null;
+    if(literalList && literalList instanceof List) 
+      return literalList
+    return new List();
   }
 
    visitExpNumberOf(ctx) {
@@ -325,10 +322,10 @@ export default class SintesisEval extends SintesisParserVisitor {
     if (typeof value !== "object")
       throw new SintesisError(ctx.exp, "Tipo incorrecto");
     if (Array.isArray(value)) {
-      let vec = new Vector(value);
-      return vec.size();
+      let list = new List(value);
+      return list.size();
     }
-    let map = new Map(value);
+    let map = new Dictionary(value);
     return map.size();
   }
 
@@ -457,9 +454,9 @@ export default class SintesisEval extends SintesisParserVisitor {
   }
 
   // Visit a parse tree produced by SintesisParser#expConcat.
-  /*                        visitExpConcat(ctx) {
-    let e1 =                         this.visit(ctx.e1)
-    let e2 =                         this.visit(ctx.e2)
+  /*                          visitExpConcat(ctx) {
+    let e1 =                           this.visit(ctx.e1)
+    let e2 =                           this.visit(ctx.e2)
     return e1 + ' ' + e2
   } */
 
@@ -510,14 +507,14 @@ export default class SintesisEval extends SintesisParserVisitor {
     const collection =  this.visit(iter.coll);
 
     if (!Iterator.iterable(collection))
-      throw new SintesisError(ctx.dest, `El valor no es iterable`);
+      throw new SintesisError(ctx.coll, `El valor no es iterable`);
 
     let iterator = new Iterator(collection);
 
     if (iterator.size) {
       // TO-DO aquí no debería añadir el símbolo, eso ya se hizo en el SintesisSymbolParser
       let mem_idx = index_id
-        ? SymbolFinder.addVariable(ctx, index_id, new Variable(iterator.idx))
+        ? SymbolFinder.addVariable(ctx, index_id, new Variable(iterator.index))
         : null;
       let mem_item = SymbolFinder.addVariable(
         ctx,
@@ -527,7 +524,7 @@ export default class SintesisEval extends SintesisParserVisitor {
       //
       while (!iterator.ended()) {
         mem_item.assign(iterator.current);
-        if (mem_idx) mem_idx.assign(iterator.idx);
+        if (mem_idx) mem_idx.assign(iterator.index);
          this.visit(ctx.stmt);
         iterator.next();
       }
@@ -588,7 +585,7 @@ export default class SintesisEval extends SintesisParserVisitor {
         if (ctx.args) {
           args =  this.visit(ctx.args).values;
         }
-        return args[0] && args[0] instanceof Map ? args[0] : new Map();
+        return args[0] && args[0] instanceof Dictionary ? args[0] : new Dictionary();
       }
       case "NumberOfContext":
         if (args.length < 1)
@@ -596,9 +593,9 @@ export default class SintesisEval extends SintesisParserVisitor {
         if ((t0 !== "string") & (t0 !== "object"))
           throw new SintesisError(ctx.args.children[1], "Tipo incorrecto");
         const v = Array.isArray(a0)
-          ? new Vector(a0)
+          ? new List(a0)
           : t0 === "object"
-          ? new Map(a0)
+          ? new Dictionary(a0)
           : a0;
         return v instanceof Variable ? v.size() : v.length;
       case "IndexOfContext":
@@ -606,7 +603,7 @@ export default class SintesisEval extends SintesisParserVisitor {
           throw new SintesisError(ctx.args, "Debe especificar dos argumentos");
         if (t0 !== "string" && !Array.isArray(a0) && t0 !== "object")
           throw new SintesisError(ctx.args.children[1], "Tipo incorrecto");
-        return t0 === "object" ? new Map(a0).indexOf(a1) : a0.indexOf(a1);
+        return t0 === "object" ? new Dictionary(a0).indexOf(a1) : a0.indexOf(a1);
       case "ConvertContext":
         if (args.length < 2)
           throw new SintesisError(ctx.args, "Debe especificar dos argumentos");
@@ -792,11 +789,11 @@ export default class SintesisEval extends SintesisParserVisitor {
   }
 
   // Visit a parse tree produced by SintesisParser#expVar.
-  /*                        visitExpVar(ctx) {
+  /*                          visitExpVar(ctx) {
     const id = ctx.id.getText()
     let mem_id = SymbolFinder.findSymbol(ctx, id)
     if (ctx.exp) {
-      let result =                         this.visit(ctx.exp)
+      let result =                           this.visit(ctx.exp)
       mem_id.assign(result)
     }
     return mem_id
@@ -804,7 +801,7 @@ export default class SintesisEval extends SintesisParserVisitor {
 
   // Visit a parse tree produced by SintesisParser#variableDeclaration.
    visitVariableDeclaration(ctx) {
-    // return                         this.visitExpVar(ctx)
+    // return                           this.visitExpVar(ctx)
     const id = ctx.dest.getText();
     let mem_id = SymbolFinder.findSymbol(ctx, id);
     if (ctx.exp) {
@@ -875,8 +872,8 @@ export default class SintesisEval extends SintesisParserVisitor {
     return str;
   }
 
-  /*                         visitStepStatement(ctx) {
-    return                         this.visitChildren(ctx)
+  /*                           visitStepStatement(ctx) {
+    return                           this.visitChildren(ctx)
   } */
 
   // Visit a parse tree produced by SintesisParser#expLiteral.
@@ -919,23 +916,23 @@ export default class SintesisEval extends SintesisParserVisitor {
     return str;
   }
 
-  // Visit a parse tree produced by SintesisParser#vectorLiteral.
-   visitVectorLiteral(ctx) {
-    var items =  ctx.children.filter(
+  // Visit a parse tree produced by SintesisParser#listLiteral.
+   visitListLiteral(ctx) {
+    var items = ctx.children.filter(
       (x) => x.constructor.name !== "TerminalNodeImpl"
     );
     var values =  items.mapAsyncSequence( (x) => {
       return  this.visit(x);
     });
-    return new Vector(values);
+    return new List(values);
   }
 
   // Visit a parse tree produced by SintesisParser#objectLiteral.
    visitObjectLiteral(ctx) {
-    // var m = new Map()
+    // var m = new Dictionary()
     var obj = {};
     var key = "";
-    var items =  ctx.children.filter(
+    var items = ctx.children.filter(
       (x) => x.constructor.name !== "TerminalNodeImpl"
     );
      items.mapAsyncSequence( (x) => {
@@ -946,12 +943,12 @@ export default class SintesisEval extends SintesisParserVisitor {
           key = getId(x);
           break;
         default:
-          //m.setValue(key,                         this.visit(x));
+          //m.setValue(key,                           this.visit(x));
           obj[key] =  this.visit(x);
           break;
       }
     });
-    return new Map(obj);
+    return new Dictionary(obj);
   }
 
    visitNullLiteral(ctx) {

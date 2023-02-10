@@ -1,10 +1,10 @@
-a = mapa()
-a['jorge'] = mapa()
+a = {}
+a['jorge'] = {}
 a['jorge']['manuel'] = 123
 imprimir a
 
 // da error:
-// b = mapa()
+// b = {}
 // b['jorge']['manuel'] = 456
 // imprimir a
 

@@ -165,7 +165,7 @@ test('Bucles-9 para cada in', async () => {
     `)).toContainText(`2 3 4`)
 
     expect(await exec(`
-    a = mapa() 
+    a = {} 
     a['z'] = 1
     a[3] = 99
     para x in a imprimir x

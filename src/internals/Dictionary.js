@@ -1,6 +1,6 @@
 import Variable from './Variable.js'
 
-class Map extends Variable {
+class Dictionary extends Variable {
 
     constructor(obj) {
         super()
@@ -27,7 +27,8 @@ class Map extends Variable {
         if (v instanceof Variable)
             v = v.value
         for (const key in this._value) {
-            if (v === this._value[key].value)
+            const v2 = this._value[key].value
+            if (((typeof v === 'object' &&  'equals' in v) && v.equals(v2)) || v === v2)
                 return key
         }
         return null
@@ -37,4 +38,4 @@ class Map extends Variable {
 
 
 
-export default Map
+export default Dictionary

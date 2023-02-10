@@ -1,6 +1,6 @@
 import Variable from './Variable.js'
 import Class from "./Class.js"
-import Map from "./Map.js"
+import Dictionary from "./Dictionary.js"
 import {printObject} from '../utils/Print.js'
 
 
@@ -34,8 +34,8 @@ class Instance extends Variable {
             }
             ref = ref.superClass
         } while (ref)
-        this.attributes['___attributes'] = new Map(atr)
-        this.attributes['___methods'] = new Map(met)
+        this.attributes['___attributes'] = new Dictionary(atr)
+        this.attributes['___methods'] = new Dictionary(met)
     }
 
     isInstanceOf(name) {

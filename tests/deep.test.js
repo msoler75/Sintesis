@@ -18,7 +18,7 @@ test('Deep objects-2', async () => {
 
     expect(await exec(`
     b={i:1,j:[2,{m:[3,4]}]} 
-    b['k']=map({n:6})
+    b['k']={n:6}
     b.x='Hola'
     imprimir b
     `)).toContainText(`{i: 1, j: [2, {m: [3, 4]}], k: {n: 6}, x: Hola}`)

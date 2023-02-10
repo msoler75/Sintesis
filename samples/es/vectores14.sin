@@ -1,5 +1,0 @@
-colores = ["azul", "rojo"]
-c = colores[0]
-colores[0] = colores[1]
-colores[1] = c
-imprimir colores

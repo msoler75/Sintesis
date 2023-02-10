@@ -1,6 +1,6 @@
 import Variable from './Variable.js'
-import Vector from './Vector.js'
-import Map from './Map.js'
+import Dictionary from './Dictionary.js'
+import List from "./List.js"
 import Instance from './Instance.js'
 import Function from './Function.js'
 import valueOf from './ValueOf.js'
@@ -9,7 +9,6 @@ import {
     variableCreate,
 } from './Factory.js'
 import Single from './Single.js'
-// import Map from './Map.js'
 
 
 class MemoryRef {
@@ -26,7 +25,7 @@ class MemoryRef {
         if (this._index !== undefined)
             {
                 var r = this._variable.getRef(this._index)
-                // if(this._variable instanceof Vector)
+                // if(this._variable instanceof List)
                    // r = variableCreate(r.value) // copia
                 return r
             }
@@ -59,8 +58,8 @@ class MemoryRef {
             this.variable = value
         } else if ((
                 (this.variable instanceof Instance) ||
-                (this.variable instanceof Vector && !Array.isArray(literal)) ||
-                (this.variable instanceof Map && (Array.isArray(literal) || typeof literal !== 'object')) ||
+                (this.variable instanceof List && !Array.isArray(literal)) ||
+                (this.variable instanceof Dictionary && (Array.isArray(literal) || typeof literal !== 'object')) ||
                 (this.variable instanceof Single && (Array.isArray(literal) || !['number', 'string', 'boolean', 'object'].includes(typeof literal))))) {
             this.variable = variableCreate(literal)
         } else

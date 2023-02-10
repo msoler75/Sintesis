@@ -133,7 +133,7 @@ basicFunction1
     | Ord                           #ord
     | Chr                           #chr
     | Prompt                        #prompt
-    | Map                           #map
+    | Dictionary                           #Dictionary
     ;
 
 
@@ -281,16 +281,16 @@ classExp
     : New_ Instance? (Of Class_?)? Identifier args=arguments
     ;
 
-vectorIndex
+listIndex
     : '[' singleExpression? ']'
     ;
 
-vectorIndexes
-    : vectorIndex+
+listIndexes
+    : listIndex+
     ;
 
 formalParameterArg
-    : id=identifier (Assign exp=singleExpression)?      
+    : dest=identifier (Assign exp=singleExpression)?      
     ;
 
 variableStatement
@@ -341,12 +341,12 @@ reservedWord
     | BooleanLiteral
     ;
 
-vectorDeclaration
-    : Vector idx=vectorIndexes args=arguments?
+listDeclaration
+    : New_ List '(' exp=listLiteral? ')'
     ;
 
 
-vectorLiteral
+listLiteral
     : '[' (singleExpression (',' singleExpression)*)? ']'
     ;
 
@@ -360,9 +360,9 @@ literal
     | booleanLiteral    
     | stringLiteral     
     | numericLiteral
-    | vectorLiteral 
+    | listLiteral 
     | objectLiteral
-    | vectorDeclaration
+    | listDeclaration
     ;
 
 
@@ -383,7 +383,7 @@ identifier
 
 
 /*
-Vector not included as keyword
+List not included as keyword
 Var_ not included
 Method not included
 Class not included
