@@ -52,7 +52,7 @@ class Instance extends Variable {
         return this.class.getConstructor(numArgs)
     }
 
-    getRef(name) {
+    getVarRef(name) {
         if (Class.isMethodsName(name)) name = '___methods'
         if (Class.isAttributesName(name)) name = '___attributes'
         // si es un atributo o método lo busca entre la instancia actual y las padres
@@ -88,7 +88,7 @@ class Instance extends Variable {
                 if (!Class.isSpecialAttribute(name))
                     a.push({
                         name,
-                        value: printObject(this.getRef(name).value)
+                        value: printObject(this.getVarRef(name).value)
                     })
             }
             /* for (const name in ref.methods) {

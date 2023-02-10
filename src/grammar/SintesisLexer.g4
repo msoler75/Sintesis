@@ -10,6 +10,7 @@ channels { ERROR, COMMENTS }
 
 MultiLineComment:               '/*' .*? '*/' -> channel(2);
 SingleLineComment:              '//' ~[\r\n\u2028\u2029]* -> channel(2);
+JavascriptCode:                 '{{' .*? '}}';
 
 OpenBracket:                    '[';
 CloseBracket:                   ']';
@@ -22,7 +23,7 @@ Comma:                          ',';
 Assign:                         '=' | '<-';
 QuestionMark:                   '?';
 Colon:                          ':';
-Ellipsis:                       '-...-';
+Ellipsis:                       '...';
 Dot:                            '.';
 PlusPlus:                       '++';
 MinusMinus:                     '--';

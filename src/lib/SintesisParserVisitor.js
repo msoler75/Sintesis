@@ -168,6 +168,12 @@ export default class SintesisParserVisitor extends antlr4.tree.ParseTreeVisitor 
 	}
 
 
+	// Visit a parse tree produced by SintesisParser#expJavascript.
+	visitExpJavascript(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
 	// Visit a parse tree produced by SintesisParser#expParenthesis.
 	visitExpParenthesis(ctx) {
 	  return this.visitChildren(ctx);
@@ -176,6 +182,12 @@ export default class SintesisParserVisitor extends antlr4.tree.ParseTreeVisitor 
 
 	// Visit a parse tree produced by SintesisParser#expPostIncrement.
 	visitExpPostIncrement(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by SintesisParser#expList.
+	visitExpList(ctx) {
 	  return this.visitChildren(ctx);
 	}
 

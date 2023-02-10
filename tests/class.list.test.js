@@ -10,15 +10,15 @@ test('List basic-1', () => {
     let v = new List([10, 20])
     expect(v.toString()).toContainText('[10, 20]')
 
-    expect(v.getRef(0).toString()).toContainText('10')
+    expect(v.getMemberRef(0).toString()).toContainText('10')
 
-    expect(v.getRef(1).toString()).toContainText('20')
+    expect(v.getMemberRef(1).toString()).toContainText('20')
 
     v.setVariable(4, new List([50, 60]))
 
     expect(v.toString()).toContainText('[10, 20, , , [50, 60]]')
 
-    expect(v.getRef(4).getRef(1).toString()).toContainText('60')
+    expect(v.getMemberRef(4).getMemberRef(1).toString()).toContainText('60')
 })
 
 

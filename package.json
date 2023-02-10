@@ -28,7 +28,8 @@
     "antlr4": "^4.9.3",
     "fs": "^0.0.1-security",
     "jest": "^27.4.7",
-    "prompt-sync": "^4.2.0"
+    "prompt-sync": "^4.2.0",
+    "safe-eval": "^0.4.1"
   },
   "jest": {
     "verbose": true,

@@ -91,6 +91,7 @@ memberIdentifier
 
 singleExpression     
     :    fn=basicFunction args=arguments                                    #expBasicFunction
+    |    JavascriptCode                                                     #expJavascript
     |    Math Dot fn=(Identifier|Min|Max|Random) args=arguments             #expMath
     |    dest=singleExpression op=(PlusPlus|MinusMinus)                           #expPostIncrement
     |    op=(PlusPlus | MinusMinus) dest=singleExpression                         #expPreIncrement

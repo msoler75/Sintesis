@@ -3,7 +3,6 @@ import Dictionary from "./Dictionary.js";
 import Variable from "./Variable.js";
 import Single from "./Single.js";
 import List from "./List.js";
-import MemoryRef from "./MemoryRef.js"
 
 const variableCreate = function (src) {
   if (src instanceof Variable) return src;
@@ -21,7 +20,7 @@ Object.defineProperty(Variable.prototype, "toString", {
   },
 });
 
-Object.defineProperty(Dictionary.prototype, "getRef", {
+Object.defineProperty(Dictionary.prototype, "getMemberRef", {
   value: function (key, create) {
     if (!(key in this._value)) {
       if (!create) return null;
@@ -42,14 +41,14 @@ Object.defineProperty(Dictionary.prototype, "setValue", {
 
 Object.defineProperty(List.prototype, "_initList", {
   value: function (obj, arr) {
-    for (const i in arr) {
-      if (arr[i] instanceof Variable) obj.setVariable(i, arr[i]);
-      else if (Array.isArray(arr[i]))
-        obj.setVariable(i, new List(arr[i]));
-      else if (arr[i] !== null && typeof arr[i] === "object")
-        obj.setVariable(i, new Dictionary(arr[i]));
-      else obj.setValue(i, arr[i]);
-    }
+    if (arr)
+      for (const i in arr) {
+        if (arr[i] instanceof Variable) obj.setVariable(i, arr[i]);
+        else if (Array.isArray(arr[i])) obj.setVariable(i, new List(arr[i]));
+        else if (arr[i] !== null && typeof arr[i] === "object")
+          obj.setVariable(i, new Dictionary(arr[i]));
+        else obj.setValue(i, arr[i]);
+      }
   },
 });
 
@@ -78,22 +77,109 @@ const _createEmptyArraySizes = function (sizes, idx, initialValue) {
   return vec;
 };*/
 
-function _checkIndex(index) {
+function _checkIndex(index, canBeAlfa) {
   if (typeof index === "string" && index.match(/^\d+$/))
     index = parseInt(index);
-  if (typeof index === "string")
+  if (!canBeAlfa && typeof index === "string")
     throw new Error("índices no numérico");
   return index;
 }
 
-Object.defineProperty(List.prototype, "getRef", {
+function executeListMethod(ctx, ref, method, args) {
+  const array = ref._variable.value;
+  const v0 = args.length > 0 ? variableCreate(args[0]) : null;
+  // const v1 = args.length > 1 ? variableCreate(args[1]) : null;
+  // const v2 = args.length > 2 ? variableCreate(args[2]) : null;
+  List;
+  switch (method) {
+    case "push":
+    case "append":
+    case "agregar":
+      array.push(v0);
+      return ref;
+    case "clear":
+    case "vaciar":
+      array.splice(0, array.length);
+      return ref;
+    case "copy":
+    case "copiar":
+      return [...array];
+    case "count":
+    case "longitud":
+      return array.length;
+    case "extend":
+    case "extender":
+      for (const i in v0) array.push(variableCreate(valueOf(v[i])));
+      return ref;
+    case "index":
+    case "índice":
+      return array.indexOf(v0);
+    case "insert":
+    case "insertar":
+      array.unshift(v0);
+      return ref;
+    case "pop":
+    case "sacar":
+      array.pop();
+      return ref;
+    case "remove":
+    case "remover":
+      var idx = array.findIndex((v) => v === v0.value);
+      if (idx >= 0) array.splice(idx, 2);
+      return ref;
+    case "reverse":
+    case "invertir":
+      ref.value = array.reverse();
+      return ref;
+    case "sort":
+    case "ordenar":
+      array.sort((a, b) => {
+        a.value - b.value;
+      });
+      return ref;
+  }
+  throw new Error(`método ${method} no encontrado`);
+}
+
+Object.defineProperty(List.prototype, "getMemberRef", {
   value: function (index, create) {
-    index = _checkIndex(index);
+    index = _checkIndex(index, true);
     if (!(index in this._value)) {
-      if (!create) return new SintesisError("out of range");
+      if (
+        ![
+          "push",
+          "append",
+          "agregar",
+          "clear",
+          "vaciar",
+          "copy",
+          "copiar",
+          "count",
+          "longitud",
+          "extend",
+          "extender",
+          "index",
+          "indice",
+          "índice",
+          "insert",
+          "insertar",
+          "pop",
+          "sacar",
+          "remove",
+          "remover",
+          "reverse",
+          "invertir",
+          "sort",
+          "ordenar",
+        ].includes(index) &&
+        !create
+      )
+        throw new Error("out of range");
+      // rellenamos las posiciones vacías con el valor null
       for (let i = this._value.length; i <= index; i++)
         this._value[i] = variableCreate(null);
     }
+    if (typeof index === "string") return this; // lo procesaremos distinto
     return this._value[index];
   },
 });
@@ -103,21 +189,21 @@ Object.defineProperty(List.prototype, "setVariable", {
     if (!(vari instanceof Variable))
       throw new Error("setVariable exige una Variable");
     index = _checkIndex(index);
-    this.getRef(index, true); // para expandir índices si acaso no existen
+    this.getMemberRef(index, true); // para expandir índices si acaso no existen
     this._value[index] = vari;
   },
 });
 
 Object.defineProperty(List.prototype, "appendVariable", {
   value: function (value) {
-    return this.setVariable(this.size(), value)
+    return this.setVariable(this.size(), value);
   },
 });
 
 Object.defineProperty(List.prototype, "insertVariable", {
   value: function (value) {
-    this._value.unshift(new Variable())
-    return this.setVariable(0, value)
+    this._value.unshift(new Variable());
+    return this.setVariable(0, value);
   },
 });
 
@@ -126,21 +212,21 @@ Object.defineProperty(List.prototype, "setValue", {
     if (value instanceof Variable) return this.setVariable(index, value);
     //throw new Error('setValue no permite asignar una Variable')
     index = _checkIndex(index);
-    let ref = this.getRef(index, true);
+    let ref = this.getMemberRef(index, true);
     if (ref) ref.value = value;
   },
 });
 
 Object.defineProperty(List.prototype, "insertValue", {
   value: function (value) {
-    this._value.unshift(new Variable())
-    return this.setValue(0, value)
+    this._value.unshift(new Variable());
+    return this.setValue(0, value);
   },
 });
 
 Object.defineProperty(List.prototype, "appendValue", {
   value: function (value) {
-    return this.setValue(this.size(), value)
+    return this.setValue(this.size(), value);
   },
 });
 
@@ -151,9 +237,9 @@ Object.defineProperty(List.prototype, "delete", {
     if (len <= index) return;
     if (len - 1 == index) this._value.pop();
     else {
-      this._value.splice(index, 1)
+      this._value.splice(index, 1);
     }
   },
 });
 
-export { variableCreate };
+export { variableCreate, executeListMethod };
