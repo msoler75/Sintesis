@@ -1,7 +1,7 @@
 import List from "../src/internals/List.js"
 import Dictionary from '../src/internals/Dictionary.js'
 import Single from '../src/internals/Single.js'
-import Factory from '../src/internals/Factory.js'
+import {} from '../src/internals/Factory.js'
 
 import exec from '../bin/exec.js'
 

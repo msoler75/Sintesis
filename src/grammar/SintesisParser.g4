@@ -90,7 +90,8 @@ memberIdentifier
     ;
 
 singleExpression     
-    :    fn=basicFunction args=arguments                                    #expBasicFunction
+    :    anonymousFunction                                                  #expFunctionExpression
+    |    fn=basicFunction args=arguments                                    #expBasicFunction
     |    JavascriptCode                                                     #expJavascript
     |    Math Dot fn=(Identifier|Min|Max|Random) args=arguments             #expMath
     |    dest=singleExpression op=(PlusPlus|MinusMinus)                           #expPostIncrement
@@ -240,6 +241,10 @@ functionDeclaration
     : dec=Declare? fun=Function_ id=identifier '(' pl=formalParameterList? ')' stmt=functionBody
     ;
 
+functionDeclarationExpr
+: fun=Function_ id=identifier '(' pl=formalParameterList? ')' stmt=functionBody
+;
+
 arguments
     : '(' (singleExpression (',' singleExpression)* )? ')'
     ;
@@ -319,6 +324,21 @@ functionBody
     | statement
     ;
 
+ 
+anonymousFunction
+    : fun=Function_ '(' pl=formalParameterList? ')'    stmt=functionBody  #anonymousFunctionDecl
+    | pl=arrowFunctionParameters ARROW stmt=arrowFunctionBody                     #arrowFunction
+    ;
+
+arrowFunctionParameters
+    : identifier
+    | '(' formalParameterList? ')'
+    ;
+
+arrowFunctionBody
+    : singleExpression
+    | functionBody
+    ;
 
 assignmentOperator
     : '*='

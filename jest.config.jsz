@@ -1,6 +1,0 @@
-const jestConfig = {
-    verbose: true,
-    testMatch: ['**/tests/*.js?)'],
-  }
-  
-  module.exports = jestConfig

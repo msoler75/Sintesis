@@ -8,7 +8,7 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "jest",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "generate": "cp ./src/SintesisParserBaseSource.js ./src/lib/SintesisParserBase && java -Dfile.encoding=UTF-8 -cp D:/projects/CodeBounce/Sintesis/antlr4/jar/antlr-4.9.3-complete.jar org.antlr.v4.Tool -Dlanguage=JavaScript -lib ./src ./src/grammar/SintesisLexer.g4 ./src/grammar/SintesisParser.g4 -o ./src/lib -no-listener -visitor",
     "toasync": "node ./to_async",
     "tosync": "node ./to_sync",
@@ -27,9 +27,14 @@
   "dependencies": {
     "antlr4": "^4.9.3",
     "fs": "^0.0.1-security",
-    "jest": "^27.4.7",
     "prompt-sync": "^4.2.0",
     "safe-eval": "^0.4.1"
+  },
+  "devDependencies": {
+    "@babel/plugin-syntax-import-assertions": "^7.17.12",
+    "@babel/preset-env": "^7.16.11",
+    "babel-jest": "^27.5.1",
+    "jest": "^27.5.1"
   },
   "jest": {
     "verbose": true,
@@ -42,10 +47,5 @@
     "testMatch": [
       "**/tests/*.js"
     ]
-  },
-  "devDependencies": {
-    "@babel/core": "^7.16.12",
-    "@babel/preset-env": "^7.16.11",
-    "babel-jest": "^27.4.6"
   }
 }

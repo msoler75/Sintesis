@@ -54,8 +54,8 @@ class SintesisSymbolParser extends SintesisParserVisitor {
   }
 
   // Visit a parse tree produced by SintesisParser#expVar.
-  /*                                     async visitExpVar(ctx) {
-                                             await this.visitVariableDeclaration(ctx)
+  /*                                       async visitExpVar(ctx) {
+                                               await this.visitVariableDeclaration(ctx)
     } */
 
   // Visit a parse tree produced by SintesisParser#formalParameterArg.
@@ -76,7 +76,12 @@ class SintesisSymbolParser extends SintesisParserVisitor {
     }
     const fn = new Function(id, ctx);
     // si es un método, no se añade porque ya se ha añadido el símbolo en la declaración de la clase
-    if (!isMethod) SymbolFinder.addFunction(ctx.parentCtx, id, fn);
+    // si es una función anónima, no la incluimos
+    if (!isMethod && id) 
+      SymbolFinder.addFunction(ctx.parentCtx, id, fn);
+      if(!id)
+    
+    ctx.anonymousFunction = fn
 
     SymbolFinder.createTable(ctx, fn);
     if (ctx.pl) {
@@ -87,6 +92,14 @@ class SintesisSymbolParser extends SintesisParserVisitor {
     if (ctx.stmt) {
        await this.visit(ctx.stmt);
     }
+  }
+
+   async visitAnonymousFunctionDecl(ctx) {
+    return  await this.visitFunctionDeclaration(ctx);
+  }
+
+   async visitArrowFunction(ctx) {
+    return  await this.visitFunctionDeclaration(ctx)
   }
 
   // Visit a parse tree produced by SintesisParser#methodDeclaration.
@@ -110,7 +123,7 @@ class SintesisSymbolParser extends SintesisParserVisitor {
    async visitStatement(ctx) {
     // console.log('statement', ctx.getText())
     return ctx.children.length ?  await this.visit(ctx.children[0]) : null;
-    //return                                       await this.visitChildren(ctx);
+    //return                                         await this.visitChildren(ctx);
   }
 
   // Visit a parse tree produced by SintesisParser#classDeclaration.
@@ -238,6 +251,7 @@ class SintesisSymbolParser extends SintesisParserVisitor {
     this.createIdentifierIfNotFound = true;
      await this.visit(ctx.dest);
     this.createIdentifierIfNotFound = false;
+     await this.visit(ctx.exp);
   }
 
   // Visit a parse tree produced by SintesisParser#forFromToStatement.
@@ -295,9 +309,9 @@ class SintesisSymbolParser extends SintesisParserVisitor {
        }
    }
 
-                                       async visitChildren(ctx) {
+                                         async visitChildren(ctx) {
 		if (ctx.children) {
-			return                                      await this.visit(ctx.children);
+			return                                        await this.visit(ctx.children);
 		} else {
 			return null;
 		}

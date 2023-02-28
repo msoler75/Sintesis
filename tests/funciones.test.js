@@ -138,3 +138,27 @@ test('Funciones-9', async () => {
     A {b: 34}
     `)
 })
+
+
+
+test('Funciones-10 dec', async () => {
+    expect(await exec(`
+    a = función () {
+        imprimir "e"
+    }
+    a()
+    `)).toContainText(`e`)
+})
+
+
+
+test('Funciones-11 arrow', async () => {
+    expect(await exec(`
+    a = () => {
+        imprimir "e"
+    }
+    a()
+    `)).toContainText(`e`)
+})
+
+
