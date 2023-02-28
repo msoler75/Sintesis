@@ -283,6 +283,8 @@ Else
 Return
               :    'return'
               |    'retornar'
+              |    'regresar'
+              |    'devolver'
               |    'ritornare '
               |    'renvoyer'
               |    'ret'

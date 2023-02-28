@@ -67,7 +67,7 @@ class SymbolTable {
         m2['___super'] = new MemoryRef(instance.superClass)
     } else if (this.function) {
       m2['___ended'] = false // para contextos de función, cuando se ejecuta 'return' el bloque o contexto entero se marca como 'terminado'
-      m2['___result'] = null // para contextos de función, cuando se retorna un resultado se guarda en esta variable
+      m2['___result'] = undefined // para contextos de función, cuando se retorna un resultado se guarda en esta variable
     }
     this.memory.push(m2)
   }

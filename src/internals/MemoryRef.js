@@ -18,6 +18,7 @@ class MemoryRef {
         // else 
         //  console.warn('memoryref with undefined variable?')
         this._index = index
+        this.recentChanged = true
     }
 
     get variable() {
@@ -42,8 +43,10 @@ class MemoryRef {
     }
 
     assign(value) {
+        this.recentChanged = true
         //if(this._variable instanceof RefClass)
         //  console.error("No puede asignar a RefClass")
+        this.lastChange = +new Date();
         if (value instanceof MemoryRef)
             value = value.variable
         let literal = valueOf(value)
@@ -64,6 +67,10 @@ class MemoryRef {
             this.variable = variableCreate(literal)
         } else
             this.variable.value = literal
+    }
+
+    clearChanged() {
+        this.recentChanged = false
     }
 
 
