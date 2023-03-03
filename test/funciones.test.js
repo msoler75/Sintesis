@@ -113,7 +113,7 @@ describe("Funciones", async (t) => {
     `)
     ).equalsIgnoringSpaces(`2 2 2`));
 
-  it("9", async () =>
+  it("9 return new instance", async () =>
     expect(
       await exec(`
     class A {
@@ -198,3 +198,5 @@ describe("Funciones", async (t) => {
     `)
     ).equalsIgnoringSpaces(`27`));
 });
+
+
