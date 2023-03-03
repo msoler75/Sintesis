@@ -1,7 +1,11 @@
-import exec from '../bin/exec.js'
+import { expect } from 'chai';
+import equalsIgnoringSpaces from '../chai-extensions.js';
+import exec from "../bin/exec.js";
 
-test('Cálculos', async () => {
-    expect(await exec(`
+describe("Operadores básicos", () => {
+  it("varios calculos", async () =>
+    expect(
+      await exec(`
     a=1
     b=2
     c=3
@@ -17,7 +21,8 @@ test('Cálculos', async () => {
     imprimir (a+b)**3
     imprimir 11%3
     imprimir (((12%7)**2)-1)/(4+(4%4))
-    `)).toContainText(`
+    `)
+    ).equalsIgnoringSpaces(`
     3
     -1
     6
@@ -29,5 +34,5 @@ test('Cálculos', async () => {
     9
     27
     2
-    6`)
-})
+    6`));
+});

@@ -1,7 +1,11 @@
-import exec from '../bin/exec.js'
+import { expect } from "chai";
+import equalsIgnoringSpaces from "../chai-extensions.js";
+import exec from "../bin/exec.js";
 
-test('Clases-1', async () => {
-    expect(await exec(`
+describe("Clases", () => {
+  it("1. descripción de clase", async () =>
+    expect(
+      await exec(`
     clase Persona {
 
         atributos: {
@@ -27,16 +31,16 @@ test('Clases-1', async () => {
     
     // mostramos toda la instancia 
     imprimir p
-    `)).toContainText(`
+    `)
+    ).equalsIgnoringSpaces(`
     Jorge
     Juan
     Persona {nombre: Juan}
-    `)
-})
+    `));
 
-
-test('Clases-2', async () => {
-    expect(await exec(`
+  it("2. acceso a métodos", async () =>
+    expect(
+      await exec(`
     // clase sencilla sin atributos
 
     clase animal {
@@ -60,17 +64,17 @@ test('Clases-2', async () => {
     imprimir a.atributos // no tiene atributos
     imprimir a.métodos
 
-    `)).toContainText(`
+    `)
+    ).equalsIgnoringSpaces(`
     corriendo...
     saltando...
     animal {}
     {}
-    {correr: f(), saltar: f(), constructor: f()}`)
-})
+    {correr: f(), saltar: f(), constructor: f()}`));
 
-
-test('Clases-3 con atributos y constructor', async () => {
-    expect(await exec(`
+  it("3. clase con atributos y constructor", async () =>
+    expect(
+      await exec(`
     clase Basica {
         atributos: { contador }
     
@@ -85,13 +89,12 @@ test('Clases-3 con atributos y constructor', async () => {
     a = nueva instancia de clase Basica()
     imprimir a.contador
     imprimir a
-    `)).toContainText(`2 Basica {contador: 2}`)
-})
+    `)
+    ).equalsIgnoringSpaces(`2 Basica {contador: 2}`));
 
-
-
-test('Clases-4 con constructor con parámetros', async () => {
-    expect(await exec(`
+  it("4. constructor con parámetros", async () =>
+    expect(
+      await exec(`
     // un atributo y un constructor con parámetro para inicializar ese atributo
 
     clase Persona {
@@ -109,16 +112,15 @@ test('Clases-4 con constructor con parámetros', async () => {
         
     }
     
-    
     p = nueva Persona("Jorge")
     imprimir p.texto()
     imprimir p
-    `)).toContainText(`Mi nombre es: Jorge Persona {nombre: Jorge}`)
-})
+    `)
+    ).equalsIgnoringSpaces(`Mi nombre es: Jorge Persona {nombre: Jorge}`));
 
-
-test('Clases-5 con modificación de atributo y diferenciando parámetros de atributos', async () => {
-    expect(await exec(`
+  it("5. con modificación de atributo y diferenciando parámetros de atributos", async () =>
+    expect(
+      await exec(`
     class Saludo {
 
         atributos: nombre
@@ -149,7 +151,8 @@ test('Clases-5 con modificación de atributo y diferenciando parámetros de atri
     s.adios("Jorge")
     imprimir s
     imprimir s.metodos
-    `)).toContainText(`
+    `)
+    ).equalsIgnoringSpaces(`
     Creando saludo con María
     Saludo {nombre: María}
     Saludo {nombre: Juan}
@@ -157,12 +160,11 @@ test('Clases-5 con modificación de atributo y diferenciando parámetros de atri
     ¡Adiós Juan!
     Saludo {nombre: Juan}
     {constructor: f(nombre), hola: f(nombre), adios: f(nombre)}
-    `)
-})
+    `));
 
-
-test('Clases-6 con herencia y constructor base que usa contador global', async () => {
-    expect(await exec(`
+  it("6. con herencia y constructor base que usa contador global", async () =>
+    expect(
+      await exec(`
     contador = 1
 
     clase Figura {
@@ -203,14 +205,14 @@ test('Clases-6 con herencia y constructor base que usa contador global', async (
     
     imprimir "Figura ", f.dameId() , " tiene area " + f.area()
     imprimir "Figura ", c.dameId() , " tiene area " + c.area()
-    `)).toContainText(`
+    `)
+    ).equalsIgnoringSpaces(`
     Figura  1  tiene area No aplicable
-    Figura  2  tiene area 6`)
-})
+    Figura  2  tiene area 6`));
 
-
-test('Clases-7 con herencia en construcción', async () => {
-    expect(await exec(`
+  it("7. con herencia en construcción", async () =>
+    expect(
+      await exec(`
     clase Persona {
         nombre
         constructor (nombre) {
@@ -227,14 +229,14 @@ test('Clases-7 con herencia en construcción', async () => {
       }
       p = nuevo Cliente ('Javier', 1234567)
       imprimir p
-      `)).toContainText(`
-      Cliente {dni: 1234567, nombre: Javier}
       `)
-})
+    ).equalsIgnoringSpaces(`
+      Cliente {dni: 1234567, nombre: Javier}
+      `));
 
-
-test('Clases-8 creación y uso dinámico', async () => {
-  expect(await exec(`
+  it("8. creación y uso dinámico", async () =>
+    expect(
+      await exec(`
   // clase sin atributos 
 
   clase p 
@@ -246,12 +248,12 @@ test('Clases-8 creación y uso dinámico', async () => {
 
   // creación de clase y llamado dinámico
   nuevo p().x()
-  `)).toContainText(`funciona!`)
-})
+  `)
+    ).equalsIgnoringSpaces(`funciona!`));
 
-
-test('Clases-9', async () => {
-  expect(await exec(`
+  it("9. mostrando atributos", async () =>
+    expect(
+      await exec(`
   b = 1
   e = 2
   
@@ -284,7 +286,8 @@ test('Clases-9', async () => {
   imprimir k
   imprimir m
   imprimir b, e 
-  `)).toContainText(`
+  `)
+    ).equalsIgnoringSpaces(`
   A {b: 2}
   A {b: 3}
   B {e: 5, b: 4}
@@ -292,11 +295,11 @@ test('Clases-9', async () => {
   B {e: 5, b: 4}
   B {e: 2, b: 1}
   1 2
-`)
-})
+`));
 
-test('Clases-10 creación de varias instancias', async () => {
-  expect(await exec(`
+  it("Clases-10 creación de varias instancias", async () =>
+    expect(
+      await exec(`
   clase A {
     b
     constructor(d)
@@ -309,15 +312,15 @@ test('Clases-10 creación de varias instancias', async () => {
   m = nueva A(7)
   imprimir k
   imprimir m
-  `)).toContainText(`
+  `)
+    ).equalsIgnoringSpaces(`
   A {b: 4}
   A {b: 7}
-  `)
-})
+  `));
 
-
-test('Clases-11 constructor & instanceof', async () => {
-    expect(await exec(`
+  it("11. constructor & instanceof", async () =>
+    expect(
+      await exec(`
     clase Persona {
 
       nombre, apellidos
@@ -427,7 +430,8 @@ test('Clases-11 constructor & instanceof', async () => {
     
     si(c es Cliente) 
     print c.nombre, "es cliente"
-    `)).toContainText(`
+    `)
+    ).equalsIgnoringSpaces(`
     Persona {nombre: Andrés, apellidos: Pérez}
     Persona (nombre#Andrés, apellidos#Pérez)
     (antes) nombre:  Andrés Andrés
@@ -447,14 +451,11 @@ test('Clases-11 constructor & instanceof', async () => {
     (después del cambio de nombre) nombre: Paco Paco
     Paco es persona
     Paco es cliente
-    `)
-})
+    `));
 
-
-
-
-test('Clases-12 métodos heredados', async () => {
-  expect(await exec(`
+  it("12. métodos heredados", async () =>
+    expect(
+      await exec(`
   clase Animal {
     nombre
     
@@ -490,16 +491,15 @@ test('Clases-12 métodos heredados', async () => {
   anim.accion()
   perro.accion()
   gato.accion()
-  `)).toContainText(`
+  `)
+    ).equalsIgnoringSpaces(`
   Bobby ladra
   Fauna maúlla
-  `)
-})
+  `));
 
-
-
-test('Clases-13 sobrecarga de constructores', async () => {
-  expect(await exec(`
+  it("13. sobrecarga de constructores", async () =>
+    expect(
+      await exec(`
   class Persona
   {
       nombre, apellidos
@@ -526,10 +526,11 @@ test('Clases-13 sobrecarga de constructores', async () => {
   imprimir b
   imprimir c
   imprimir a.metodos
-  `)).toContainText(`
+  `)
+    ).equalsIgnoringSpaces(`
   Persona {nombre: nulo, apellidos: nulo}
   Persona {nombre: Jorge, apellidos: nulo}
   Persona {nombre: Juan, apellidos: García}
   {constructor: f(), constructor2: f(nombre), constructor3: f(nombre, apellidos)}
-  `)
-})
+  `));
+});

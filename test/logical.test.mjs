@@ -1,64 +1,68 @@
-import exec from '../bin/exec.js'
-test('logical-1', async () => {
+import { expect } from 'chai';
+import equalsIgnoringSpaces from '../chai-extensions.js';
+import exec from "../bin/exec.js";
+
+
+describe('logical-1',() => {
     
-    expect(await exec(
+    it('', async () => expect(await exec(
         `c = cierto
         f = falso
         imprimir f || f
         imprimir f || c
         imprimir c || f
         imprimir c || c`
-    )).toContainText(`falso cierto cierto cierto`)
+    )).equalsIgnoringSpaces(`falso cierto cierto cierto`))
 
-    expect(await exec(
+    it('', async () => expect(await exec(
         `c = cierto
         f = falso
         imprimir f && f
         imprimir f && c
         imprimir c && f
         imprimir c && c`
-    )).toContainText(`falso falso falso cierto`)
+    )).equalsIgnoringSpaces(`falso falso falso cierto`))
 
-    expect(await exec(
+    it('', async () => expect(await exec(
         `c = cierto
         f = falso
         imprimir !(f || f)
         imprimir !(f || c)
         imprimir !(c || f)
         imprimir !(c || c)`
-    )).toContainText(`cierto falso falso falso`)
+    )).equalsIgnoringSpaces(`cierto falso falso falso`))
 
-    expect(await exec(
+    it('', async () => expect(await exec(
         `c = cierto
         f = falso
         imprimir !(f && f)
         imprimir !(f && c)
         imprimir !(c && f)
         imprimir !(c && c)`
-    )).toContainText(`cierto cierto cierto falso`)
+    )).equalsIgnoringSpaces(`cierto cierto cierto falso`))
 
-    expect(await exec(
+    it('', async () => expect(await exec(
         `c = cierto
         f = falso
         imprimir !f || !f
         imprimir !f || !c
         imprimir !c || !f
         imprimir !c || !c`
-    )).toContainText(`cierto cierto cierto falso`)
+    )).equalsIgnoringSpaces(`cierto cierto cierto falso`))
 
-    expect(await exec(
+    it('', async () => expect(await exec(
         `c = cierto
         f = falso
         imprimir !f && !f
         imprimir !f && !c
         imprimir !c && !f
         imprimir !c && !c`
-    )).toContainText(`cierto falso falso falso`)
+    )).equalsIgnoringSpaces(`cierto falso falso falso`))
 
 })
 
-test('logical-2 reserved words', async () => {    
-    expect(await exec(
+describe('logical-2 reserved words',() => {    
+    it('', async () => expect(await exec(
         `
         c = vero
         f = faux
@@ -67,6 +71,6 @@ test('logical-2 reserved words', async () => {
         imprimir not (c or f)
         imprimir not (c and f)
         `
-    )).toContainText(`falso cierto falso cierto`)
+    )).equalsIgnoringSpaces(`falso cierto falso cierto`))
 
 })

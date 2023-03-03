@@ -1,11 +1,17 @@
-import exec from '../bin/exec.js'
-test('Variables-1', async () => {
-    expect(await exec(`a=1
-     imprimir a`)).toContainText('1')
-})
+import { expect } from "chai";
+import equalsIgnoringSpaces from "../chai-extensions.js";
+import exec from "../bin/exec.js";
 
-test('Variables-2', async () => {
-    expect(await exec(`
+describe("Variables", () => {
+  it("1", async () =>
+    expect(
+      await exec(`a=1
+     imprimir a`)
+    ).equalsIgnoringSpaces("1"));
+
+  it("2", async () =>
+    expect(
+      await exec(`
     // asigna un valor a una variable, y como no existe, la crea
     a = 1
 
@@ -32,17 +38,18 @@ test('Variables-2', async () => {
     }
 
     imprimir a
-`)).toContainText('1 2 2 3 2')
-})
+`)
+    ).equalsIgnoringSpaces("1 2 2 3 2"));
 
-
-test('Variables-3', async () => {
-    expect(await exec(`
+  it("3", async () =>
+    expect(
+      await exec(`
     a = 3
     {
         var a = [1,2,3]
         imprimir a
     }
     imprimir a
-`)).toContainText('[1, 2, 3] 3')
-})
+`)
+    ).equalsIgnoringSpaces("[1, 2, 3] 3"));
+});

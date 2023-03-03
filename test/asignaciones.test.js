@@ -1,7 +1,11 @@
-import exec from '../bin/exec.js'
+import { expect } from "chai";
+import equalsIgnoringSpaces from "../chai-extensions.js";
+import exec from "../bin/exec.js";
 
-test('Asignaciones-1 tipos simples', async () => {
-    expect(await exec(`
+describe("Asignaciones", () => {
+  it("tipos simples", async () =>
+    expect(
+      await exec(`
     a = 1
     b = 2
     imprimir b
@@ -19,48 +23,47 @@ test('Asignaciones-1 tipos simples', async () => {
     imprimir b
     a="adios"
     imprimir b
-    `)).toContainText(`
-    2
-    2
-    2.2
-    2.2
-    hola
-    hola
     `)
-})
+    ).equalsIgnoringSpaces(`
+    2
+    2
+    2.2
+    2.2
+    hola
+    hola
+    `));
 
-
-
-test('Asignaciones-2 map', async () => {
-    expect(await exec(`
+  it("map", async () =>
+    expect(
+      await exec(`
     a={r:1}
     b=a
     imprimir b
     a.r=3
     imprimir b
-    `)).toContainText(`
+    `)
+    ).equalsIgnoringSpaces(`
     {r: 1}
     {r: 3}
-    `)
-})
+    `));
 
-
-test('Asignaciones-3 vector', async () => {
-    expect(await exec(`
+  it("vector", async () =>
+    expect(
+      await exec(`
     a=[1,2]
     b=a
     imprimir b
     a[0]=33
     imprimir b
-    `)).toContainText(`
+    `)
+    ).equalsIgnoringSpaces(`
     [1, 2]
     [33, 2]
-    `)
-})
+    `));
 
-
-test('Asignaciones-4 clase', async () => {
-    expect(await exec(`
+  it("clase", async () =>
+    expect(
+      await exec(`
     clase Usuario {
         atributos: nombre
 
@@ -73,8 +76,9 @@ test('Asignaciones-4 clase', async () => {
     imprimir b
     a.nombre = 'Jaime'
     imprimir b
-    `)).toContainText(`
+    `)
+    ).equalsIgnoringSpaces(`
     Usuario {nombre: Jorge}
     Usuario {nombre: Jaime}
-    `)
-})
+    `));
+});
