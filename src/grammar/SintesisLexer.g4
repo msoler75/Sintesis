@@ -545,7 +545,9 @@ Protected:                      'protected' | 'protegid'[oa];
 
 /// Identifier Names and Identifiers
 
+
 Identifier:                     [a-zA-Z$_áéíóúÁÉÍÓÚàèìòùÀÈÌÒÙñÑ][a-zA-Z$_áéíóúÁÉÍÓÚàèìòùÀÈÌÒÙñÑçÇ0-9]* ;
+
 
 // Strings
 

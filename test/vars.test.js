@@ -52,4 +52,24 @@ describe("Variables", () => {
     imprimir a
 `)
     ).equalsIgnoringSpaces("[1, 2, 3] 3"));
+
+  it("4 palabras reservadas", async () =>
+    expect(
+      await exec(`
+        var a = 1
+        del = 2
+        en = 3
+        es = 4
+        di = 5
+        imprimir en, del, es, di 
+        
+        {
+            var del = 2
+            var en = 3
+            var es = 4
+            var di = 5  
+            imprimir en, del, es, di 
+        }
+      `)
+    ).equalsIgnoringSpaces("3 2 4 5 3 2 4 5"));
 });

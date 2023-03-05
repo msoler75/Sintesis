@@ -35,6 +35,7 @@ statement
     | switchStatement
     | functionDeclaration
     | expressionStatement
+
     ;
 
 block
@@ -79,6 +80,7 @@ member
     | mem=member '[' idx=singleExpression ']'                                #expMemberIndex
     | mem=member args=arguments                                              #expMemberFunc
     | identifier                                                             #expIdentifier
+    | reservedIdentifier                                                     #expReservedIdentifier
     ;
 
 memberIdentifier
@@ -94,6 +96,7 @@ singleExpression
     |    fn=basicFunction args=arguments                                    #expBasicFunction
     |    JavascriptCode                                                     #expJavascript
     |    Math Dot fn=(Identifier|Min|Max|Random) args=arguments             #expMath
+    |    op=Delete dest=singleExpression                                            #expDelete
     |    dest=singleExpression op=(PlusPlus|MinusMinus)                           #expPostIncrement
     |    op=(PlusPlus | MinusMinus) dest=singleExpression                         #expPreIncrement
     |    op=Plus dest=singleExpression                                             #expUnaryPlus
@@ -304,8 +307,17 @@ variableStatement
     : variableDeclarationList eos
     ;
 
+reservedIdentifier 
+    : Delete 
+    | In
+    | InstanceOf
+    | NumberOf
+    | ElseIf
+    | Of
+    ;
+
 variableDeclaration
-    : dest=identifier (Assign exp=singleExpression)? 
+    : (reservedIdentifier|identifier) (Assign exp=singleExpression)?  
     ;
 
 variableDeclarationList

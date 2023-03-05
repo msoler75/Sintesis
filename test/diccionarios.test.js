@@ -127,4 +127,20 @@ describe("Diccionarios", () => {
 
 
 
+
+    it("12 delete", async () =>
+    expect(
+      await exec(`
+      dic = {a: 1, b: 2}
+      del dic["a"]
+      imprimir dic
+      
+      arr = [1, 2, 3]
+      del arr[1]
+      imprimir arr      
+      `)
+    ).equalsIgnoringSpaces(`{b: 2} [1, , 3]`));
+
+
+
   });

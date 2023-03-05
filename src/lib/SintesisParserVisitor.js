@@ -78,6 +78,12 @@ export default class SintesisParserVisitor extends antlr4.tree.ParseTreeVisitor 
 	}
 
 
+	// Visit a parse tree produced by SintesisParser#expReservedIdentifier.
+	visitExpReservedIdentifier(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
 	// Visit a parse tree produced by SintesisParser#expMemberIndex.
 	visitExpMemberIndex(ctx) {
 	  return this.visitChildren(ctx);
@@ -230,6 +236,12 @@ export default class SintesisParserVisitor extends antlr4.tree.ParseTreeVisitor 
 
 	// Visit a parse tree produced by SintesisParser#expOp.
 	visitExpOp(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by SintesisParser#expDelete.
+	visitExpDelete(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -554,6 +566,12 @@ export default class SintesisParserVisitor extends antlr4.tree.ParseTreeVisitor 
 
 	// Visit a parse tree produced by SintesisParser#variableStatement.
 	visitVariableStatement(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by SintesisParser#reservedIdentifier.
+	visitReservedIdentifier(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
