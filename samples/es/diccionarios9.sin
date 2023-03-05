@@ -1,0 +1,7 @@
+dic1 = {a: 1, b: 2}
+dic2 = {c: 3, d: "hola"}
+dic3 = {b: 99}
+x = dic1 + dic2
+y = x + dic3
+imprimir x
+imprimir y

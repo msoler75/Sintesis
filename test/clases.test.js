@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import equalsIgnoringSpaces from "../chai-extensions.js";
-import exec from "../bin/exec.js";
+import exec from "../lib/exec.js";
 
 describe("Clases", () => {
   it("1. descripción de clase", async () =>

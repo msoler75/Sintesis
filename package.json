@@ -12,12 +12,15 @@
     "generate": "cp ./src/SintesisParserBaseSource.js ./src/lib/SintesisParserBase && java -Dfile.encoding=UTF-8 -cp D:/projects/CodeBounce/Sintesis/antlr4/jar/antlr-4.9.3-complete.jar org.antlr.v4.Tool -Dlanguage=JavaScript -lib ./src ./src/grammar/SintesisLexer.g4 ./src/grammar/SintesisParser.g4 -o ./src/lib -no-listener -visitor",
     "toasync": "node ./to_async",
     "tosync": "node ./to_sync",
-    "cp": "cp -v -r -u ./src ../cb_nuxt3/Sintesis",
+    "cp": "yarn toasync && cp -v -r -u ./src ../cb_nuxt3/Sintesis",
     "eval": "node ./index.js",
     "generatejava": "java  -cp D:/projects/juego-programacion/sintesis/antlr4/jar/antlr-4.9.3-complete.jar org.antlr.v4.Tool -Dlanguage=Java -lib ./src ./src/grammar/SintesisLexer.g4 ./src/grammar/SintesisParser.g4 -o ./src/lib -no-listener -visitor",
     "javacompile": "javac  -cp D:/projects/juego-programacion/sintesis/antlr4/jar/antlr-4.9.3-complete.jar ./src/lib/*.java",
     "j": "yarn generatejava && yarn javacompile",
-    "setup": "@powershell -NoProfile -await executionPolicy Unrestricted -Command ./sintesis/setup.ps1"
+    "setup": "@powershell -NoProfile -await executionPolicy Unrestricted -Command ./sintesis/setup.ps1",
+    "compile1": "yarn tosync && ncc build index.js -o dist",
+    "compile2": "npx caxa --input \"dist\" --output \"bin/sintesis.exe\" -- \"{{caxa}}/node_modules/.bin/node\" \"{{caxa}}/index.js\"",
+    "compile": "yarn compile1 && yarn compile2"
   },
   "keywords": [
     "antlr4"
@@ -25,6 +28,7 @@
   "author": "Marcel Soler / Pigmalión",
   "license": "ISC",
   "dependencies": {
+    "@vercel/ncc": "^0.36.1",
     "antlr4": "^4.9.3",
     "chai": "^4.3.7",
     "fs": "^0.0.1-security",
@@ -35,6 +39,12 @@
     "@babel/plugin-syntax-import-assertions": "^7.17.12",
     "@babel/preset-env": "^7.16.11",
     "babel-jest": "^27.5.1",
+    "caxa": "^3.0.1",
     "mocha": "^10.2.0"
+  },
+  "pkg": {
+    "options": [
+      "experimental-modules"
+    ]
   }
 }

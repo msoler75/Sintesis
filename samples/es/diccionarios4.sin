@@ -1,0 +1,5 @@
+dic = {}
+dic[1] = 2
+dic[6] = "hola"
+dic["6"] = "no más"
+imprimir dic

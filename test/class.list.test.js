@@ -5,7 +5,7 @@ import {} from "../src/internals/Factory.js";
 
 import { expect } from "chai";
 import equalsIgnoringSpaces from "../chai-extensions.js";
-import exec from "../bin/exec.js";
+import exec from "../lib/exec.js";
 
 describe("Lists", () => {
   let v = new List([10, 20]);

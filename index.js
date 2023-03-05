@@ -1,30 +1,30 @@
-import exec from './bin/exec.js'
+import exec from './lib/exec.js'
 import fs from 'fs'
 
 import SintesisError from './src/SintesisError.js'
 
 
-const file = process.argv[2]
+const command_arg = process.argv[2]
 
-if (!file) {
+if (!command_arg) {
   console.log('Debes especificar un archivo o un programa')
   process.exit()
 }
 
-let input
-if (file.match(/.*\.sin?(tesis)?$/) || fs.existsSync(file)) {
+let sintesis_code = command_arg
+let file = command_arg
+if (file.match(/.*\.s(in|intesis)?$/) || fs.existsSync(file)) {
   try {
-    input = fs.readFileSync(file, 'utf8')
+    sintesis_code = fs.readFileSync(file, 'utf8')
   } catch (err) {
     console.log(`Error al leer el archivo ${file}`)
+    process.exit();
   }
-} else {
-  input = file
-}
+} 
 
 
-if (input) {
-  const lines = input.split('\n')
+if (sintesis_code) {
+  const lines = sintesis_code.split('\n')
 
   function mostrarError(titulo, err) {
     let line = lines[err.line - 1]
@@ -44,7 +44,7 @@ if (input) {
   }
 
   try {
-    console.log(exec(input))
+    console.log(exec(sintesis_code))
   } catch (err) {
     if (err instanceof SyntaxError) {
       const data = JSON.parse(err.message)

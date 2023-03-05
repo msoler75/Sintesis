@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import equalsIgnoringSpaces from "../chai-extensions.js";
-import exec from "../bin/exec.js";
+import exec from "../lib/exec.js";
 
 describe("Funciones", async (t) => {
   it("1", async () =>
@@ -161,10 +161,10 @@ describe("Funciones", async (t) => {
   it("12", async () =>
     expect(
       await exec(`
-    function inc (a) => {
+    function inc (a){
         return a+1
     }
-    function dec(b) => {
+    function dec(b) {
         return b-1
     }
     imprimir inc(dec(3))
@@ -177,9 +177,9 @@ describe("Funciones", async (t) => {
     función a(b) {
     // se pueden declarar funciones dentro de funciones
      función c(d) {
-     retorna  "e"
+     retornar  "e"
     }
-    retorna c(b)
+    retornar c(b)
     }
     imprimir a("f")
     `)
@@ -197,6 +197,21 @@ describe("Funciones", async (t) => {
     imprimir área_circulo(3)
     `)
     ).equalsIgnoringSpaces(`27`));
+
+  it("15", async () =>
+    expect(
+      await exec(`
+      función generarContraseña(x) {
+        var caracteres = ["a", "b", "c", "d", "e", 1, 2, 3 ]
+        var contraseña = ""
+        var n = 0
+        mientras (n < x) {
+           contraseña  = contraseña + caracteres[n]
+           n = n + 2  
+        }
+        devolver contraseña
+      }
+      imprimir generarContraseña(6)
+      `)
+    ).equalsIgnoringSpaces(`ace`));
 });
-
-

@@ -1,4 +1,4 @@
 a = función () {
-        imprimir "e"
-    }
-    a()
+    imprimir "e"
+}
+a()

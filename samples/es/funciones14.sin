@@ -1,0 +1,7 @@
+función área_circulo(radio){
+    función pi() {
+        devolver 3
+    }
+    devolver pi()*radio*radio; 
+}
+imprimir área_circulo(3)

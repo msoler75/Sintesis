@@ -1,0 +1,3 @@
+dic = {a: 1, b: 2}
+imprimir "a" en dic
+imprimir "d" en dic

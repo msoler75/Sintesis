@@ -1,0 +1,7 @@
+function inc (a){
+    return a+1
+}
+function dec(b) {
+    return b-1
+}
+imprimir inc(dec(3))

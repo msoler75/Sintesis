@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import equalsIgnoringSpaces from "../chai-extensions.js";
-import exec from "../bin/exec.js";
+import exec from "../lib/exec.js";
 
 describe("Acentos", () => {
   it("1", async () =>

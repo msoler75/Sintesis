@@ -1,0 +1,5 @@
+x = {a:[1,2,3], b: {c:[1,2,3], d: "hola"}}
+
+
+para cada clave, valor de x
+imprimir clave, valor

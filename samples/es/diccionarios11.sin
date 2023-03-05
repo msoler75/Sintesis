@@ -1,0 +1,4 @@
+a = {"clave con espacios": "valor"}
+b = {"nombre": "Juan", "edad": 30, "ciudad": "Madrid"}
+imprimir a
+imprimir b

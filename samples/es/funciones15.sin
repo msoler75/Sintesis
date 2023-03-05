@@ -1,0 +1,11 @@
+función generarContraseña(x) {
+    var caracteres = ["a", "b", "c", "d", "e", 1, 2, 3 ]
+    var contraseña = ""
+    var n = 0
+    mientras (n < x) {
+    contraseña  = contraseña + caracteres[n]
+       n = n + 2  
+     }
+    devolver contraseña
+  }
+  imprimir generarContraseña(6)

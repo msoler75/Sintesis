@@ -1,0 +1,8 @@
+función a(b) {
+    // se pueden declarar funciones dentro de funciones
+    función c(d) {
+        retornar  "e"
+    }
+    retornar c(b)
+}
+imprimir a("f")

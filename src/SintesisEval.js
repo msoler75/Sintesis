@@ -132,7 +132,7 @@ export default class SintesisEval extends SintesisParserVisitor {
         ctxArgs,
         (fn.isConstructor ? `El constructor ` : `La función ${fn.name} `) +
           (params.length
-            ? `requiere ${params.length} argumento${params.length?'s':''}`
+            ? `requiere ${params.length} argumento${params.length ? "s" : ""}`
             : `no tiene parámetros`)
       );
 
@@ -337,13 +337,13 @@ export default class SintesisEval extends SintesisParserVisitor {
   }
 
      async visitListDeclaration(ctx) {
-    var literalList = ctx.exp ?    await this.visit(ctx.exp) : null;
+    var literalList = ctx.exp ? valueOf(   await this.visit(ctx.exp)) : null;
     if (literalList && literalList instanceof List) return literalList;
     return new List();
   }
 
      async visitExpNumberOf(ctx) {
-    var value =    await this.visit(ctx.exp);
+    var value = valueOf(   await this.visit(ctx.exp));
     if (!value) return 0;
     if (typeof value !== "object")
       throw new SintesisError(ctx.exp, "Tipo incorrecto");
@@ -353,6 +353,14 @@ export default class SintesisEval extends SintesisParserVisitor {
     }
     let map = new Dictionary(value);
     return map.size();
+  }
+
+     async visitExpIn(ctx) {
+    const key =    await this.visit(ctx.key);
+    const obj = valueOf(   await this.visit(ctx.dest));
+    if (typeof obj !== "object")
+      return new SintesisError(ctx.dest, "Tipo incorrecto");
+    return key in obj;
   }
 
   // Visit a parse tree produced by SintesisParser#expAssignmentOperator.
@@ -375,7 +383,7 @@ export default class SintesisEval extends SintesisParserVisitor {
         e1 %= e2;
         break;
       case "+=":
-        e1 = this.addOp(e1, e2);
+        e1 = this.addOp(ctx, e1, e2);
         break;
       case "-=":
         e1 -= e2;
@@ -404,8 +412,21 @@ export default class SintesisEval extends SintesisParserVisitor {
     return e1;
   }
 
-  addOp(e1, e2) {
+  addOp(ctx, e1, e2) {
     if (Array.isArray(e1) && Array.isArray(e2)) return e1.concat(e2);
+    if (Array.isArray(e1)) {
+      e1.push(e2);
+      return [...e1];
+    }
+    if (typeof e1 === "object" && typeof e2 === "object")
+      return { ...e1, ...e2 };
+    if (
+      typeof e1 === "object" ||
+      typeof e2 === "object" ||
+      Array.isArray(e1) ||
+      Array.isArray(e2)
+    )
+      throw new SintesisError(ctx, "Tipos incompatibles");
     return e1 + e2;
   }
 
@@ -427,7 +448,7 @@ export default class SintesisEval extends SintesisParserVisitor {
         e1 = e1 % e2;
         break;
       case "+":
-        e1 = this.addOp(e1, e2);
+        e1 = this.addOp(ctx, e1, e2);
         break;
       case "-":
         e1 = e1 - e2;
@@ -503,7 +524,7 @@ export default class SintesisEval extends SintesisParserVisitor {
 
   // Visit a parse tree produced by SintesisParser#repeatStatement.
      async visitRepeatStatement(ctx) {
-    const n =    await this.visit(ctx.exp);
+    const n = valueOf(   await this.visit(ctx.exp));
     if (n) for (var i = 0; i < n; i++)    await this.visit(ctx.stmt);
   }
 
@@ -894,8 +915,8 @@ export default class SintesisEval extends SintesisParserVisitor {
     return str;
   }
 
-  /*                                 async visitStepStatement(ctx) {
-    return                                 await this.visitChildren(ctx)
+  /*                                          async visitStepStatement(ctx) {
+    return                                          await this.visitChildren(ctx)
   } */
 
   // Visit a parse tree produced by SintesisParser#expLiteral.
@@ -953,7 +974,7 @@ export default class SintesisEval extends SintesisParserVisitor {
      async visitObjectLiteral(ctx) {
     // var m = new Dictionary()
     var obj = {};
-    var key = "";
+    var key = undefined;
     var items = ctx.children.filter(
       (x) => x.constructor.name !== "TerminalNodeImpl"
     ); 
@@ -961,11 +982,18 @@ await        items.mapAsyncSequence(async(x) => {
       switch (x.constructor.name) {
         case "IdentifierContext":
         case "IdContext":
-        case "KeywContext":
+          // case "KeywContext":
           key = getId(x);
+          break;
+        case "StringLiteralContext":
+          key =    await this.visit(x);
           break;
         default:
           //m.setValue(key,
+          if (key === undefined)
+            throw new SintesisError(x, "Tipo o formato incorrecto");
+          if (key === null)
+            throw new SintesisError(x, "La clave no puede ser nula");
           obj[key] =    await this.visit(x);
           break;
       }
@@ -979,12 +1007,12 @@ await        items.mapAsyncSequence(async(x) => {
 
   // Visit a parse tree produced by SintesisParser#expNot.
      async visitExpNot(ctx) {
-    return !valueOf(   await this.visit(ctx.exp));
+    return !valueOf(   await this.visit(ctx.dest));
   }
 
   // Visit a parse tree produced by SintesisParser#expBitNot.
      async visitExpBitNot(ctx) {
-    return ~valueOf(   await this.visit(ctx.exp));
+    return ~valueOf(   await this.visit(ctx.dest));
   }
 
   // pre indica si es pre incremento (++i) o post incremento  (i++)
@@ -1022,13 +1050,13 @@ await        items.mapAsyncSequence(async(x) => {
 
   // Visit a parse tree produced by SintesisParser#expUnaryMinus.
      async visitExpUnaryMinus(ctx) {
-    const value =    await this.visit(ctx.exp);
+    const value = valueOf(   await this.visit(ctx.dest));
     return -value;
   }
 
   // Visit a parse tree produced by SintesisParser#expUnaryPlus.
      async visitExpUnaryPlus(ctx) {
-    return    await this.visit(ctx.exp);
+    return valueOf(   await this.visit(ctx.dest));
   }
 
   // Visit a parse tree produced by SintesisParser#numericLiteral.
@@ -1040,7 +1068,7 @@ await        items.mapAsyncSequence(async(x) => {
 
   // Visit a parse tree produced by SintesisParser#expParenthesis.
      async visitExpParenthesis(ctx) {
-    return    await this.visit(ctx.exp);
+    return valueOf(   await this.visit(ctx.exp));
   }
 
   // Visit a parse tree produced by SintesisParser#expParenthesis.

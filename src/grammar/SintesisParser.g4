@@ -96,10 +96,11 @@ singleExpression
     |    Math Dot fn=(Identifier|Min|Max|Random) args=arguments             #expMath
     |    dest=singleExpression op=(PlusPlus|MinusMinus)                           #expPostIncrement
     |    op=(PlusPlus | MinusMinus) dest=singleExpression                         #expPreIncrement
-    |    Plus exp=singleExpression                                                #expUnaryPlus
-    |    Minus exp=singleExpression                                               #expUnaryMinus
-    |    op=BitNot exp=singleExpression                                           #expBitNot
-    |    op=Not exp=singleExpression                                              #expNot
+    |    op=Plus dest=singleExpression                                             #expUnaryPlus
+    |    op=Minus dest=singleExpression                                            #expUnaryMinus
+    |    op=BitNot dest=singleExpression                                           #expBitNot
+    |    op=Not dest=singleExpression                                              #expNot
+    |    key=stringLiteral op=In dest=singleExpression                                    #expIn
     |    e1=singleExpression op=(Modulus|Multiply|Divide) e2=singleExpression           #expOp
     |    e1=singleExpression op=('+'|'-') e2=singleExpression                           #expOp
     |    e1=singleExpression op=('>>'|'<<'|'>>>') e2=singleExpression                   #expOp
@@ -174,7 +175,7 @@ elseIf
  
 iteratorIndexes
     : idv=Identifier op=(In|Of) coll=singleExpression                      
-    | idv=Identifier ',' idk=Identifier op=(In|Of) coll=singleExpression  
+    | idk=Identifier ',' idv=Identifier op=(In|Of) coll=singleExpression  
     | idk=Identifier ARROW idv=Identifier op=(In|Of) coll=singleExpression 
     ;
 
@@ -372,7 +373,7 @@ listLiteral
     ;
 
 objectLiteral
-    : '{' (identifier ':' singleExpression (',' identifier ':' singleExpression)*)? '}'
+    : '{' ((identifier|stringLiteral) ':' singleExpression (',' (identifier|stringLiteral) ':' singleExpression)*)? '}'
     ;
 
 

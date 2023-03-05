@@ -1,0 +1,10 @@
+j = {a:1, b: 2, c: 3}
+para cada letra=>valor de j
+imprimir letra, valor
+
+para cada letra, valor de j
+imprimir letra, valor
+
+para cada valor de j imprimir valor
+
+

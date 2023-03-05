@@ -1,0 +1,3 @@
+dic = {}
+dic["hola qué tal"] = "muy bien, gracias"
+imprimir dic

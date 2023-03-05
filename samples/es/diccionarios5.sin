@@ -1,0 +1,4 @@
+desordenado = {f: 1}
+desordenado['a'] = 2
+desordenado['z'] = 3
+imprimir desordenado

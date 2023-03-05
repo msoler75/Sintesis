@@ -1,0 +1,8 @@
+// podemos acceder de varias formas al diccionario
+dic = { id: 1 }
+// con corchetes [ ]
+dic['id'] = 2
+imprimir dic ['id']
+// con punto
+dic.id = 3
+imprimir dic.id

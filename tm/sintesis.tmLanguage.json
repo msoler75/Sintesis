@@ -1,0 +1,151 @@
+{
+    "name": "Sintesis",
+    "scopeName": "source.sintesis",
+    "fileTypes": ["sintesis"],
+    "patterns": [
+        {
+            "begin": "\\/\\*",
+            "end": "\\*\\/",
+            "name": "comment.block.sintesis",
+            "captures": {
+                "0": {
+                    "name": "punctuation.definition.comment.sintesis"
+                }
+            }
+        },
+        {
+            "match": "\\/\\/.*?$",
+            "name": "comment.line.sintesis",
+            "captures": {
+                "0": {
+                    "name": "punctuation.definition.comment.sintesis"
+                }
+            }
+        },
+        {
+            "match": "{{.*?}}",
+            "name": "source.js.embedded.sintesis",
+            "captures": {
+                "0": {
+                    "name": "punctuation.section.embedded.begin.sintesis"
+                },
+                "1": {
+                    "name": "source.js.embedded.sintesis"
+                },
+                "2": {
+                    "name": "punctuation.section.embedded.end.sintesis"
+                }
+            }
+        },
+        {
+            "match": "\\[",
+            "name": "punctuation.definition.array.begin.sintesis"
+        },
+        {
+            "match": "\\]",
+            "name": "punctuation.definition.array.end.sintesis"
+        },
+        {
+            "match": "\\(",
+            "name": "punctuation.definition.group.begin.sintesis"
+        },
+        {
+            "match": "\\)",
+            "name": "punctuation.definition.group.end.sintesis"
+        },
+        {
+            "match": "\\{",
+            "name": "punctuation.definition.block.begin.sintesis"
+        },
+        {
+            "match": "\\}",
+            "name": "punctuation.definition.block.end.sintesis"
+        },
+        {
+            "match": ";",
+            "name": "punctuation.terminator.statement.sintesis"
+        },
+        {
+            "match": ",",
+            "name": "punctuation.separator.arguments.sintesis"
+        },
+        {
+            "match": "=",
+            "name": "keyword.operator.assignment.sintesis"
+        },
+        {
+            "match": "<-",
+            "name": "keyword.operator.arrow.sintesis"
+        },
+        {
+            "match": "\\?",
+            "name": "keyword.operator.ternary.sintesis"
+        },
+        {
+            "match": ":",
+            "name": "punctuation.separator.object.sintesis"
+        },
+        {
+            "match": "\\.\\.\\.",
+            "name": "keyword.operator.variadic.sintesis"
+        },
+        {
+            "match": "\\.",
+            "name": "punctuation.accessor.sintesis"
+        },
+        {
+            "match": "\\+\\+",
+            "name": "keyword.operator.increment.sintesis"
+        },
+        {
+            "match": "--",
+            "name": "keyword.operator.decrement.sintesis"
+        },
+        {
+            "match": "\\+",
+            "name": "keyword.operator.arithmetic.plus.sintesis"
+        },
+        {
+            "match": "-",
+            "name": "keyword.operator.arithmetic.minus.sintesis"
+        },
+        {
+            "match": "~",
+            "name": "keyword.operator.bitwise.not.sintesis"
+        },
+        {
+            "match": "!",
+            "name": "keyword.operator.logical.not.sintesis"
+        },
+        {
+            "match": "\\*",
+            "name": "keyword.operator.arithmetic.multiply.sintesis"
+        },
+        {
+            "match": "\\/",
+            "name": "keyword.operator.arithmetic.divide.sintesis"
+        },
+        {
+            "match": "%",
+            "name": "keyword.operator.arithmetic.modulo.sintesis"
+        },
+        {
+            "match": "\\*\\*",
+            "name": "keyword.operator.arithmetic.power.sintesis"
+        },
+        {
+            "match": "\\?\\?",
+            "name": "keyword.operator.null.coalescing.sintesis"
+        },
+       
+
+        {
+"match": "\b(true|false|cierto|falso|vero|verdadeiro|faux|vrai|certo)\b",
+"name": "constant.language.boolean.MiGramatica"
+},
+{
+"match": "\b(step|paso|passo|etape|étape)\b",
+"name": "keyword.control.MiGramatica"
+}
+}
+
