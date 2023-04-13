@@ -67,7 +67,9 @@ BitOrAssign:                    '|=';
 PowerAssign:                    '**=';
 ARROW:                          '=>' | '->';
 
-PieceOfCode:                    ('¿'|'¿¿'|'¿¿¿')[0-9]+;
+
+// PieceOfCode:                    ('?'|'??'|'???')[0-9]+;
+PieceOfCode:                    ('\u00BF'|'\u00BF\u00BF'|'\u00BF\u00BF\u00BF')[0-9]+;
 
 /// Null Literals
 
@@ -548,8 +550,8 @@ Protected:                      'protected' | 'protegid'[oa];
 /// Identifier Names and Identifiers
 
 
-Identifier:                     [a-zA-Z$_áéíóúÁÉÍÓÚàèìòùÀÈÌÒÙñÑ][a-zA-Z$_áéíóúÁÉÍÓÚàèìòùÀÈÌÒÙñÑçÇ0-9]*;
-
+// Identifier:                     [a-zA-Z$_áéíóúÁÉÍÓÚàèìòùÀÈÌÒÙñÑ][a-zA-Z$_áéíóúÁÉÍÓÚàèìòùÀÈÌÒÙñÑçÇ0-9]*;
+Identifier:                     [a-zA-Z$_\u00E1\u00E9\u00ED\u00F3\u00FA\u00C1\u00C9\u00CD\u00D3\u00DA\u00E0\u00E8\u00EC\u00F2\u00F9\u00C0\u00C8\u00CC\u00D2\u00D9\u00F1\u00D1][a-zA-Z$_\u00E1\u00E9\u00ED\u00F3\u00FA\u00C1\u00C9\u00CD\u00D3\u00DA\u00E0\u00E8\u00EC\u00F2\u00F9\u00C0\u00C8\u00CC\u00D2\u00D9\u00F1\u00D1\u00E7\u00C70-9]*;
 
 // Strings
 
