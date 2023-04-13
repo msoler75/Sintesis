@@ -1,0 +1,6 @@
+// numero es una palabra reservada
+function doble(numero) {
+    regresar numero * 2
+}
+imprimir numero([1,2])
+imprimir doble(3)

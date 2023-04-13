@@ -123,6 +123,7 @@ singleExpression
     |    '(' exp=singleExpression ')'                                             #expParenthesis
     |    member                                                             #expMember
     |    literal                                                            #expLiteral
+    |    PieceOfCode                                                         #expPieceOfCode
     ;
 
 
@@ -300,7 +301,7 @@ listIndexes
     ;
 
 formalParameterArg
-    : dest=identifier (Assign exp=singleExpression)?      
+    : (reservedIdentifier|identifier) (Assign exp=singleExpression)?      
     ;
 
 variableStatement

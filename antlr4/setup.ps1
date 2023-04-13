@@ -1,1 +1,1 @@
-$env:CLASSPATH = "D:\projects\juego-programacion\sintesis\antlr4\jar\antlr-4.9.3-complete.jar;.;" + $env:CLASSPATH
+$env:CLASSPATH = "D:\projects\CodeBounce\Sintesis\antlr4\jar\antlr-4.9.3-complete.jar;.;" + $env:CLASSPATH
