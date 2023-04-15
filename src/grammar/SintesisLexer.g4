@@ -8,8 +8,8 @@ lexer grammar SintesisLexer;
 
 channels { ERROR, COMMENTS }
 
-MultiLineComment:               '/*' .*? '*/' -> channel(2);
-SingleLineComment:              '//' ~[\r\n\u2028\u2029]* -> channel(2);
+MultiLineComment:               '"""' .*? '"""' | '\'\'\'' .*? '\'\'\'' | '/*' .*? '*/' -> channel(2);
+SingleLineComment:              '#' | '//' ~[\r\n\u2028\u2029]* -> channel(2);
 JavascriptCode:                 '{{' .*? '}}';
 
 OpenBracket:                    '[';

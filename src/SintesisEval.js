@@ -11,7 +11,7 @@ import Iterator from "./internals/Iterator.js";
 import MemoryRef from "./internals/MemoryRef.js";
 import { printObject, printThing } from "./utils/Print.js";
 import SintesisError from "./SintesisError.js";
-import "./internals/ArrayUtils.js";
+import "./internals/ArrayUtilsHacked.js";
 // import SintesisSymbolParser from './SintesisSymbolParser.js'
 import { SymbolFinder } from "./internals/Symbols.js";
 import SintesisParserVisitor from "./lib/SintesisParserVisitor.js";
@@ -35,7 +35,7 @@ export default class SintesisEval extends SintesisParserVisitor {
   }
 
   // Visit a parse tree produced by SintesisParser#program.
-          async visitProgram(ctx) {
+             visitProgram(ctx) {
     // parsea todos los símbolos primero
     // let symbolParser = new SintesisSymbolParser()
     // symbolParser.visitProgram(ctx)
@@ -43,63 +43,63 @@ export default class SintesisEval extends SintesisParserVisitor {
     // prepara la salida
     this.output = "";
     // procesa el programa
-            await this.visitChildren(ctx);
+               this.visitChildren(ctx);
     // console.log(SymbolFinder.print(ctx))
     return this.output;
   }
 
   // Visit a parse tree produced by SintesisParser#statementList.
-          async visitStatementList(ctx) {
+             visitStatementList(ctx) {
     let i = 0;
     while (i < ctx.children.length && !SymbolFinder.functionHasEnded(ctx)) {
       if (imprimirCadaLinea) console.log(ctx.children[i].getText());
-              await this.visit(ctx.children[i++]);
+                 this.visit(ctx.children[i++]);
     }
   }
 
   // Visit a parse tree produced by SintesisParser#statement.
-          async visitStatement(ctx) {
+             visitStatement(ctx) {
     // console.log('statement', ctx.getText())
-    return ctx.children.length ?         await this.visit(ctx.children[0]) : null;
+    return ctx.children.length ?            this.visit(ctx.children[0]) : null;
   }
 
   // Visit a parse tree produced by SintesisParser#classDeclaration.
-          async visitClassDeclaration(ctx) {
+             visitClassDeclaration(ctx) {
     return null;
   }
 
   // Visit a parse tree produced by SintesisParser#functionDeclaration.
-          async visitFunctionDeclaration(ctx) {
+             visitFunctionDeclaration(ctx) {
     return null;
   }
 
-          async visitAnonymousFunctionDecl(ctx) {
+             visitAnonymousFunctionDecl(ctx) {
     return ctx.anonymousFunction;
   }
 
-          async visitArrowFunction(ctx) {
+             visitArrowFunction(ctx) {
     return ctx.anonymousFunction;
   }
 
   // Visit a parse tree produced by SintesisParser#expFunctionExpression.
-          async visitExpFunctionExpression(ctx) {
-    return         await this.visit(ctx.children[0]);
+             visitExpFunctionExpression(ctx) {
+    return            this.visit(ctx.children[0]);
   }
 
   // Visit a parse tree produced by SintesisParser#methodDeclaration.
-          async visitMethodDeclaration(ctx) {
+             visitMethodDeclaration(ctx) {
     return null;
   }
 
   // Visit a parse tree produced by SintesisParser#expNew.
-          async visitExpNew(ctx) {
+             visitExpNew(ctx) {
     const id = ctx.id.text;
     let memoryref = SymbolFinder.findSymbol(ctx, id);
     if (!memoryref) throw new SintesisError(ctx.id, `No existe la clase ${id}`);
     if (!(memoryref.variable instanceof Class))
       throw new SintesisError(ctx.id, "${id} no es una clase");
     let obj = new Instance(memoryref.variable);
-    let values = ctx.args ?         await this.visit(ctx.args) : [];
+    let values = ctx.args ?            this.visit(ctx.args) : [];
     if (values) ctx.args.values = values;
     let constructor = obj.getConstructor(values.length);
     if (!constructor)
@@ -114,7 +114,7 @@ export default class SintesisEval extends SintesisParserVisitor {
     return new MemoryRef(obj);
   }
 
- async callToFunction(memoryref, ctxArgs) {
+  callToFunction(memoryref, ctxArgs) {
     const fn = memoryref.variable;
     const inst = memoryref._variable;
     const ctx = fn.context;
@@ -124,7 +124,7 @@ export default class SintesisEval extends SintesisParserVisitor {
     if (!ctx || !ctx.stmt) return;
 
     // obtenemos los argumentos o parámetros de la función y los valores
-    const params = ctx.pl ?         await this.visit(ctx.pl) : [];
+    const params = ctx.pl ?            this.visit(ctx.pl) : [];
     const values = ctxArgs ? ctxArgs.values : [];
 
     if (params.length !== values.length)
@@ -162,7 +162,7 @@ export default class SintesisEval extends SintesisParserVisitor {
     }
 
     // ejecutamos el cuerpo de la función
-            await this.visit(ctx.stmt);
+               this.visit(ctx.stmt);
 
     const r = SymbolFinder.getReturnValue(ctx);
 
@@ -176,27 +176,27 @@ export default class SintesisEval extends SintesisParserVisitor {
   }
 
   // Visit a parse tree produced by SintesisParser#returnStatement.
-          async visitReturnStatement(ctx) {
+             visitReturnStatement(ctx) {
     if (!SymbolFinder.insideFunction(ctx))
       throw new SintesisError(
         ctx,
         "Se ha intentado retornar sin estar dentro de función o método"
       );
-    let r = ctx.exp ?         await this.visit(ctx.exp) : null;
+    let r = ctx.exp ?            this.visit(ctx.exp) : null;
     // r = valueOf(r)
     SymbolFinder.setReturnValue(ctx, r);
     return r;
   }
 
   // Visit a parse tree produced by SintesisParser#expMemberIndex.
-          async visitExpMemberIndex(ctx) {
+             visitExpMemberIndex(ctx) {
     const logC = ctx.getText();
     const logM = ctx.mem.getText();
 
     // console.log(logC)
 
     // obtenemos la referencia al miembro
-    let memoryref =         await this.visit(ctx.mem);
+    let memoryref =            this.visit(ctx.mem);
     if (!memoryref || !(memoryref instanceof MemoryRef))
       throw new SintesisError(ctx.mem, "Operador izquierdo inválido");
 
@@ -205,7 +205,7 @@ export default class SintesisEval extends SintesisParserVisitor {
       throw new SintesisError(ctx.mem, "Acceso no permitido");
 
     // obtenemos el índice
-    let index =         await this.visit(ctx.idx);
+    let index =            this.visit(ctx.idx);
     index = valueOf(index);
     if (index == undefined)
       throw new SintesisError(ctx.idx, "Índice no válido");
@@ -249,7 +249,7 @@ export default class SintesisEval extends SintesisParserVisitor {
     // sí es una llamada a un método
 
     // preparamos argumentos
-    let values = ctx.args ?         await this.visit(ctx.args) : [];
+    let values = ctx.args ?            this.visit(ctx.args) : [];
     if (values) ctx.args.values = values;
 
     if (ref._variable instanceof List) {
@@ -269,18 +269,18 @@ export default class SintesisEval extends SintesisParserVisitor {
   }
 
   // Visit a parse tree produced by SintesisParser#expMemberDot.
-          async visitExpMemberDot(ctx) {
-    return         await this.visitExpMemberIndex(ctx);
+             visitExpMemberDot(ctx) {
+    return            this.visitExpMemberIndex(ctx);
   }
 
   // Visit a parse tree produced by SintesisParser#expMemberFunc.
-          async visitExpMemberFunc(ctx) {
+             visitExpMemberFunc(ctx) {
     if (!ctx) throw new Error("ctx is undefined");
     const logC = ctx.getText();
-    const memoryref =         await this.visit(ctx.mem);
+    const memoryref =            this.visit(ctx.mem);
     if (!memoryref) throw new SintesisError(ctx.mem, "Función no encontrada");
 
-    let values = ctx.args ?         await this.visit(ctx.args) : [];
+    let values = ctx.args ?            this.visit(ctx.args) : [];
     if (values) ctx.args.values = values;
     let obj = memoryref.variable;
     if (obj instanceof Instance) {
@@ -293,23 +293,23 @@ export default class SintesisEval extends SintesisParserVisitor {
   }
 
   // Visit a parse tree produced by SintesisParser#memberIdentifier.
-          async visitMemberIdentifier(ctx) {
+             visitMemberIdentifier(ctx) {
     return ctx.children[0].getText();
   }
 
-          async visitMember(ctx) {
+             visitMember(ctx) {
     console.log("member", ctx);
   }
 
   // Visit a parse tree produced by SintesisParser#expAssignment.
-          async visitExpAssignment(ctx) {
+             visitExpAssignment(ctx) {
     this.createIndexIfNotExists = true;
     const logC = ctx.getText();
     const logD = ctx.dest.getText();
     const logE = ctx.exp.getText();
 
     // console.log(logC)
-    let memoryref =         await this.visit(ctx.dest);
+    let memoryref =            this.visit(ctx.dest);
     this.createIndexIfNotExists = false;
 
     if (
@@ -322,28 +322,28 @@ export default class SintesisEval extends SintesisParserVisitor {
         "El operador izquierdo de asignación es inválido"
       );
 
-    let result =         await this.visit(ctx.exp);
+    let result =            this.visit(ctx.exp);
     // const r = valueOf(result)
     memoryref.assign(result);
     return memoryref;
   }
 
   // Visit a parse tree produced by SintesisParser#listIndex.
-          async visitListIndex(ctx) {
+             visitListIndex(ctx) {
     let items = ctx.children.filter(
       (x) => x.constructor.name !== "TerminalNodeImpl"
     );
-    return items.length ?         await this.visit(items[0]) : null;
+    return items.length ?            this.visit(items[0]) : null;
   }
 
-          async visitListDeclaration(ctx) {
-    var literalList = ctx.exp ? valueOf(        await this.visit(ctx.exp)) : null;
+             visitListDeclaration(ctx) {
+    var literalList = ctx.exp ? valueOf(           this.visit(ctx.exp)) : null;
     if (literalList && literalList instanceof List) return literalList;
     return new List();
   }
 
-          async visitExpNumberOf(ctx) {
-    var value = valueOf(        await this.visit(ctx.exp));
+             visitExpNumberOf(ctx) {
+    var value = valueOf(           this.visit(ctx.exp));
     if (!value) return 0;
     if (typeof value !== "object")
       throw new SintesisError(ctx.exp, "Tipo incorrecto");
@@ -355,23 +355,23 @@ export default class SintesisEval extends SintesisParserVisitor {
     return map.size();
   }
 
-          async visitExpIn(ctx) {
-    const key =         await this.visit(ctx.key);
-    const obj = valueOf(        await this.visit(ctx.dest));
+             visitExpIn(ctx) {
+    const key =            this.visit(ctx.key);
+    const obj = valueOf(           this.visit(ctx.dest));
     if (typeof obj !== "object")
       return new SintesisError(ctx.dest, "Tipo incorrecto");
     return key in obj;
   }
 
   // Visit a parse tree produced by SintesisParser#expAssignmentOperator.
-          async visitExpAssignmentOperator(ctx) {
-    const memoryref =         await this.visit(ctx.dest);
+             visitExpAssignmentOperator(ctx) {
+    const memoryref =            this.visit(ctx.dest);
     this.allowSymbolNotFound = false;
     if (!memoryref) throw new SintesisError(ctx.dest, `Símbolo no encontrado`);
     if (!(memoryref instanceof MemoryRef))
       throw new SintesisError(ctx.dest, `Operador izquierdo es inválido`);
     let e1 = valueOf(memoryref);
-    let e2 = valueOf(        await this.visit(ctx.exp));
+    let e2 = valueOf(           this.visit(ctx.exp));
     switch (ctx.op.getText()) {
       case "*=":
         e1 *= e2;
@@ -431,9 +431,9 @@ export default class SintesisEval extends SintesisParserVisitor {
   }
 
   // Visit a parse tree produced by SintesisParser#expOp.
-          async visitExpOp(ctx) {
-    let e1 = valueOf(        await this.visit(ctx.e1));
-    let e2 = valueOf(        await this.visit(ctx.e2));
+             visitExpOp(ctx) {
+    let e1 = valueOf(           this.visit(ctx.e1));
+    let e2 = valueOf(           this.visit(ctx.e2));
     switch (ctx.op.text) {
       case "**":
         e1 = e1 ** e2;
@@ -501,49 +501,49 @@ export default class SintesisEval extends SintesisParserVisitor {
   }
 
   // Visit a parse tree produced by SintesisParser#expMath.
-          async visitExpMath(ctx) {
+             visitExpMath(ctx) {
     const funcname = ctx.fn.text;
-    const args =         await this.visit(ctx.args);
+    const args =            this.visit(ctx.args);
     if (!(funcname in Math))
       throw new SintesisError(ctx.fn, "No existe este método");
     return Math[funcname].apply(this, args);
   }
 
   // Visit a parse tree produced by SintesisParser#ifStatement.
-          async visitIfStatement(ctx) {
-    if (valueOf(        await this.visit(ctx.exp))) {
-      return         await this.visitChildren(ctx.stmt);
+             visitIfStatement(ctx) {
+    if (valueOf(           this.visit(ctx.exp))) {
+      return            this.visitChildren(ctx.stmt);
     } else if (ctx.elseifs) {
       for (const cs of ctx.elseifs.children) {
-        if (valueOf(        await this.visit(cs.exp))) return         await this.visitChildren(cs.stmt);
+        if (valueOf(           this.visit(cs.exp))) return            this.visitChildren(cs.stmt);
       }
     }
-    if (ctx.elsestmt_) return         await this.visit(ctx.elsestmt_);
+    if (ctx.elsestmt_) return            this.visit(ctx.elsestmt_);
   }
 
   // Visit a parse tree produced by SintesisParser#repeatStatement.
-          async visitRepeatStatement(ctx) {
-    const n = valueOf(        await this.visit(ctx.exp));
-    if (n) for (var i = 0; i < n; i++)         await this.visit(ctx.stmt);
+             visitRepeatStatement(ctx) {
+    const n = valueOf(           this.visit(ctx.exp));
+    if (n) for (var i = 0; i < n; i++)            this.visit(ctx.stmt);
   }
 
   // Visit a parse tree produced by SintesisParser#repeatWhileStatement.
-          async visitRepeatWhileStatement(ctx) {
-    do         await this.visit(ctx.stmt);
-    while (valueOf(        await this.visit(ctx.exp)));
+             visitRepeatWhileStatement(ctx) {
+    do            this.visit(ctx.stmt);
+    while (valueOf(           this.visit(ctx.exp)));
   }
 
   // Visit a parse tree produced by SintesisParser#whileRepeatStatement.
-          async visitWhileRepeatStatement(ctx) {
-    while (valueOf(        await this.visit(ctx.exp)))         await this.visit(ctx.stmt);
+             visitWhileRepeatStatement(ctx) {
+    while (valueOf(           this.visit(ctx.exp)))            this.visit(ctx.stmt);
   }
 
   // Visit a parse tree produced by SintesisParser#forEachStatement.
-          async visitForEachStatement(ctx) {
+             visitForEachStatement(ctx) {
     const iter = ctx.iter;
     const value_id = iter.idv ? iter.idv.text : null;
     const index_id = iter.idk ? iter.idk.text : null;
-    const collection =         await this.visit(iter.coll);
+    const collection =            this.visit(iter.coll);
 
     if (!Iterator.iterable(collection))
       throw new SintesisError(ctx.coll, `El valor no es iterable`);
@@ -564,53 +564,53 @@ export default class SintesisEval extends SintesisParserVisitor {
       while (!iterator.ended()) {
         mem_item.assign(iterator.current);
         if (mem_idx) mem_idx.assign(iterator.index);
-                await this.visit(ctx.stmt);
+                   this.visit(ctx.stmt);
         iterator.next();
       }
     }
   }
 
   // Visit a parse tree produced by SintesisParser#forEachStatement2.
-          async visitForEachStatement2(ctx) {
-    return         await this.visitForEachStatement(ctx);
+             visitForEachStatement2(ctx) {
+    return            this.visitForEachStatement(ctx);
   }
 
   // Visit a parse tree produced by SintesisParser#forFromToStatement.
-          async visitForFromToStatement(ctx) {
+             visitForFromToStatement(ctx) {
     const iter = ctx.iter;
-    const from = valueOf(        await this.visit(iter.start));
-    const end = valueOf(        await this.visit(iter.to));
+    const from = valueOf(           this.visit(iter.start));
+    const end = valueOf(           this.visit(iter.to));
     const id_iterator = iter.id.getText();
 
     let mem_index = SymbolFinder.findSymbol(ctx, id_iterator);
     mem_index.assign(from);
     var val = valueOf(mem_index.variable);
     while ((from < end && val <= end) || (from > end && val >= end)) {
-              await this.visit(ctx.stmt);
+                 this.visit(ctx.stmt);
       mem_index.increment(from < end ? 1 : -1);
       val = valueOf(mem_index.variable);
     }
   }
 
   // Visit a parse tree produced by SintesisParser#forFromToStatement2.
-          async visitForFromToStatement2(ctx) {
-    return         await this.visitForFromToStatement(ctx);
+             visitForFromToStatement2(ctx) {
+    return            this.visitForFromToStatement(ctx);
   }
 
   // Visit a parse tree produced by SintesisParser#forClassic.
-          async visitForClassic(ctx) {
-    if (ctx.pre)         await this.visit(ctx.pre);
-    let continuar = ctx.exp ? valueOf(        await this.visit(ctx.exp)) : [true];
+             visitForClassic(ctx) {
+    if (ctx.pre)            this.visit(ctx.pre);
+    let continuar = ctx.exp ? valueOf(           this.visit(ctx.exp)) : [true];
     while (continuar[continuar.length - 1]) {
-      if (ctx.stmt)         await this.visit(ctx.stmt);
-      if (ctx.post)         await this.visit(ctx.post);
-      continuar = ctx.exp ? valueOf(        await this.visit(ctx.exp)) : [true];
+      if (ctx.stmt)            this.visit(ctx.stmt);
+      if (ctx.post)            this.visit(ctx.post);
+      continuar = ctx.exp ? valueOf(           this.visit(ctx.exp)) : [true];
     }
   }
 
   // Visit a parse tree produced by SintesisParser#expBasicFunction.
-          async visitExpBasicFunction(ctx) {
-    const args =         await this.visit(ctx.args);
+             visitExpBasicFunction(ctx) {
+    const args =            this.visit(ctx.args);
     const a0 = valueOf(args[0]);
     const a1 = valueOf(args[1]);
     const a2 = valueOf(args[2]);
@@ -622,7 +622,7 @@ export default class SintesisEval extends SintesisParserVisitor {
       case "MapContext": {
         let args = [];
         if (ctx.args) {
-          args =         await this.visit(ctx.args);
+          args =            this.visit(ctx.args);
         }
         return args[0] && args[0] instanceof Dictionary
           ? args[0]
@@ -783,54 +783,54 @@ export default class SintesisEval extends SintesisParserVisitor {
   }
 
   // Visit a parse tree produced by SintesisParser#expMemberMethod.
-          async visitExpMemberMethod(ctx) {
-    return         await this.visitChildren(ctx);
+             visitExpMemberMethod(ctx) {
+    return            this.visitChildren(ctx);
   }
 
   // Visit a parse tree produced by SintesisParser#expTernary.
-          async visitExpTernary(ctx) {
-    let cond = valueOf(        await this.visit(ctx.cond));
-    if (cond) return         await this.visit(ctx.ok);
-    return         await this.visit(ctx.no);
+             visitExpTernary(ctx) {
+    let cond = valueOf(           this.visit(ctx.cond));
+    if (cond) return            this.visit(ctx.ok);
+    return            this.visit(ctx.no);
   }
 
   // Visit a parse tree produced by SintesisParser#formalParameterList.
-          async visitFormalParameterList(ctx) {
+             visitFormalParameterList(ctx) {
     ctx.params = [];
     for (let i = 0; i < ctx.children.length; i++)
       if (i % 2 == 0) ctx.params.push(ctx.children[i].getText());
     return ctx.params;
   }
 
-          async visitArrowFunctionParameters(ctx) {
+             visitArrowFunctionParameters(ctx) {
     if (ctx.children.length == 3)
       // formalListParameters
-      return         await this.visit(ctx.children[1]);
+      return            this.visit(ctx.children[1]);
     else {
-      const params =         await this.visitChildren(ctx);
+      const params =            this.visitChildren(ctx);
       if (!params || !params[0]) return [];
       return params;
     }
   }
 
   // Visit a parse tree produced by SintesisParser#arguments.
-          async visitArguments(ctx) {
+             visitArguments(ctx) {
     const values = [];
     if (ctx.children.length > 2)
       for (let i = 1; i < ctx.children.length; i++)
-        if (i % 2 == 1) values.push(        await this.visit(ctx.children[i]));
+        if (i % 2 == 1) values.push(           this.visit(ctx.children[i]));
     return values;
   }
 
   // Visit a parse tree produced by SintesisParser#expMember.
-          async visitExpMember(ctx) {
+             visitExpMember(ctx) {
     return ctx.children.length
-      ?         await this.visit(ctx.children[0])
-      :         await this.visitChildren(ctx);
+      ?            this.visit(ctx.children[0])
+      :            this.visitChildren(ctx);
   }
 
   // Visit a parse tree produced by SintesisParser#expIdentifier.
-          async visitExpIdentifier(ctx) {
+             visitExpIdentifier(ctx) {
     const id = getId(ctx);
     // console.log('#visitExpIdentifier', id)
     // console.log('ID', id)
@@ -843,7 +843,7 @@ export default class SintesisEval extends SintesisParserVisitor {
   }
 
   // Visit a parse tree produced by SintesisParser#expIdentifier.
-          async visitExpReservedIdentifier(ctx) {
+             visitExpReservedIdentifier(ctx) {
     const id = ctx.getText();
     // console.log('#visitExpIdentifier', id)
     // console.log('ID', id)
@@ -855,17 +855,17 @@ export default class SintesisEval extends SintesisParserVisitor {
     return memoryref;
   }
   // Visit a parse tree produced by SintesisParser#variableDeclaration.
-          async visitVariableDeclaration(ctx) {
+             visitVariableDeclaration(ctx) {
     const id = ctx.children[0].getText();
     let mem_id = SymbolFinder.findSymbol(ctx, id);
     if (ctx.exp) {
-      let result =         await this.visit(ctx.exp);
+      let result =            this.visit(ctx.exp);
       mem_id.assign(result);
     }
     return mem_id;
   }
 
-          async visitExpAttributes(ctx) {
+             visitExpAttributes(ctx) {
     // console.log('#visitExpAttributes')
     if (!SymbolFinder.insideClass(ctx))
       throw new SintesisError(ctx, `Referencia fuera de Clase`);
@@ -875,14 +875,14 @@ export default class SintesisEval extends SintesisParserVisitor {
     return s;
   }
 
-          async visitExpMethods(ctx) {
+             visitExpMethods(ctx) {
     if (!SymbolFinder.insideClass(ctx))
       throw new SintesisError(ctx, `Referencia fuera de Clase`);
     return SymbolFinder.findSymbol(ctx, "___methods");
   }
 
   // Visit a parse tree produced by SintesisParser#expSuper.
-          async visitExpSuper(ctx) {
+             visitExpSuper(ctx) {
     const class_ctx = SymbolFinder.getClassContext(ctx);
     if (!class_ctx) throw new SintesisError(ctx, "Referencia fuera de clase");
     if (!class_ctx.symbolTable.class.superClass)
@@ -891,26 +891,26 @@ export default class SintesisEval extends SintesisParserVisitor {
   }
 
   // Visit a parse tree produced by SintesisParser#identifierName.
-          async visitIdentifierName(ctx) {
+             visitIdentifierName(ctx) {
     return getId(ctx);
   }
 
   // Visit a parse tree produced by SintesisParser#identifierName.
-          async visitIdentifier(ctx) {
+             visitIdentifier(ctx) {
     return getId(ctx);
   }
 
   // Visit a parse tree produced by SintesisParser#functionBody.
-          async visitFunctionBody(ctx) {
+             visitFunctionBody(ctx) {
     return ctx.children.length
-      ?         await this.visit(ctx.children[0])
-      :         await this.visitChildren(ctx);
+      ?            this.visit(ctx.children[0])
+      :            this.visitChildren(ctx);
   }
 
   // Visit a parse tree produced by SintesisParser#printStatement.
-          async visitPrintStatement(ctx) {
+             visitPrintStatement(ctx) {
     // console.log(ctx.getText())
-    let args =         await this.visit(ctx.exp);
+    let args =            this.visit(ctx.exp);
     // console.log('PRINT ARGS', args)
     args = args.filter((x) => x !== undefined);
     let result = [];
@@ -926,26 +926,26 @@ export default class SintesisEval extends SintesisParserVisitor {
     return str;
   }
 
-  /*                                                    async visitStepStatement(ctx) {
-    return                                                    await this.visitChildren(ctx)
+  /*                                                       visitStepStatement(ctx) {
+    return                                                       this.visitChildren(ctx)
   } */
 
   // Visit a parse tree produced by SintesisParser#expLiteral.
-          async visitExpLiteral(ctx) {
+             visitExpLiteral(ctx) {
     return ctx.children.length
-      ?         await this.visit(ctx.children[0])
-      :         await this.visitChildren(ctx);
+      ?            this.visit(ctx.children[0])
+      :            this.visitChildren(ctx);
   }
 
   // Visit a parse tree produced by SintesisParser#literal.
-          async visitLiteral(ctx) {
+             visitLiteral(ctx) {
     return ctx.children.length
-      ?         await this.visit(ctx.children[0])
-      :         await this.visitChildren(ctx);
+      ?            this.visit(ctx.children[0])
+      :            this.visitChildren(ctx);
   }
 
   // Visit a parse tree produced by SintesisParser#booleanLiteral.
-          async visitBooleanLiteral(ctx) {
+             visitBooleanLiteral(ctx) {
     let r = ctx.children[0].getText();
     switch (r) {
       case "true":
@@ -964,32 +964,32 @@ export default class SintesisEval extends SintesisParserVisitor {
   }
 
   // Visit a parse tree produced by SintesisParser#stringLiteral.
-          async visitStringLiteral(ctx) {
+             visitStringLiteral(ctx) {
     let str = ctx.children[0].getText();
     str = str.substr(1, str.length - 2);
     return str;
   }
 
   // Visit a parse tree produced by SintesisParser#listLiteral.
-          async visitListLiteral(ctx) {
+             visitListLiteral(ctx) {
     var items = ctx.children.filter(
       (x) => x.constructor.name !== "TerminalNodeImpl"
     );
-    var values = await                  items.mapAsyncSequence(async(x) => {
-      return         await this.visit(x);
+    var values =                       items.mapAsyncSequence((x) => {
+      return            this.visit(x);
     });
     return new List(values);
   }
 
   // Visit a parse tree produced by SintesisParser#objectLiteral.
-          async visitObjectLiteral(ctx) {
+             visitObjectLiteral(ctx) {
     // var m = new Dictionary()
     var obj = {};
     var key = undefined;
     var items = ctx.children.filter(
       (x) => x.constructor.name !== "TerminalNodeImpl"
     ); 
-await             items.mapAsyncSequence(async(x) => {
+               items.mapAsyncSequence((x) => {
       switch (x.constructor.name) {
         case "IdentifierContext":
         case "IdContext":
@@ -997,7 +997,7 @@ await             items.mapAsyncSequence(async(x) => {
           key = getId(x);
           break;
         case "StringLiteralContext":
-          key =         await this.visit(x);
+          key =            this.visit(x);
           break;
         default:
           //m.setValue(key,
@@ -1005,19 +1005,19 @@ await             items.mapAsyncSequence(async(x) => {
             throw new SintesisError(x, "Tipo o formato incorrecto");
           if (key === null)
             throw new SintesisError(x, "La clave no puede ser nula");
-          obj[key] =         await this.visit(x);
+          obj[key] =            this.visit(x);
           break;
       }
     });
     return new Dictionary(obj);
   }
 
-          async visitNullLiteral(ctx) {
+             visitNullLiteral(ctx) {
     return null;
   }
 
-          async visitExpDelete(ctx) {
-    const memoryref =         await this.visit(ctx.dest);
+             visitExpDelete(ctx) {
+    const memoryref =            this.visit(ctx.dest);
     const obj = valueOf(memoryref._variable);
     if (typeof obj !== "object")
       return new SintesisError(ctx.dest, "Tipo incorrecto");
@@ -1025,19 +1025,19 @@ await             items.mapAsyncSequence(async(x) => {
   }
 
   // Visit a parse tree produced by SintesisParser#expNot.
-          async visitExpNot(ctx) {
-    return !valueOf(        await this.visit(ctx.dest));
+             visitExpNot(ctx) {
+    return !valueOf(           this.visit(ctx.dest));
   }
 
   // Visit a parse tree produced by SintesisParser#expBitNot.
-          async visitExpBitNot(ctx) {
-    return ~valueOf(        await this.visit(ctx.dest));
+             visitExpBitNot(ctx) {
+    return ~valueOf(           this.visit(ctx.dest));
   }
 
   // pre indica si es pre incremento (++i) o post incremento  (i++)
-          async visitExpIncrement(ctx, pre, inc) {
+             visitExpIncrement(ctx, pre, inc) {
     // const logD = ctx.dest.getText()
-    var memoryref =         await this.visit(ctx.dest);
+    var memoryref =            this.visit(ctx.dest);
     memoryref = memoryref;
     if (!memoryref) throw new SintesisError(ctx.dest, `Símbolo no encontrado`);
     if (!(memoryref instanceof MemoryRef))
@@ -1056,42 +1056,42 @@ await             items.mapAsyncSequence(async(x) => {
   }
 
   // Visit a parse tree produced by SintesisParser#expPreIncrement.
-          async visitExpPreIncrement(ctx) {
+             visitExpPreIncrement(ctx) {
     const inc = ctx.op.text == "++" ? 1 : -1;
-    return         await this.visitExpIncrement(ctx, true, inc);
+    return            this.visitExpIncrement(ctx, true, inc);
   }
 
   // Visit a parse tree produced by SintesisParser#expPostIncrement.
-          async visitExpPostIncrement(ctx) {
+             visitExpPostIncrement(ctx) {
     const inc = ctx.op.text == "++" ? 1 : -1;
-    return         await this.visitExpIncrement(ctx, false, inc);
+    return            this.visitExpIncrement(ctx, false, inc);
   }
 
   // Visit a parse tree produced by SintesisParser#expUnaryMinus.
-          async visitExpUnaryMinus(ctx) {
-    const value = valueOf(        await this.visit(ctx.dest));
+             visitExpUnaryMinus(ctx) {
+    const value = valueOf(           this.visit(ctx.dest));
     return -value;
   }
 
   // Visit a parse tree produced by SintesisParser#expUnaryPlus.
-          async visitExpUnaryPlus(ctx) {
-    return valueOf(        await this.visit(ctx.dest));
+             visitExpUnaryPlus(ctx) {
+    return valueOf(           this.visit(ctx.dest));
   }
 
   // Visit a parse tree produced by SintesisParser#numericLiteral.
-          async visitNumericLiteral(ctx) {
+             visitNumericLiteral(ctx) {
     let r = ctx.children[0].getText();
     if (r.indexOf(".") >= 0) return parseFloat(r);
     return parseInt(r);
   }
 
   // Visit a parse tree produced by SintesisParser#expParenthesis.
-          async visitExpParenthesis(ctx) {
-    return valueOf(        await this.visit(ctx.exp));
+             visitExpParenthesis(ctx) {
+    return valueOf(           this.visit(ctx.exp));
   }
 
   // Visit a parse tree produced by SintesisParser#expParenthesis.
-          async visitExpJavascript(ctx) {
+             visitExpJavascript(ctx) {
     const code = ctx.getText().replace(/^{{|}}$/g, "");
     console.log("code", code);
     //var func = new Function('custom', 'ctx', code);
@@ -1111,24 +1111,24 @@ await             items.mapAsyncSequence(async(x) => {
   }
 
   // funciones asíncronas
- async visit(ctx) {
+  visit(ctx) {
     if (Array.isArray(ctx)) {
-      return await ctx.mapAsyncSequence(async         (child) => child.accept(this));
+      return  ctx.mapAsyncSequence(           (child) => child.accept(this));
     } else {
       if (!ctx) throw new Error("ctx is undefined");
       return ctx.accept(this);
     }
   }
 
-          async visitChildren(ctx) {
+             visitChildren(ctx) {
     if (ctx.children) {
-      return         await this.visit(ctx.children);
+      return            this.visit(ctx.children);
     } else {
       return null;
     }
   }
 
- async accept(visitor) {
-    return await visitor.visitTerminal(this);
+  accept(visitor) {
+    return  visitor.visitTerminal(this);
   }
 }

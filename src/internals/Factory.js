@@ -88,7 +88,7 @@ function _checkIndex(index, canBeAlfa) {
 function executeListMethod(ctx, ref, method, args) {
   const array = ref._variable.value;
   const v0 = args.length > 0 ? variableCreate(args[0]) : null;
-  // const v1 = args.length > 1 ? variableCreate(args[1]) : null;
+  const v1 = args.length > 1 ? variableCreate(args[1]) : null;
   // const v2 = args.length > 2 ? variableCreate(args[2]) : null;
   List;
   switch (method) {
@@ -116,7 +116,10 @@ function executeListMethod(ctx, ref, method, args) {
       return array.indexOf(v0);
     case "insert":
     case "insertar":
-      array.unshift(v0);
+      if(args.length==1)
+        array.unshift(v0);
+      else if(args.length>1)
+        array.splice(v0, 0, v1)
       return ref;
     case "pop":
     case "sacar":

@@ -8,130 +8,137 @@ import equalsIgnoringSpaces from "../chai-extensions.js";
 import exec from "../lib/exec.js";
 
 describe("Lists", () => {
-  let v = new List([10, 20]);
+  let v1 = new List([10, 20]);
   it("basics 1", async () =>
-    expect(v.toString()).equalsIgnoringSpaces("[10, 20]"));
+    expect(v1.toString()).equalsIgnoringSpaces("[10, 20]"));
 
   it("basics 2", async () =>
-    expect(v.getMemberRef(0).toString()).equalsIgnoringSpaces("10"));
+    expect(v1.getMemberRef(0).toString()).equalsIgnoringSpaces("10"));
 
   it("basics 3", async () =>
-    expect(v.getMemberRef(1).toString()).equalsIgnoringSpaces("20"));
+    expect(v1.getMemberRef(1).toString()).equalsIgnoringSpaces("20"));
 
-  v.setVariable(4, new List([50, 60]));
+  let v2 = new List([10, 20]);
+  v2.setVariable(4, new List([50, 60]));
 
   it("basics 4", async () =>
-    expect(v.toString()).equalsIgnoringSpaces("[10, 20, , , [50, 60]]"));
+    expect(v2.toString()).equalsIgnoringSpaces("[10, 20, , , [50, 60]]"));
 
   it("basics 5", async () =>
-    expect(v.getMemberRef(4).getMemberRef(1).toString()).equalsIgnoringSpaces(
+    expect(v2.getMemberRef(4).getMemberRef(1).toString()).equalsIgnoringSpaces(
       "60"
     ));
 
-  v = new List([10, 20]);
+  let v3 = new List([10, 20]);
   let m = new Dictionary({ j: 1, p: 2 });
-  v.setVariable(3, m);
+  v3.setVariable(3, m);
   it("basics 6", async () =>
-    expect(v.toString()).equalsIgnoringSpaces("[10, 20, , {j: 1, p: 2}]"));
+    expect(v3.toString()).equalsIgnoringSpaces("[10, 20, , {j: 1, p: 2}]"));
 
-  v.setValue(5, 55);
+  let v3b = new List([10, 20]);
+  v3b.setVariable(3, m);
+  v3b.setValue(5, 55);
   it("basics 7", async () =>
-    expect(v.toString()).equalsIgnoringSpaces(
+    expect(v3b.toString()).equalsIgnoringSpaces(
       "[10, 20, , {j: 1, p: 2}, , 55]"
     ));
 
-  v = new List([10, 20, 30, 40, 50, 60, 70]);
-  v.delete(4);
-  v.delete(2);
+  var v4 = new List([10, 20, 30, 40, 50, 60, 70]);
+  v4.delete(4);
+  v4.delete(2);
   it("delete 1", async () =>
-    expect(v.toString()).equalsIgnoringSpaces("[10, 20, 40, 60, 70]"));
-  v.delete(3);
+    expect(v4.toString()).equalsIgnoringSpaces("[10, 20, 40, 60, 70]"));
+
+  var v4b = new List([10, 20, 30, 40, 50, 60, 70]);
+  v4b.delete(4);
+  v4b.delete(2);
+  v4b.delete(3);
   it("delete 2", async () =>
-    expect(v.toString()).equalsIgnoringSpaces("[10, 20, 40, 70 ]"));
+    expect(v4b.toString()).equalsIgnoringSpaces("[10, 20, 40, 70 ]"));
 
-  v = new List([10, 20, 30]);
-  v.insertValue(-1);
+  let v5 = new List([10, 20, 30]);
+  v5.insertValue(-1);
   it("insert number", async () =>
-    expect(v.toString()).equalsIgnoringSpaces("[-1, 10, 20, 30]"));
-  v.appendValue(99);
+    expect(v5.toString()).equalsIgnoringSpaces("[-1, 10, 20, 30]"));
+
+  let v5b = new List([10, 20, 30]);
+  v5b.insertValue(-1);
+  v5b.appendValue(99);
   it("append number", async () =>
-    expect(v.toString()).equalsIgnoringSpaces("[-1, 10, 20, 30, 99]"));
+    expect(v5b.toString()).equalsIgnoringSpaces("[-1, 10, 20, 30, 99]"));
 
-  v.insertValue(new Single(-2));
+  let v5c = new List([10, 20, 30]);
+  v5c.insertValue(-1);
+  v5c.appendValue(99);
+  v5c.insertValue(new Single(-2));
   it("insert Single", async () =>
-    expect(v.toString()).equalsIgnoringSpaces("[-2, -1, 10, 20, 30, 99]"));
+    expect(v5c.toString()).equalsIgnoringSpaces("[-2, -1, 10, 20, 30, 99]"));
 
-  v.appendVariable(new Single(101));
-  it("append Single", async () =>
-    expect(v.toString()).equalsIgnoringSpaces("[-2, -1, 10, 20, 30, 99, 101]"));
-
-  v.insertVariable(new List([5, 6]));
-  it("insert list", async () =>
-    expect(v.toString()).equalsIgnoringSpaces(
-      "[[5, 6], -2, -1, 10, 20, 30, 99, 101]"
-    ));
-
-  v.insertValue({ h: 3, k: 7 });
-  it("insert object", async () =>
-    expect(v.toString()).equalsIgnoringSpaces(
-      "[{h:3, k:7}, [5, 6], -2, -1, 10, 20, 30, 99, 101]"
-    ));
-
-  v.appendValue({ z: 8, x: 2 });
-  it("append object", async () =>
-    expect(v.toString()).equalsIgnoringSpaces(
-      "[{h:3, k:7}, [5, 6], -2, -1, 10, 20, 30, 99, 101, {z:8, x: 2}]"
-    ));
-
-  v.insertVariable(new Dictionary({ m: 8 }));
-  it("insert Dictionary", async () =>
-    expect(v.toString()).equalsIgnoringSpaces(
-      "[{m: 8}, {h:3, k:7}, [5, 6], -2, -1, 10, 20, 30, 99, 101, {z:8, x: 2}]"
-    ));
-
-  v.appendVariable(new Dictionary({ y: "a" }));
+  let v5d = new List([10, 20, 30]);
+  v5d.insertValue(-1);
+  v5d.appendValue(99);
+  v5d.insertValue(new Single(-2));
+  v5d.appendVariable(new Single(101));
+  v5d.insertVariable(new List([5, 6]));
+  v5d.insertValue({ h: 3, k: 7 });
+  v5d.appendValue({ z: 8, x: 2 });
+  v5d.insertVariable(new Dictionary({ m: 8 }));
+  v5d.appendVariable(new Dictionary({ y: "a" }));
   it("append Dictionary", async () =>
-    expect(v.toString()).equalsIgnoringSpaces(
+    expect(v5d.toString()).equalsIgnoringSpaces(
       "[{m: 8}, {h:3, k:7}, [5, 6], -2, -1, 10, 20, 30, 99, 101, {z:8, x: 2}, {y: a}]"
     ));
 
-  v = new List([10, 20]);
-  m = new Dictionary({
+  let v6 = new List([10, 20]);
+  let m2 = new Dictionary({
     j: 1,
     p: 2,
   });
-  v.setVariable(3, m);
-  m.setValue("k", 77);
+  v6.setVariable(3, m2);
+  m2.setValue("k", 77);
   it("list with dictionary 1", async () =>
-    expect(v.toString()).equalsIgnoringSpaces(
+    expect(v6.toString()).equalsIgnoringSpaces(
       "[10, 20, , {j: 1, p: 2, k: 77}]"
     ));
   it("list with dictionary 2", async () =>
-    expect(v.getRef(3).getRef("p").toString()).equalsIgnoringSpaces("2"));
+    expect(v6.getMemberRef(3).getMemberRef("p").toString()).equalsIgnoringSpaces("2"));
 
-  m.delete("j");
+  let v7 = new List([10, 20]);
+  let m3 = new Dictionary({
+    j: 1,
+    p: 2,
+  });
+  v7.setVariable(3, m3);
+  m3.setValue("k", 77);
+  m3.delete("j");
   it("after delete key", async () =>
-    expect(v.getRef(3).toString()).equalsIgnoringSpaces("{p: 2, k: 77}"));
+    expect(v7.getMemberRef(3).toString()).equalsIgnoringSpaces("{p: 2, k: 77}"));
 
+  let v8 = new List([10, 20]);
+  let mx = new Dictionary({
+    j: 1,
+    p: 2,
+  });
+  v8.setVariable(3, mx);
   let x = new Single(55);
-  m.setVariable("fifty", x);
+  mx.setVariable("fifty", x);
   it("inserted key/value", async () =>
-    expect(v.getRef(3).toString()).equalsIgnoringSpaces(
-      "{p: 2, k: 77, fifty: 55}"
+    expect(v8.getMemberRef(3).toString()).equalsIgnoringSpaces(
+      "{j: 1, p: 2, fifty: 55}"
     ));
 
-  m = new Dictionary();
-  m.setValue("j", 1);
-  m.setVariable("k", new Single(2));
+  let m4 = new Dictionary();
+  m4.setValue("j", 1);
+  m4.setVariable("k", new Single(2));
 
   let n = new Dictionary({ i: 3 });
-  m.setVariable("dicc", n);
+  m4.setVariable("dicc", n);
   n.setValue("z", 99);
 
   n.setVariable("x", new List([7, 8]));
 
   it("dictionary with list", async () =>
-    expect(m.toString()).equalsIgnoringSpaces(
+    expect(m4.toString()).equalsIgnoringSpaces(
       "{j: 1, k: 2, dicc: {i: 3, z: 99, x: [7, 8]}}"
     ));
 
@@ -275,4 +282,30 @@ describe("Lists", () => {
     imprimir x
     `)
     ).equalsIgnoringSpaces("1 hola"));
+
+
+    it("list insert", async () =>
+    expect(
+      await exec(`
+    a = [1, 2, 3]
+    imprimir a.insertar(99)
+    `)
+    ).equalsIgnoringSpaces("[99, 1, 2, 3]"));
+
+    it("list insert2", async () =>
+    expect(
+      await exec(`
+    a = [1, 2, 3]
+    imprimir a.insertar(2, 99)
+    `)
+    ).equalsIgnoringSpaces("[1, 2, 99, 3]"));
+
+    it("list append", async () =>
+    expect(
+      await exec(`
+    a = [1, 2, 3]
+    imprimir a.agregar(99)
+    `)
+    ).equalsIgnoringSpaces("[1, 2, 3, 99]"));
+
 });
