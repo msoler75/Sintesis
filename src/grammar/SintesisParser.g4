@@ -89,13 +89,14 @@ memberIdentifier
     | Super
     | Constructor
     | identifier
+    | reservedIdentifier
     ;
 
 singleExpression     
     :    anonymousFunction                                                  #expFunctionExpression
     |    fn=basicFunction args=arguments                                    #expBasicFunction
     |    JavascriptCode                                                     #expJavascript
-    |    Math Dot fn=(Identifier|Min|Max|Random) args=arguments             #expMath
+    |    Math Dot mem=(Identifier|Min|Max|Random) args=arguments             #expMath
     |    op=Delete dest=singleExpression                                            #expDelete
     |    dest=singleExpression op=(PlusPlus|MinusMinus)                           #expPostIncrement
     |    op=(PlusPlus | MinusMinus) dest=singleExpression                         #expPreIncrement
@@ -140,7 +141,7 @@ basicFunction1
     | Ord                           #ord
     | Chr                           #chr
     | Prompt                        #prompt
-    | Dictionary                           #Dictionary
+    | Dictionary                    #Dictionary
     ;
 
 
@@ -313,6 +314,7 @@ reservedIdentifier
     | In
     | InstanceOf
     | NumberOf
+    | IndexOf
     | ElseIf
     | Of
     ;

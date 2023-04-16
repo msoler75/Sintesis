@@ -25,7 +25,12 @@ class MemoryRef {
         if (this._variable === undefined) return undefined
         if (this._index !== undefined)
             {
-                var r = this._variable.getMemberRef(this._index)
+                try {
+                    var r = this._variable.getMemberRef(this._index)
+                }
+                catch (err) {
+                    return new Variable()
+                }
                 // if(this._variable instanceof List)
                    // r = variableCreate(r.value) // copia
                 return r

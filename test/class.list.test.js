@@ -308,4 +308,75 @@ describe("Lists", () => {
     `)
     ).equalsIgnoringSpaces("[1, 2, 3, 99]"));
 
+    it("list count", async () =>
+    expect(
+      await exec(`
+    a = [60, 70]
+    imprimir contar(a)
+    `) 
+    ).equalsIgnoringSpaces("2"));
+
+    it("list length", async () =>
+    expect(
+      await exec(`
+    a = [60, 70]
+    imprimir a.length
+    `) 
+    ).equalsIgnoringSpaces("2"));
+
+
+    it("list indexof", async () =>
+    expect(
+      await exec(`
+    a = [999, 'amigo', 90, {a:1, b:2}]
+    imprimir a.indiceDe(999)
+    imprimir a.indiceDe(20)
+    imprimir a.indiceDe('amigo')
+    imprimir a.indiceDe(90)
+    imprimir a.indiceDe({a:1, b:2})
+    imprimir a.indiceDe({a:1, b:3})
+    `)
+    ).equalsIgnoringSpaces("0 -1 1 2 3 -1"));
+
+        
+    it("list operations 1", async () =>
+    expect(
+      await exec(`
+    a = [1, 2, 3]
+    b = a.copiar()
+    imprimir a.extender([4, 5])
+    imprimir a.extender(6)
+    imprimir a.pop()
+    imprimir a
+    imprimir b
+    `)
+    ).equalsIgnoringSpaces("[1, 2, 3, 4, 5] [1, 2, 3, 4, 5, 6] 6 [1, 2, 3, 4, 5] [1,2,3]"));
+
+    
+    it("list operations 2", async () =>
+    expect(
+      await exec(`
+    a = [80, 90, 100, 110, 90]
+    imprimir a.indiceDe(100)
+    imprimir a.removerValor(90)
+    imprimir a
+    imprimir a.vaciar().pop()
+    `)
+    ).equalsIgnoringSpaces("2 1 [80, 100, 110, 90] nulo"));
+
+    
+    it("list pops", async () =>
+    expect(
+      await exec(`
+    a = [80, 90, 100, 110, 120]
+    imprimir a.sacar(2)
+    imprimir a
+    imprimir a.sacar(1)
+    imprimir a
+    imprimir a.sacar(7)
+    imprimir a
+    `)
+    ).equalsIgnoringSpaces("100 [80, 90, 110, 120] 90 [80, 110, 120] nulo [80, 110, 120]"));
+
+
 });

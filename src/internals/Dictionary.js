@@ -11,7 +11,7 @@ class Dictionary extends Variable {
 
     setVariable(key, vari) {
         if (!(vari instanceof Variable))
-            throw new Error('setVariable exige una Variable|Function|Instance')
+            throw new Error('Dictionary.setVariable exige una Variable|Function|Instance')
         this._value[key] = vari
     }
 

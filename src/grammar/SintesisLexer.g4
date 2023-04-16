@@ -8,8 +8,11 @@ lexer grammar SintesisLexer;
 
 channels { ERROR, COMMENTS }
 
-MultiLineComment:               '"""' .*? '"""' | '\'\'\'' .*? '\'\'\'' | '/*' .*? '*/' -> channel(2);
-SingleLineComment:              '#' | '//' ~[\r\n\u2028\u2029]* -> channel(2);
+MultiLineCommentJS:             '/*' .*? '*/' -> channel(2);
+MultiLineCommentPy:             '"""' .*? '"""' -> channel(2);
+MultiLineCommentPy2:            '\u0027\u0027\u0027' .*? '\u0027\u0027\u0027' -> channel(2);
+SingleLineCommentJs:            '//' ~[\r\n\u2028\u2029]* -> channel(2);
+SingleLineCommentPy:            '#' ~[\r\n\u2028\u2029]*  -> channel(2);
 JavascriptCode:                 '{{' .*? '}}';
 
 OpenBracket:                    '[';
@@ -328,12 +331,7 @@ Delete
               ;
 
 NumberOf       
-              :     'number'
-              |     'num'
-              |     'numero'
-              |     'tamano'
-              |     'tama\u00F1o'
-              |     'size'
+              :     'contar'
               |     'count'
               |     'tam'
               |     'dimensione'
@@ -341,11 +339,9 @@ NumberOf
               |     'taille'
               |     'tamanho'
               |     'longueur'
-              |     'length'
               |     'longitud'
               |     'len'
-              |     'long'
-              |     'lon'
+              |     'length'
               ;
 
 IndexOf 
@@ -353,7 +349,6 @@ IndexOf
               |     'find'
               |     'search'
               |     'buscar'
-              |     'bus'
               ;
 
 Sub

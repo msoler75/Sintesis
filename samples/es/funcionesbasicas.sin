@@ -45,3 +45,4 @@ imprimir "2. " + chr(97)
 imprimir "\nEntrada de datos por teclado"
 nombre = teclado("introduce tu nombre: ")   // alternativas: teclado, entrada, preguntar
 imprimir nombre
+    

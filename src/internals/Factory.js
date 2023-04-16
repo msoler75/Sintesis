@@ -3,6 +3,7 @@ import Dictionary from "./Dictionary.js";
 import Variable from "./Variable.js";
 import Single from "./Single.js";
 import List from "./List.js";
+import valueOf from "./ValueOf.js";
 
 const variableCreate = function (src) {
   if (src instanceof Variable) return src;
@@ -92,6 +93,13 @@ function executeListMethod(ctx, ref, method, args) {
   // const v2 = args.length > 2 ? variableCreate(args[2]) : null;
   List;
   switch (method) {
+    case "extend":
+    case "extender":
+      const arr0 = valueOf(v0);
+      if (Array.isArray(arr0)) {
+        for (const i in arr0) array.push(variableCreate(arr0[i]));
+        return ref;
+      }
     case "push":
     case "append":
     case "agregar":
@@ -104,32 +112,49 @@ function executeListMethod(ctx, ref, method, args) {
     case "copy":
     case "copiar":
       return [...array];
-    case "count":
+    case "length":
     case "longitud":
       return array.length;
-    case "extend":
-    case "extender":
-      for (const i in v0) array.push(variableCreate(valueOf(v[i])));
-      return ref;
-    case "index":
-    case "índice":
-      return array.indexOf(v0);
+    case "indexOf":
+    case "indiceDe":
+    case "índiceDe":
+      var vv0 = valueOf(v0);
+      var strv0 = "";
+      if (typeof vv0 === "object") strv0 = JSON.stringify(vv0);
+      for (var i in array) {
+        const si = i.match(/^\d+$/) ? parseInt(i) : i;
+        if (typeof vv0 === "object") {
+          if (JSON.stringify(valueOf(array[i])) == strv0) return si;
+        } else if (vv0 === valueOf(array[i])) {
+          return si;
+        }
+      }
+      return -1;
     case "insert":
     case "insertar":
-      if(args.length==1)
-        array.unshift(v0);
-      else if(args.length>1)
-        array.splice(v0, 0, v1)
+      if (args.length == 1) array.unshift(v0);
+      else if (args.length > 1) array.splice(v0, 0, v1);
       return ref;
     case "pop":
     case "sacar":
-      array.pop();
-      return ref;
-    case "remove":
-    case "remover":
-      var idx = array.findIndex((v) => v === v0.value);
-      if (idx >= 0) array.splice(idx, 2);
-      return ref;
+      if (array.length) {
+        if (v0) {
+          const v0i = valueOf(v0);
+          if (v0i in array) {
+            return array.splice(v0i, 1)[0];
+          } else return new Single(null);
+        }
+        return array.pop();
+      }
+      return new Single(null);
+    case "removeValue":
+    case "removerValor":
+      const idx = executeListMethod(ctx, ref, "indexOf", args);
+      if (idx >= 0) {
+        array.splice(idx, 1);
+        return 1;
+      }
+      return -1;
     case "reverse":
     case "invertir":
       ref.value = array.reverse();
@@ -157,19 +182,19 @@ Object.defineProperty(List.prototype, "getMemberRef", {
           "vaciar",
           "copy",
           "copiar",
-          "count",
+          "length",
           "longitud",
           "extend",
           "extender",
-          "index",
-          "indice",
-          "índice",
+          "indexOf",
+          "indiceDe",
+          "índiceDe",
           "insert",
           "insertar",
           "pop",
           "sacar",
-          "remove",
-          "remover",
+          "removeValue",
+          "removerValor",
           "reverse",
           "invertir",
           "sort",
@@ -177,12 +202,12 @@ Object.defineProperty(List.prototype, "getMemberRef", {
         ].includes(index) &&
         !create
       )
-        throw new Error("out of range");
+        throw new Error(`El objeto no tiene atributo '${index}'`);
       // rellenamos las posiciones vacías con el valor null
       for (let i = this._value.length; i <= index; i++)
         this._value[i] = variableCreate(null);
     }
-    if (typeof index === "string") return this; // lo procesaremos distinto
+    if (typeof index === "string" && index !== "length") return this; // lo procesaremos distinto
     return this._value[index];
   },
 });
@@ -190,7 +215,7 @@ Object.defineProperty(List.prototype, "getMemberRef", {
 Object.defineProperty(List.prototype, "setVariable", {
   value: function (index, vari) {
     if (!(vari instanceof Variable))
-      throw new Error("setVariable exige una Variable");
+      throw new Error("List.setVariable exige una Variable");
     index = _checkIndex(index);
     this.getMemberRef(index, true); // para expandir índices si acaso no existen
     this._value[index] = vari;

@@ -18,6 +18,10 @@ class Variable {
         return this._value
     }
 
+    equals(variable2) {
+        return this.value == variable2.value
+    }
+
     
 }
 
