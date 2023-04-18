@@ -218,12 +218,12 @@ describe("Funciones", async (t) => {
   it("16 reserved words in parameters", async () =>
     expect(
       await exec(`
-      // numero es una palabra reservada
-      function doble(numero) {
-        regresar numero * 2
+      // contar es una palabra reservada
+      function doble(contar) {
+        regresar contar * 2
       }
       
-      imprimir numero([1,2])
+      imprimir contar([1,2])
       imprimir doble(3)
       `)
     ).equalsIgnoringSpaces(`2 6`));

@@ -346,9 +346,7 @@ NumberOf
 
 IndexOf 
               :     'indexOf'
-              |     'find'
-              |     'search'
-              |     'buscar'
+              |     'indiceDe'
               ;
 
 Sub

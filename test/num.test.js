@@ -13,10 +13,10 @@ describe("NumberOf", () => {
     d = {}
     d[1] = 1.1
     d['h'] = 5
-    imprimir num(a)
-    imprimir num(b)
-    imprimir num(c)
-    imprimir num(d)
+    imprimir contar(a)
+    imprimir contar(b)
+    imprimir contar(c)
+    imprimir contar(d)
 `)
     ).equalsIgnoringSpaces(`0 3 8 2`));
 });

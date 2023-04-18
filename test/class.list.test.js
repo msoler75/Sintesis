@@ -333,10 +333,12 @@ describe("Lists", () => {
     imprimir a.indiceDe(20)
     imprimir a.indiceDe('amigo')
     imprimir a.indiceDe(90)
+    // este objeto es una copia pero no es el mismo objeto en memoria
     imprimir a.indiceDe({a:1, b:2})
-    imprimir a.indiceDe({a:1, b:3})
+    // aquí buscamos el mismo objeto en memoria
+    imprimir a.indiceDe(a[3])
     `)
-    ).equalsIgnoringSpaces("0 -1 1 2 3 -1"));
+    ).equalsIgnoringSpaces("0 -1 1 2 -1 3"));
 
         
     it("list operations 1", async () =>
@@ -346,11 +348,12 @@ describe("Lists", () => {
     b = a.copiar()
     imprimir a.extender([4, 5])
     imprimir a.extender(6)
-    imprimir a.pop()
+    imprimir a.sacar()
+    imprimir a.sacar(1)
     imprimir a
     imprimir b
     `)
-    ).equalsIgnoringSpaces("[1, 2, 3, 4, 5] [1, 2, 3, 4, 5, 6] 6 [1, 2, 3, 4, 5] [1,2,3]"));
+    ).equalsIgnoringSpaces("[1, 2, 3, 4, 5] [1, 2, 3, 4, 5, 6] 6  2 [1, 3, 4, 5] [1,2,3]"));
 
     
     it("list operations 2", async () =>
@@ -358,25 +361,85 @@ describe("Lists", () => {
       await exec(`
     a = [80, 90, 100, 110, 90]
     imprimir a.indiceDe(100)
-    imprimir a.removerValor(90)
-    imprimir a
+    imprimir a.invertir()
     imprimir a.vaciar().pop()
     `)
-    ).equalsIgnoringSpaces("2 1 [80, 100, 110, 90] nulo"));
+    ).equalsIgnoringSpaces("2 [90, 110, 100, 90, 80] nulo"));
 
-    
-    it("list pops", async () =>
+    it("list sort", async () =>
     expect(
       await exec(`
-    a = [80, 90, 100, 110, 120]
-    imprimir a.sacar(2)
-    imprimir a
-    imprimir a.sacar(1)
-    imprimir a
-    imprimir a.sacar(7)
-    imprimir a
+      a=[3, 1, 2]
+      b=['b', 'ac', 'ab', 'a']
+      c=[true, false, false, true, false]
+      d=[{z:1}, {a: 1}]
+      imprimir a.sort()
+      imprimir b.sort()
+      imprimir c.sort()
+      imprimir d.sort()
+      `)
+    ).equalsIgnoringSpaces("[1, 2, 3] [a, ab, ac, b] [falso, falso, falso, cierto, cierto] [{z:1}, {a:1}]"));
+
+
+
+    it("list foreach 2", async () =>
+    expect(
+      await exec(`
+    a = [80, 90, 100]
+    b = []
+    para cada e en a
+      b.insertar(e)
+    imprimir b
     `)
-    ).equalsIgnoringSpaces("100 [80, 90, 110, 120] 90 [80, 110, 120] nulo [80, 110, 120]"));
+    ).equalsIgnoringSpaces("[100, 90, 80]"));
+
+    it("list foreach 3", async () =>
+    expect(
+      await exec(`
+    a = ["perro", "gato", "león"]
+    b = []
+    para cada e en a
+      b.insertar(e)
+    imprimir b
+    `)
+    ).equalsIgnoringSpaces("[león, gato, perro]"));
+
+    it("list foreach 4", async () =>
+    expect(
+      await exec(`
+    a = [{value: 1}, {value: 2}]
+    b = []
+    para cada e en a
+      b.insertar(e)
+    imprimir b
+    `)
+    ).equalsIgnoringSpaces("[{value: 2}, {value: 1}]"));
+
+    
+    it("list foreach 5", async () =>
+    expect(
+      await exec(`
+    a = [[1, 2], [3, 4]]
+    b = []
+    para cada e en a
+      b.insertar(e)
+    imprimir b
+    `)
+    ).equalsIgnoringSpaces("[[3, 4], [1, 2]]"));
+
+
+    
+    it("list foreach null", async () =>
+    expect(
+      await exec(`
+    a = [nulo, 1, 2, z]
+    b = []
+    para cada e en a
+      b.insertar(e)
+    imprimir b
+    `)
+    ).equalsIgnoringSpaces("[, 2, 1, ]"));
+
 
 
 });

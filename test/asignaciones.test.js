@@ -57,8 +57,7 @@ describe("Asignaciones", () => {
     imprimir b
     `)
     ).equalsIgnoringSpaces(`
-    [1, 2]
-    [33, 2]
+    [1, 2] [33, 2]
     `));
 
   it("clase", async () =>

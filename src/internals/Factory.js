@@ -2,12 +2,17 @@ import { printObject } from "../utils/Print.js";
 import Dictionary from "./Dictionary.js";
 import Variable from "./Variable.js";
 import Single from "./Single.js";
+import Class from "./Class.js";
 import List from "./List.js";
 import valueOf from "./ValueOf.js";
+import MemoryRef from "./MemoryRef.js";
 
 const variableCreate = function (src) {
+  if (src === undefined) return new Variable();
+  if (src === null) return new Variable(null);
+  if (src instanceof MemoryRef)
+   src = src.variable
   if (src instanceof Variable) return src;
-  if (src === undefined || src === null) return new Variable();
   if (Array.isArray(src)) return new List(src);
   if (typeof src === "object") return new Dictionary(src);
   return new Single(src);
@@ -88,10 +93,10 @@ function _checkIndex(index, canBeAlfa) {
 
 function executeListMethod(ctx, ref, method, args) {
   const array = ref._variable.value;
-  const v0 = args.length > 0 ? variableCreate(args[0]) : null;
-  const v1 = args.length > 1 ? variableCreate(args[1]) : null;
+  const v0 = args.length > 0 ? args[0] : null;
+  const v1 = args.length > 1 ? args[1] : null;
   // const v2 = args.length > 2 ? variableCreate(args[2]) : null;
-  List;
+  // List;
   switch (method) {
     case "extend":
     case "extender":
@@ -100,10 +105,11 @@ function executeListMethod(ctx, ref, method, args) {
         for (const i in arr0) array.push(variableCreate(arr0[i]));
         return ref;
       }
+      // si no es un array, lo asume como un elemento para push:
     case "push":
     case "append":
     case "agregar":
-      array.push(v0);
+      array.push(variableCreate(v0));
       return ref;
     case "clear":
     case "vaciar":
@@ -118,52 +124,46 @@ function executeListMethod(ctx, ref, method, args) {
     case "indexOf":
     case "indiceDe":
     case "índiceDe":
-      var vv0 = valueOf(v0);
-      var strv0 = "";
-      if (typeof vv0 === "object") strv0 = JSON.stringify(vv0);
+      var vv0 = variableCreate(v0)
       for (var i in array) {
         const si = i.match(/^\d+$/) ? parseInt(i) : i;
-        if (typeof vv0 === "object") {
-          if (JSON.stringify(valueOf(array[i])) == strv0) return si;
-        } else if (vv0 === valueOf(array[i])) {
-          return si;
-        }
+        if (vv0.equals(array[i])) return si;
       }
       return -1;
     case "insert":
     case "insertar":
-      if (args.length == 1) array.unshift(v0);
-      else if (args.length > 1) array.splice(v0, 0, v1);
+      if (args.length == 1) array.unshift(variableCreate(v0));
+      else if (args.length > 1) array.splice(valueOf(v0), 0, variableCreate(v1));
       return ref;
     case "pop":
     case "sacar":
       if (array.length) {
         if (v0) {
           const v0i = valueOf(v0);
-          if (v0i in array) {
+          if (v0i in array) 
             return array.splice(v0i, 1)[0];
-          } else return new Single(null);
+          else 
+            return new Single(null);
         }
         return array.pop();
       }
       return new Single(null);
-    case "removeValue":
+    /* case "removeValue":
     case "removerValor":
       const idx = executeListMethod(ctx, ref, "indexOf", args);
       if (idx >= 0) {
         array.splice(idx, 1);
         return 1;
       }
-      return -1;
+      return -1; */
     case "reverse":
     case "invertir":
-      ref.value = array.reverse();
+      // ref.value = 
+      array.reverse();
       return ref;
     case "sort":
     case "ordenar":
-      array.sort((a, b) => {
-        a.value - b.value;
-      });
+      array.sort((a, b) => a.compareTo(b));
       return ref;
   }
   throw new Error(`método ${method} no encontrado`);
@@ -193,8 +193,8 @@ Object.defineProperty(List.prototype, "getMemberRef", {
           "insertar",
           "pop",
           "sacar",
-          "removeValue",
-          "removerValor",
+          //"removeValue",
+          // "removerValor",
           "reverse",
           "invertir",
           "sort",

@@ -1,15 +1,16 @@
+import { variableCreate}  from "../src/internals/Factory.js"
 import { expect } from "chai";
 import equalsIgnoringSpaces from "../chai-extensions.js";
 import exec from "../lib/exec.js";
 
 describe("Variables", () => {
-  it("1", async () =>
+  it("asignación simple", async () =>
     expect(
       await exec(`a=1
      imprimir a`)
     ).equalsIgnoringSpaces("1"));
 
-  it("2", async () =>
+  it("contextos", async () =>
     expect(
       await exec(`
     // asigna un valor a una variable, y como no existe, la crea
@@ -41,7 +42,7 @@ describe("Variables", () => {
 `)
     ).equalsIgnoringSpaces("1 2 2 3 2"));
 
-  it("3", async () =>
+  it("contextos 2", async () =>
     expect(
       await exec(`
     a = 3
@@ -53,7 +54,7 @@ describe("Variables", () => {
 `)
     ).equalsIgnoringSpaces("[1, 2, 3] 3"));
 
-  it("4 palabras reservadas", async () =>
+  it("palabras reservadas", async () =>
     expect(
       await exec(`
         var a = 1
@@ -72,4 +73,44 @@ describe("Variables", () => {
         }
       `)
     ).equalsIgnoringSpaces("3 2 4 5 3 2 4 5"));
+
+    const n1 = variableCreate(1)
+    const n2 = variableCreate(1)
+    const n3 = variableCreate(2)
+    it("igualdad numérica", async () =>
+    expect(n1.equals(n2)).equalsIgnoringSpaces("true"))
+
+    it("desigualdad numérica", async () =>
+    expect(n1.equals(n3)).equalsIgnoringSpaces("false"))
+
+
+    const s1 = variableCreate("hola")
+    const s2 = variableCreate("hola")
+    const s3 = variableCreate("adios")
+
+    it("igualdad strings", async () =>
+    expect(s1.equals(s2)).equalsIgnoringSpaces("true"))
+
+    it("desigualdad strings", async () =>
+    expect(s1.equals(s3)).equalsIgnoringSpaces("false"))
+
+    const l1 = variableCreate([1, 2, 3])
+    const l2 = variableCreate([1, 2, 3])
+    const l3 = variableCreate([4, 5, 6])
+
+    it("deigualdad de listas con los mismos valores", async () =>
+    expect(l1.equals(l2)).equalsIgnoringSpaces("false"))
+
+    it("desigualdad listas que son diferentes objetos", async () =>
+    expect(l1.equals(l3)).equalsIgnoringSpaces("false"))
+
+    const o1 = variableCreate({a:1})
+    const o2 = variableCreate({a:1})
+    const o3 = variableCreate({b:1})
+
+    it("deigualdad de diccionarios con los mismos valores", async () =>
+    expect(o1.equals(o2)).equalsIgnoringSpaces("false"))
+
+    it("desigualdad diccionarios que son diferentes objetos", async () =>
+    expect(o1.equals(o3)).equalsIgnoringSpaces("false"))
 });

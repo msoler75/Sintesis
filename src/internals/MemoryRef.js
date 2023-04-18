@@ -18,7 +18,7 @@ class MemoryRef {
         // else 
         //  console.warn('memoryref with undefined variable?')
         this._index = index
-        this.recentChanged = true
+        // this.recentChanged = true
     }
 
     get variable() {
@@ -48,17 +48,16 @@ class MemoryRef {
     }
 
     assign(value) {
-        this.recentChanged = true
+        // this.recentChanged = true
         //if(this._variable instanceof RefClass)
         //  console.error("No puede asignar a RefClass")
-        this.lastChange = +new Date();
         if (value instanceof MemoryRef)
             value = value.variable
         let literal = valueOf(value)
-        let valueIsVarType = value instanceof Variable || value instanceof Function || value instanceof Instance
-        if(['number', 'string', 'boolean'].includes(typeof literal))
-            value = variableCreate(literal)
-        if (!this._variable) {
+        // let valueIsVarType = value instanceof Variable || value instanceof Function || value instanceof Instance
+        // if(['number', 'string', 'boolean'].includes(typeof literal))
+          // value = variableCreate(literal)
+        /*if (!this._variable) {
             if (!valueIsVarType)
                 value = variableCreate(value)
             this._variable = value
@@ -71,12 +70,33 @@ class MemoryRef {
                 (this.variable instanceof Single && (Array.isArray(literal) || !['number', 'string', 'boolean', 'object'].includes(typeof literal))))) {
             this.variable = variableCreate(literal)
         } else
-            this.variable.value = literal
+            this.variable.value = literal */
+        if(['number', 'string', 'boolean'].includes(typeof literal))
+        {
+            // if (!this._variable)
+            this.variable = variableCreate(literal)
+        }
+        else {
+            const isVarType = value instanceof Variable || value instanceof Function || value instanceof Instance
+            if (!this._variable)
+            {
+                if(isVarType)
+                    this._variable = value;
+                else
+                    this._variable = variableCreate(value)
+            }
+            else {
+                if(isVarType)
+                    this.variable = value;
+                else
+                    this.variable.value = value
+            }
+        }
     }
 
-    clearChanged() {
+    /*clearChanged() {
         this.recentChanged = false
-    }
+    }*/
 
 
     increment(inc) {

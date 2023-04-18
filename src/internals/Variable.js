@@ -19,7 +19,33 @@ class Variable {
     }
 
     equals(variable2) {
-        return this.value == variable2.value
+        if(['number', 'string', 'boolean'].includes(typeof this.value))
+            return this.value == variable2.value
+        return this.value === variable2.value
+    }
+
+    compareTo(variable2) {
+        switch(typeof this.value) {
+            case 'number':
+            return this.value - variable2.value;
+        case 'boolean':
+            const a = !!this.value?1:0
+            const b = !!variable2.value?1:0
+            return a-b
+        case 'string':
+            const cadena1 = this.value
+            const cadena2 = variable2.value
+            for (let i = 0; i < cadena1.length && i < cadena2.length; i++) {
+                if (cadena1.charCodeAt(i) !== cadena2.charCodeAt(i)) {
+                  return cadena1.charCodeAt(i) - cadena2.charCodeAt(i);
+                }
+              }
+              return cadena1.length - cadena2.length;   
+        case 'object':
+            if('compareTo' in this.value)
+                return this.value.compareTo(variable2)
+        }
+        return 0
     }
 
     

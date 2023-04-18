@@ -11,7 +11,7 @@ describe("Map", () => {
     usuarios[24] = 'jaime'
 
     imprimir usuarios
-    imprimir num(usuarios)
+    imprimir count(usuarios)
     `)
     ).equalsIgnoringSpaces(`{12: jorge, 24: jaime} 2`));
 
@@ -31,7 +31,7 @@ describe("Map", () => {
     a = {}
     a['jorge'] = 33
     a['jaime'] = 77
-    imprimir buscar(a, 77), buscar(a, 99)
+    imprimir indiceDe(a, 77), indiceDe(a, 99)
     `)
     ).equalsIgnoringSpaces(`jaime nulo`));
 });
