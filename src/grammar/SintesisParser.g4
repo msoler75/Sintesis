@@ -9,7 +9,7 @@ parser grammar SintesisParser;
 
 options {
     tokenVocab=SintesisLexer;
-    superClass=SintesisParserBase;
+    superClass=SintesisParserBase; 
 }
 
 program
@@ -17,29 +17,47 @@ program
     ;
 
 statementList
-    : statement+
+    : statement+ 
     ;
 
 statement
-    : block
-    | variableStatement
+    : simpleStatement
+    | compoundStatement
+    ;
+
+simpleStatement
+    : variableStatement
     | emptyStatement_
     | stepStatement
     | printStatement
-    | classDeclaration    
-    | ifStatement
-    | iterationStatement
     | continueStatement
     | breakStatement
     | returnStatement
-    | switchStatement
-    | functionDeclaration
     | expressionStatement
-
     ;
 
-block
+compoundStatement
+    : block
+    | classDeclaration    
+    | ifStatement
+    | iterationStatement
+    | functionDeclaration
+    | switchStatement
+    ;
+
+
+// simple_stmts: simpleStatement (';' simpleStatement)* ';'? NEWLINE;
+
+
+blockJS
     : '{' stmt=statementList? '}'
+    ;
+
+// blockPy: simple_stmts | NEWLINE INDENT statementList DEDENT;
+
+block 
+    : blockJS
+    // | blockPy
     ;
 
 stepStatement
@@ -317,6 +335,7 @@ reservedIdentifier
     | IndexOf
     | ElseIf
     | Of
+    | Function_
     ;
 
 variableDeclaration
@@ -387,8 +406,16 @@ listLiteral
     : '[' (singleExpression (',' singleExpression)*)? ']'
     ;
 
+objectKey
+    : identifier
+    | reservedIdentifier
+    | stringLiteral
+    | numericLiteral
+    | booleanLiteral    
+    ;
+
 objectLiteral
-    : '{' ((identifier|stringLiteral) ':' singleExpression (',' (identifier|stringLiteral) ':' singleExpression)*)? '}'
+    : '{' (objectKey ':' singleExpression (',' objectKey ':' singleExpression)*)? '}'
     ;
 
 

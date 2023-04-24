@@ -9,7 +9,7 @@
   },
   "scripts": {
     "test": "npx mocha",
-    "preparegenerate": "cp ./src/SintesisParserBaseSource.js ./src/lib/SintesisParserBase",
+    "cpbase": "copy ./src/SintesisParserBaseSource.js ./src/lib/SintesisParserBase && copy ./src/SintesisLexerBaseSource.js ./src/lib/SintesisLexerBase.js",
     "generate": "java -cp D:/projects/CodeBounce/Sintesis/antlr4/jar/antlr-4.9.3-complete.jar org.antlr.v4.Tool -Dlanguage=JavaScript -lib ./src ./src/grammar/SintesisLexer.g4 ./src/grammar/SintesisParser.g4 -o ./src/lib -no-listener -visitor",
     "toasync": "node ./to_async",
     "tosync": "node ./to_sync",

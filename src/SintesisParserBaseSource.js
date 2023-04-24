@@ -70,4 +70,6 @@ export default class SintesisParserBase extends antlr4.Parser {
                 type === SintesisParser.LineTerminator
                );
     }
+
+       
 }

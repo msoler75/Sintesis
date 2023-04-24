@@ -1,0 +1,48 @@
+// Lista de palabras secretas
+palabras_secretas = ["python", "programacion", "computadora", "algoritmo", "datos"]
+
+# Lista de letras trampa
+letras_trampa = ["x", "z", "ñ"]
+
+# Elige una palabra secreta aleatoria de la lista
+palabra_secreta = 2 //random.choice(palabras_secretas)
+
+# Inicializa la lista de letras adivinadas con guiones
+letras_adivinadas = ["_"] * len(palabra_secreta)
+
+# Número de vidas del jugador
+vidas = 5
+
+# Bucle principal del juego
+while vidas > 0 {
+    # Mostrar la lista de letras adivinadas al jugador
+    print(" ".join(letras_adivinadas))
+
+    # Pedir al jugador que ingrese una letra
+    letra = input("Ingresa una letra: ")
+
+    # Si la letra es una letra trampa, restar dos vidas
+    if letra in letras_trampa:
+        print("¡Esa letra es una trampa! Pierdes dos vidas.")
+        vidas -= 2
+    # Si la letra está en la palabra secreta, mostrarla en su lugar correspondiente
+    elif letra in palabra_secreta:
+        print("¡Buena elección de letra!")
+        # Encontrar todas las ocurrencias de la letra en la palabra secreta y mostrarlas en letras_adivinadas
+        indices = [i for i, l in enumerate(palabra_secreta) if l == letra]
+        for i in indices:
+            letras_adivinadas[i] = letra
+        # Si todas las letras de la palabra secreta han sido adivinadas, el jugador gana
+        if "_" not in letras_adivinadas:
+            print("¡Ganaste!")
+            break
+    # Si la letra no está en la palabra secreta, restar una vida
+    else:
+        print("¡Esa letra no está en la palabra secreta! Pierdes una vida.")
+        vidas -= 1
+}
+
+# Si el jugador pierde todas las vidas, mostrar la palabra secreta y decir que perdió
+if vidas == 0:
+    print("La palabra secreta era:", palabra_secreta)
+    print("¡Perdiste!")
