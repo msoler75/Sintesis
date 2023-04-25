@@ -80,6 +80,21 @@ function printObject(obj) {
     return '{' + values.join(', ') + '}'
 }
 
+function sprintf(str, ...args) {
+    let index = 0;
+    return str.replace(/%[sd]/g, (match) => {
+      const arg = args[index++];
+      switch (match) {
+        case "%s":
+          return String(arg);
+        case "%d":
+          return Number(arg);
+        default:
+          return match;
+      }
+    });
+  }
+
 /** No sé para qué sirve */
 /*
 function printValueOf(v) {
@@ -175,5 +190,6 @@ export {
     printSymbolTable,
     printSymbolsTree,
     printTree,
-    tabulate
+    tabulate,
+    sprintf
 }

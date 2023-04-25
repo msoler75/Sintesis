@@ -34,7 +34,8 @@
     "chai": "^4.3.7",
     "fs": "^0.0.1-security",
     "prompt-sync": "^4.2.0",
-    "safe-eval": "^0.4.1"
+    "safe-eval": "^0.4.1",
+    "unidecode": "^0.1.8"
   },
   "devDependencies": {
     "@babel/plugin-syntax-import-assertions": "^7.17.12",
