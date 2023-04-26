@@ -1,4 +1,5 @@
 {
+    "args-expected":"you must specify a file or a program",
     "error-sintaxis": "syntax error",
     "error-ejecucion": "execution error",
     "extrana": "strange",
