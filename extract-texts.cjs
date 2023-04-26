@@ -1,18 +1,30 @@
 const fs = require("fs");
 const unidecode = require("unidecode");
 const regex = /this\.t\((".*?")/g;
-const archivos = ["src/SintesisEval.js", "src/SintesisSymbolParser.js"];
+const archivosEntrada = ["src/SintesisEval.js", "src/SintesisSymbolParser.js"];
 const archivoSalida = "textos.sql";
 const resultados = [];
 
-for (const archivo of archivos) {
-  const texto = fs.readFileSync(archivo, "utf-8");
+
+if (fs.existsSync(archivoSalida)) {
+  console.log(`El archivo '${archivoSalida}' ya existe. No se ha creado un nuevo archivo ni se han modificado los originales.`);
+  process.exit();
+}
+
+const filasUnicas = new Set();
+
+for (const archivoEntrada of archivosEntrada) {
+  var texto = fs.readFileSync(archivoEntrada, "utf-8");
   let match;
 
   while ((match = regex.exec(texto))) {
     const valor = match[1];
-    const slug = unidecode(valor.toLowerCase()).replace(/ /g, "-");
-    resultados.push(`${valor}, ${slug.replace(/'?%[ds]'?-?|-?'?%[ds]'?/g, '')}`);
+    const slug = unidecode(valor.toLowerCase()).replace(/ /g, "-").replace(/'?%[ds]'?-?|-?'?%[ds]'?/g, '');
+    texto = texto.replace(valor, slug);
+    const linea = `${valor}, ${slug}`
+    filasUnicas.add(linea);
   }
+
+  fs.writeFileSync(archivoEntrada, texto);
 }
-fs.writeFileSync(archivoSalida, resultados.join("\n"));
+fs.writeFileSync(archivoSalida, Array.from(filasUnicas).join("\n"));
