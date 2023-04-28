@@ -1,0 +1,12 @@
+// lista de palabras a buscar
+palabras = ['coche', 'paraguas', 'letrero']
+// diccionario con descripción de algunas palabras
+dicc = {
+    coche: 'vehículo de 4 ruedas',
+    paraguas: 'te protege de la lluvia',
+    champú: 'jabón para el pelo',
+    aguacate: 'fruta tropical'
+}
+para cada p en palabras
+    si p en dicc
+        imprimir dicc[p]

@@ -1,0 +1,12 @@
+// diccionario de vehículos y las ruedas que usan
+ruedas_de_vehiculos = {
+coche:4,
+moto:2,
+triciclo:3,
+barco:0
+}
+// lista de vehiculos a imprimir
+vehiculos = ["coche","moto", "triciclo"]
+para cada v de vehiculos 
+// cuando usamos variables para acceder a un diccionario necesitamos los corchetes [ ]
+imprimir "Ruedas de un", v + ":", ruedas_de_vehiculos[v]

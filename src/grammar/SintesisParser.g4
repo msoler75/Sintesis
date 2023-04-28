@@ -122,7 +122,7 @@ singleExpression
     |    op=Minus dest=singleExpression                                            #expUnaryMinus
     |    op=BitNot dest=singleExpression                                           #expBitNot
     |    op=Not dest=singleExpression                                              #expNot
-    |    key=stringLiteral op=In dest=singleExpression                                    #expIn
+    |    key=singleExpression op=In dest=singleExpression                                #expIn
     |    e1=singleExpression op=(Modulus|Multiply|Divide) e2=singleExpression           #expOp
     |    e1=singleExpression op=('+'|'-') e2=singleExpression                           #expOp
     |    e1=singleExpression op=('>>'|'<<'|'>>>') e2=singleExpression                   #expOp
