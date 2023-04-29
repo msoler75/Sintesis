@@ -327,8 +327,6 @@ reservedIdentifier
     | ElseIf
     | Of
     | Function_
-    | Upper
-    | Lower
     ;
 
 variableDeclaration
@@ -404,12 +402,13 @@ objectKey
     | reservedIdentifier
     | stringLiteral
     | numericLiteral
-    | booleanLiteral    
+    | booleanLiteral
     ;
 
 objectLiteral
     : '{' (objectKey ':' singleExpression (',' objectKey ':' singleExpression)*)? '}'
     ;
+
 
 
 literal
@@ -420,8 +419,10 @@ literal
     | listLiteral 
     | objectLiteral
     | listDeclaration
+    | regularExpressionLiteral 
     ;
 
+regularExpressionLiteral: RegularExpressionLiteral;
 
 booleanLiteral : BooleanLiteral ;
 stringLiteral : StringLiteral ;

@@ -1078,6 +1078,15 @@ export default class SintesisEval extends SintesisParserVisitor {
   }
 
   // Visit a parse tree produced by SintesisParser#objectLiteral.
+  visitRegularExpressionLiteral(ctx) {
+    const exp = ctx.getText() 
+    const pos = exp.lastIndexOf("/")
+    const e1 = exp.substr(1,pos-1)
+    const e2 = exp.substr(pos+1)
+    return new RegExp(e1, e2);
+  }
+
+  // Visit a parse tree produced by SintesisParser#objectLiteral.
      visitObjectLiteral(ctx) {
     // var m = new Dictionary()
     var obj = {};

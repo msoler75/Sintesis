@@ -27,6 +27,7 @@ MultiLineCommentPy2:
 	'\u0027\u0027\u0027' .*? '\u0027\u0027\u0027' -> channel(2);
 SingleLineCommentJs: '//' ~[\r\n\u2028\u2029]* -> channel(2);
 SingleLineCommentPy: '#' ~[\r\n\u2028\u2029]* -> channel(2);
+RegularExpressionLiteral:       '/' RegularExpressionFirstChar RegularExpressionChar*  '/' IdentifierPart*;
 
 // experimental
 JavascriptCode: '{{' .*? '}}';
@@ -291,7 +292,7 @@ IndexOf: 'indexOf' | 'indiceDe';
 
 Sub: 'sub';
 
-Lower:
+/*Lower:
 	'lower'
 	| 'minusculas'
 	| 'min\u00FAsculas'
@@ -304,6 +305,7 @@ Upper:
 	| 'may\u00FAsculas'
 	| 'maiusculas'
 	| 'mai\u00FAsculas';
+	*/
 
 Math: 'Math' | 'Mates';
 
@@ -439,3 +441,39 @@ fragment HexDigit: [_0-9a-fA-F];
 fragment DecimalIntegerLiteral: '0' | [1-9] [0-9_]*;
 fragment ExponentPart: [eE] [+-]? [0-9_]+;
 
+
+
+fragment IdentifierPart
+    : IdentifierStart
+    | [\p{Mn}]
+    | [\p{Nd}]
+    | [\p{Pc}]
+    | '\u200C'
+    | '\u200D'
+    ;
+
+fragment IdentifierStart
+    : [\p{L}]
+    | [$_]
+    ;
+
+fragment RegularExpressionFirstChar
+    : ~[*\r\n\u2028\u2029\\/[]
+    | RegularExpressionBackslashSequence
+    | '[' RegularExpressionClassChar* ']'
+    ;
+
+fragment RegularExpressionChar
+    : ~[\r\n\u2028\u2029\\/[]
+    | RegularExpressionBackslashSequence
+    | '[' RegularExpressionClassChar* ']'
+    ;
+
+fragment RegularExpressionClassChar
+    : ~[\r\n\u2028\u2029\]\\]
+    | RegularExpressionBackslashSequence
+    ;
+
+fragment RegularExpressionBackslashSequence
+    : '\\' ~[\r\n\u2028\u2029]
+    ;
