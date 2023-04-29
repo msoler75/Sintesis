@@ -297,9 +297,16 @@ function executeStringMethod(ctx, ref, method, args) {
     case "split":
     case "dividir":
       return str.split(v0);
+    case "trim":
+    case "limpiar":
+    case "nettoyer":
+    case "pulire":
+      return str.trim();
     case "replace":
     case "reemplazar":
-      return v0 instanceof RegExp ? str.replace(v0, v1):str.replace(new RegExp(v0, "g"), v1);
+      return v0 instanceof RegExp
+        ? str.replace(v0, v1)
+        : str.replace(new RegExp(v0, "g"), v1);
   }
   throw new Error(`método '%s' no encontrado`);
 }

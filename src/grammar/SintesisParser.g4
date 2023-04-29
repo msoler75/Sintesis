@@ -100,6 +100,8 @@ member
     | identifier                                                             #expIdentifier
     | reservedIdentifier                                                     #expReservedIdentifier
     | stringLiteral                                                          #expMemberString
+    | listLiteral                                                            #expMemberList
+    | objectLiteral                                                          #expMemberObject
     ;
 
 memberIdentifier
