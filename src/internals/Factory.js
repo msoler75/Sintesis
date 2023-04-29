@@ -163,6 +163,8 @@ function executeListMethod(ctx, ref, method, args) {
     case "ordenar":
       array.sort((a, b) => a.compareTo(b));
       return ref;
+    case "sub":
+      return args.length>1?array.slice(v0, v1):array.slice(v0)      
   }
   throw new Error(`método '%s' no encontrado`);
 }
@@ -197,6 +199,7 @@ Object.defineProperty(List.prototype, "getMemberRef", {
           "invertir",
           "sort",
           "ordenar",
+          "sub"
         ].includes(index) &&
         !create
       )

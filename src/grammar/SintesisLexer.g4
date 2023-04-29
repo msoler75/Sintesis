@@ -321,11 +321,8 @@ Ord: 'ord';
 
 Prompt:
 	'prompt'
-	| 'input'
-	| 'preguntar'
-	| 'demander'
-	| 'chiedere'
-	| 'perguntar';
+	| 'teclado';
+	
 
 Convert: 'convert' | 'convertir' | 'conv';
 
@@ -362,6 +359,7 @@ Method: 'method' | 'metodo' | 'm\u00E9todo' | 'm\u00E9tode';
 Constructor: 'constructor' | 'construct';
 
 Super: 'super';
+
 
 InstanceOf:
 	'instanceof'

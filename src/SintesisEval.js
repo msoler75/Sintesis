@@ -485,6 +485,11 @@ export default class SintesisEval extends SintesisParserVisitor {
     }
     if (typeof e1 === "object" && typeof e2 === "object")
       return { ...e1, ...e2 };
+
+    // convierte a string el segundo valor, si el primero lo es
+    if (typeof e1 === "string" && typeof e2 !== "string")
+      return e1 + printObject(e2);
+
     if (
       typeof e1 === "object" ||
       typeof e2 === "object" ||
@@ -567,8 +572,8 @@ export default class SintesisEval extends SintesisParserVisitor {
 
   // Visit a parse tree produced by SintesisParser#expMath.
   visitExpMath(ctx) {
-    const funcname = ctx.fn.text;
-    const args = this.visit(ctx.args);
+    const funcname = getId(ctx.mem)
+    const args = valueOf(this.visit(ctx.args));
     if (!(funcname in Math))
       throw new SintesisError(ctx.fn, this.t("no existe este método"));
     return Math[funcname].apply(this, args);
@@ -1050,8 +1055,8 @@ export default class SintesisEval extends SintesisParserVisitor {
     return str;
   }
 
-  /*                                                                                    visitStepStatement(ctx) {
-    return                                                                                    this.visitChildren(ctx)
+  /*                                                                                     visitStepStatement(ctx) {
+    return                                                                                     this.visitChildren(ctx)
   } */
 
   // Visit a parse tree produced by SintesisParser#expLiteral.
@@ -1157,10 +1162,7 @@ export default class SintesisEval extends SintesisParserVisitor {
                 keyContext = keyContext.children[0];
                 break;
               default:
-                  throw new SintesisError(
-                    x,
-                    this.t("tipo o formato incorrecto")
-                  );
+                throw new SintesisError(x, this.t("tipo o formato incorrecto"));
             }
           }
           break;

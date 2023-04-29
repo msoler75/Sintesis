@@ -229,6 +229,10 @@ export default class SintesisEval extends SintesisParserVisitor {
     if (memoryref && Array.isArray(memoryref))
       memoryref = new MemoryRef(new List(memoryref));
 
+    // para cuando el objeto es un object literal
+    if (memoryref && memoryref instanceof Dictionary)
+      memoryref = new MemoryRef(memoryref);
+
     // comprobamos si es válido
     if (!memoryref || !(memoryref instanceof MemoryRef))
       throw new SintesisError(ctx.mem, this.t("operador izquierdo inválido"));
@@ -240,7 +244,7 @@ export default class SintesisEval extends SintesisParserVisitor {
     // obtenemos el índice
     let index = this.visit(ctx.idx);
     index = valueOf(index);
-    if (index === undefined||index === null)
+    if (index === undefined || index === null)
       throw new SintesisError(ctx.idx, this.t("índice no válido"));
 
     // si no existe la variable de referencia, creamos la variable dinámicamente
@@ -481,6 +485,11 @@ export default class SintesisEval extends SintesisParserVisitor {
     }
     if (typeof e1 === "object" && typeof e2 === "object")
       return { ...e1, ...e2 };
+
+    // convierte a string el segundo valor, si el primero lo es
+    if (typeof e1 === "string" && typeof e2 !== "string")
+      return e1 + printObject(e2);
+
     if (
       typeof e1 === "object" ||
       typeof e2 === "object" ||
@@ -563,8 +572,8 @@ export default class SintesisEval extends SintesisParserVisitor {
 
   // Visit a parse tree produced by SintesisParser#expMath.
   visitExpMath(ctx) {
-    const funcname = ctx.fn.text;
-    const args = this.visit(ctx.args);
+    const funcname = getId(ctx.mem)
+    const args = valueOf(this.visit(ctx.args));
     if (!(funcname in Math))
       throw new SintesisError(ctx.fn, this.t("no existe este método"));
     return Math[funcname].apply(this, args);
@@ -1046,8 +1055,8 @@ export default class SintesisEval extends SintesisParserVisitor {
     return str;
   }
 
-  /*                                                                                    visitStepStatement(ctx) {
-    return                                                                                    this.visitChildren(ctx)
+  /*                                                                                     visitStepStatement(ctx) {
+    return                                                                                     this.visitChildren(ctx)
   } */
 
   // Visit a parse tree produced by SintesisParser#expLiteral.
@@ -1091,15 +1100,15 @@ export default class SintesisEval extends SintesisParserVisitor {
   }
 
   visitExpMemberString(ctx) {
-    return this.visitStringLiteral(ctx);
+    return this.visitStringLiteral(ctx.children[0]);
   }
 
   visitExpMemberList(ctx) {
-    return this.visitListLiteral(ctx);
+    return this.visitListLiteral(ctx.children[0]);
   }
 
   visitExpMemberObject(ctx) {
-    return this.visitObjectLiteral(ctx);
+    return this.visitObjectLiteral(ctx.children[0]);
   }
 
   // Visit a parse tree produced by SintesisParser#listLiteral.
@@ -1133,19 +1142,28 @@ export default class SintesisEval extends SintesisParserVisitor {
     items.mapAsyncSequence((x) => {
       switch (x.constructor.name) {
         case "ObjectKeyContext":
-          const keyContext = x.children[0];
-          switch (keyContext.constructor.name) {
-            case "ReservedIdentifierContext":
-            case "IdentifierContext":
-              // case "IdContext":
-              // case "KeywContext":
-              key = getId(keyContext);
-              break;
-            case "BooleanLiteralContext":
-            case "NumericLiteralContext":
-            case "StringLiteralContext":
-              key = this.visit(keyContext);
-              break;
+          let keyContext = x.children[0];
+          while (key === undefined && keyContext) {
+            switch (keyContext.constructor.name) {
+              case "ReservedIdentifierContext":
+              case "IdentifierContext":
+                // case "IdContext":
+                // case "KeywContext":
+                key = getId(keyContext);
+                break;
+              case "BooleanLiteralContext":
+              case "NumericLiteralContext":
+              case "StringLiteralContext":
+                key = this.visit(keyContext);
+                break;
+              case "ExpLiteralContext":
+              case "IdentifierExtContext":
+              case "ObjectKeyContext":
+                keyContext = keyContext.children[0];
+                break;
+              default:
+                throw new SintesisError(x, this.t("tipo o formato incorrecto"));
+            }
           }
           break;
         default:
@@ -1154,8 +1172,8 @@ export default class SintesisEval extends SintesisParserVisitor {
             throw new SintesisError(x, this.t("tipo o formato incorrecto"));
           if (key === null)
             throw new SintesisError(x, this.t("la clave no puede ser nula"));
-          obj[key] = this.visit(x);
-          break;
+          obj[key] = valueOf(this.visit(x));
+          key = undefined;
       }
     });
     return new Dictionary(obj);

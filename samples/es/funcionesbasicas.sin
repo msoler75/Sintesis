@@ -7,9 +7,9 @@ imprimir "2. " + longitud("hola")
 
 imprimir "\nBuscar (Retorna -1 o la posición donde encontró)"
 imprimir "1. " + "hola".indiceDe("o")
-imprimir "2. " + buscar("hola", "x")  
-imprimir "3. " + buscar([1,2,3], 2)
-imprimir "4. " + buscar([1,2,3], 0)
+imprimir "2. " + "hola".indiceDe("x")
+imprimir "3. " + [1,2,3].indiceDe(2)
+imprimir "4. " + [1,2,3].indiceDe(0)
 
 imprimir "\nConvertir valores"
 imprimir "1. " + convert(2, "texto")         // segundo argumento: t, texto
