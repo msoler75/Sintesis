@@ -61,7 +61,7 @@ block
     ;
 
 stepStatement
-    : Step exp=(Identifier|DecimalLiteral) 
+    : Step exp=identifierExt
     ;
 
 emptyStatement_
@@ -106,16 +106,15 @@ memberIdentifier
     | Methods
     | Super
     | Constructor
-    | identifier
-    | reservedIdentifier
+    | identifierExt
     ;
 
 singleExpression     
     :    anonymousFunction                                                  #expFunctionExpression
     |    fn=basicFunction args=arguments                                    #expBasicFunction
     |    JavascriptCode                                                     #expJavascript
-    |    Math Dot mem=(Identifier|Min|Max|Random) args=arguments             #expMath
-    |    op=Delete dest=singleExpression                                            #expDelete
+    |    Math Dot mem=identifier args=arguments                             #expMath
+    |    op=Delete dest=singleExpression                                    #expDelete
     |    dest=singleExpression op=(PlusPlus|MinusMinus)                           #expPostIncrement
     |    op=(PlusPlus | MinusMinus) dest=singleExpression                         #expPreIncrement
     |    op=Plus dest=singleExpression                                             #expUnaryPlus
@@ -152,10 +151,6 @@ basicFunction0
 
 basicFunction1
     : NumberOf                      #numberOf
-    | Lower                         #lower
-    | Upper                         #upper
-    | Max                           #max
-    | Min                           #min
     | Ord                           #ord
     | Chr                           #chr
     | Prompt                        #prompt
@@ -164,19 +159,14 @@ basicFunction1
 
 
 basicFunction2
-    : IndexOf                       #indexOf
-    | Convert                       #convert
+    :
+     Convert                       #convert
     ;
     
-basicFunction3
-    : Sub                           #sub
-    ;
-
 basicFunction
     : basicFunction0
     | basicFunction1
     | basicFunction2
-    | basicFunction3
     ;
 
 expressionSequence
@@ -320,7 +310,7 @@ listIndexes
     ;
 
 formalParameterArg
-    : (reservedIdentifier|identifier) (Assign exp=singleExpression)?      
+    : identifierExt (Assign exp=singleExpression)?      
     ;
 
 variableStatement
@@ -333,13 +323,16 @@ reservedIdentifier
     | InstanceOf
     | NumberOf
     | IndexOf
+    | Sub
     | ElseIf
     | Of
     | Function_
+    | Upper
+    | Lower
     ;
 
 variableDeclaration
-    : (reservedIdentifier|identifier) (Assign exp=singleExpression)?  
+    : identifierExt (Assign exp=singleExpression)?  
     ;
 
 variableDeclarationList
@@ -366,7 +359,7 @@ anonymousFunction
     ;
 
 arrowFunctionParameters
-    : identifier
+    : identifierExt
     | '(' formalParameterList? ')'
     ;
 
@@ -407,7 +400,7 @@ listLiteral
     ;
 
 objectKey
-    : identifier
+    : identifierExt
     | reservedIdentifier
     | stringLiteral
     | numericLiteral
@@ -445,6 +438,10 @@ numericLiteral
 identifier 
     : Identifier ;
 
+
+identifierExt :
+identifier
+|reservedIdentifier;
 
 /*
 List not included as keyword

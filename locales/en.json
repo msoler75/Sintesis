@@ -49,5 +49,8 @@
     "el-simbolo-ya-fue-definido": "symbol '%s' has already been defined",
     "la-clase-padre-no-tiene-ningun-constructor": "parent class does not have any constructor",
     "debe-llamar-al-metodo-constructor-de-la-clase-padre": "must call parent class constructor method",
-    "se-requiere-un-constructor-para-inicializar-los-atributos": "a constructor is required to initialize attributes"
+    "se-requiere-un-constructor-para-inicializar-los-atributos": "a constructor is required to initialize attributes",
+    "metodo-no-encontrado":"method '%s' not found",
+    "atributo-no-encontrado":"property '%s' not found",
+    "el-indice-debe-ser-numerico":"index must be numeric"
 }

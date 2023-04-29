@@ -288,30 +288,6 @@ export default class SintesisParserVisitor extends antlr4.tree.ParseTreeVisitor 
 	}
 
 
-	// Visit a parse tree produced by SintesisParser#lower.
-	visitLower(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by SintesisParser#upper.
-	visitUpper(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by SintesisParser#max.
-	visitMax(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by SintesisParser#min.
-	visitMin(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
 	// Visit a parse tree produced by SintesisParser#ord.
 	visitOrd(ctx) {
 	  return this.visitChildren(ctx);
@@ -336,20 +312,8 @@ export default class SintesisParserVisitor extends antlr4.tree.ParseTreeVisitor 
 	}
 
 
-	// Visit a parse tree produced by SintesisParser#indexOf.
-	visitIndexOf(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
 	// Visit a parse tree produced by SintesisParser#convert.
 	visitConvert(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by SintesisParser#sub.
-	visitSub(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -716,6 +680,12 @@ export default class SintesisParserVisitor extends antlr4.tree.ParseTreeVisitor 
 
 	// Visit a parse tree produced by SintesisParser#identifier.
 	visitIdentifier(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by SintesisParser#identifierExt.
+	visitIdentifierExt(ctx) {
 	  return this.visitChildren(ctx);
 	}
 

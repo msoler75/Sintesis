@@ -2,11 +2,11 @@ imprimir "Número de elementos"
 imprimir "1. " + contar ([1,2,3])           // alternativas: num, numero
 
 imprimir "\nLongitud de texto"
-imprimir "1. " + number("hola")  
+imprimir "1. " + contar("hola")  
 imprimir "2. " + longitud("hola")
 
 imprimir "\nBuscar (Retorna -1 o la posición donde encontró)"
-imprimir "1. " + buscar("hola", "o")        // alternativas: bus, buscar
+imprimir "1. " + "hola".indiceDe("o")
 imprimir "2. " + buscar("hola", "x")  
 imprimir "3. " + buscar([1,2,3], 2)
 imprimir "4. " + buscar([1,2,3], 0)
@@ -17,25 +17,23 @@ imprimir "2. " + convert("2.5", "entero")    // segundo argumento: e, ent, enter
 imprimir "3. " + convert("2.5", "decimal")   // segundo argumento: d, dec, decimal
 
 imprimir "\nsubparte de un texto o un array"
-imprimir "1. " + sub("hola", 1)
-imprimir "2. " + sub("hola", 1, 3)
-imprimir "3. " + sub([1,2,3,4], 1)
-imprimir "4. " + sub([1,2,3,4], 1, 2)
+imprimir "1. " + "hola".sub(1)
+imprimir "2. " + "hola".sub(1, 3)
+imprimir "3. " + [1,2,3,4].sub(1)
+imprimir "4. " + [1,2,3,4].sub(1, 2)
 
 imprimir "\nPasar a mayúsculas o mínusculas"
-imprimir "1. " + mayúsculas("HoLa, ¿Qué TaL?")   // alternativas: mayuscula, mayúscula, mayusculas, mayúsculas
-imprimir "2. " + minúsculas("HoLa, ¿Qué TaL?")   // alternativas: minuscula, minúscula, minusculas, minúsculas
+imprimir "1. " + "HoLa, ¿Qué TaL?".mayúsculas()   // alternativas: mayusculas, mayúsculas
+imprimir "2. " + "HoLa, ¿Qué TaL?".minúsculas()   // alternativas: minusculas, minúsculas
 
 imprimir "\nValor máximo o mínimo de un conjunto de números"
-imprimir "1. " + max(1)
-imprimir "2. " + max(1, 2, 3)
-imprimir "3. " + min(1, 2, 3)
-imprimir "4. " + min(9, 5, 4, 1, 6)
+imprimir "1. " + Mates.max([1, 2, 3])
+imprimir "2. " + Mates.min([1, 2, 3])
 
 imprimir "\nGenerador de valores aleatorios, pudiendo indicar el valor máximo y opcionalmente el mínimo"
-imprimir "1. " + aleatorio()    // de 0 a 1 en formato decimal
-imprimir "2. " + aleatorio(7)   // valor entero de 0 a 7
-imprimir "3. " + aleatorio(3, 7)   // valor entero de 3 a 7
+imprimir "1. " + aleatorio()    // de 0 a .9999999999999 en formato decimal
+imprimir "2. " + aleatorio(7)   // valor entero de 0 a 6.99999999
+imprimir "3. " + aleatorio(3, 7)   // valor entero de 3 a 6.99999999
 
 imprimir "\nConvertir de caracteres a su valor numérico ASCII o al revés"
 imprimir "1. " + ord("a")

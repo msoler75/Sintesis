@@ -305,11 +305,11 @@ Upper:
 	| 'maiusculas'
 	| 'mai\u00FAsculas';
 
-Math: 'Math' | 'mates';
+Math: 'Math' | 'Mates';
 
-Min: 'min' | 'm' [i\u00ED]'nimo';
+// Min: 'min' | 'm' [i\u00ED]'nimo';
 
-Max: 'm' [a\u00E1]'ximo' | 'm' [a\u00E1]'x';
+// Max: 'm' [a\u00E1]'ximo' | 'm' [a\u00E1]'x';
 
 Random: 'random' | 'aleatorio';
 

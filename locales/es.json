@@ -49,5 +49,8 @@
     "el-simbolo-ya-fue-definido":"el símbolo '%s' ya fue definido",
     "la-clase-padre-no-tiene-ningun-constructor":"la clase padre no tiene ningún constructor",
     "debe-llamar-al-metodo-constructor-de-la-clase-padre":"debe llamar al método constructor de la clase padre",
-    "se-requiere-un-constructor-para-inicializar-los-atributos":"se requiere un constructor para inicializar los atributos"
+    "se-requiere-un-constructor-para-inicializar-los-atributos":"se requiere un constructor para inicializar los atributos",
+    "metodo-no-encontrado":"método '%s' no encontrado",
+    "atributo-no-encontrado":"atributo '%s' no encontrado",
+    "el-indice-debe-ser-numerico":"índice debe ser numérico"
 }

@@ -10,8 +10,7 @@ import MemoryRef from "./MemoryRef.js";
 const variableCreate = function (src) {
   if (src === undefined) return new Variable();
   if (src === null) return new Variable(null);
-  if (src instanceof MemoryRef)
-   src = src.variable
+  if (src instanceof MemoryRef) src = src.variable;
   if (src instanceof Variable) return src;
   if (Array.isArray(src)) return new List(src);
   if (typeof src === "object") return new Dictionary(src);
@@ -87,7 +86,7 @@ function _checkIndex(index, canBeAlfa) {
   if (typeof index === "string" && index.match(/^\d+$/))
     index = parseInt(index);
   if (!canBeAlfa && typeof index === "string")
-    throw new Error("índices no numérico");
+    throw new Error("el índice debe ser numérico");
   return index;
 }
 
@@ -105,7 +104,7 @@ function executeListMethod(ctx, ref, method, args) {
         for (const i in arr0) array.push(variableCreate(arr0[i]));
         return ref;
       }
-      // si no es un array, lo asume como un elemento para push:
+    // si no es un array, lo asume como un elemento para push:
     case "push":
     case "append":
     case "agregar":
@@ -124,7 +123,7 @@ function executeListMethod(ctx, ref, method, args) {
     case "indexOf":
     case "indiceDe":
     case "índiceDe":
-      var vv0 = variableCreate(v0)
+      var vv0 = variableCreate(v0);
       for (var i in array) {
         const si = i.match(/^\d+$/) ? parseInt(i) : i;
         if (vv0.equals(array[i])) return si;
@@ -133,17 +132,16 @@ function executeListMethod(ctx, ref, method, args) {
     case "insert":
     case "insertar":
       if (args.length == 1) array.unshift(variableCreate(v0));
-      else if (args.length > 1) array.splice(valueOf(v0), 0, variableCreate(v1));
+      else if (args.length > 1)
+        array.splice(valueOf(v0), 0, variableCreate(v1));
       return ref;
     case "pop":
     case "sacar":
       if (array.length) {
         if (v0) {
           const v0i = valueOf(v0);
-          if (v0i in array) 
-            return array.splice(v0i, 1)[0];
-          else 
-            return new Single(null);
+          if (v0i in array) return array.splice(v0i, 1)[0];
+          else return new Single(null);
         }
         return array.pop();
       }
@@ -158,7 +156,7 @@ function executeListMethod(ctx, ref, method, args) {
       return -1; */
     case "reverse":
     case "invertir":
-      // ref.value = 
+      // ref.value =
       array.reverse();
       return ref;
     case "sort":
@@ -166,7 +164,7 @@ function executeListMethod(ctx, ref, method, args) {
       array.sort((a, b) => a.compareTo(b));
       return ref;
   }
-  throw new Error(`método ${method} no encontrado`);
+  throw new Error(`método '%s' no encontrado`);
 }
 
 Object.defineProperty(List.prototype, "getMemberRef", {
@@ -202,7 +200,7 @@ Object.defineProperty(List.prototype, "getMemberRef", {
         ].includes(index) &&
         !create
       )
-        throw new Error(`El objeto no tiene atributo '${index}'`);
+        throw new Error("atributo '%s' no encontrado");
       // rellenamos las posiciones vacías con el valor null
       for (let i = this._value.length; i <= index; i++)
         this._value[i] = variableCreate(null);
@@ -270,4 +268,34 @@ Object.defineProperty(List.prototype, "delete", {
   },
 });
 
-export { variableCreate, executeListMethod };
+function executeStringMethod(ctx, ref, method, args) {
+  const str = ref._variable.value;
+  const v0 = args.length > 0 ? args[0] : null;
+  const v1 = args.length > 1 ? args[1] : null;
+  // const v2 = args.length > 2 ? variableCreate(args[2]) : null;
+  // List;
+
+  switch (method) {
+    case "upper":
+    case "mayusculas":
+    case "may\u00FAsculas":
+    case "maiusculas":
+    case "mai\u00FAsculas":
+      return str.toUpperCase();
+    case "lower":
+    case "minusculas":
+    case "min\u00FAsculas":
+    case "minuscule":
+    case "minuscolo":
+      return str.toLowerCase();
+    case "sub":
+      if (v0 === null || v0 === undefined) return str;
+      return args.length > 1 ? str.substring(v0, v1) : str.substring(v0);
+    case "indiceDe":
+    case "indexOf":
+      return str.indexOf(v0);
+  }
+  throw new Error(`método '%s' no encontrado`);
+}
+
+export { variableCreate, executeListMethod, executeStringMethod };
