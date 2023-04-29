@@ -99,6 +99,7 @@ member
     | mem=member args=arguments                                              #expMemberFunc
     | identifier                                                             #expIdentifier
     | reservedIdentifier                                                     #expReservedIdentifier
+    | stringLiteral                                                          #expMemberString
     ;
 
 memberIdentifier

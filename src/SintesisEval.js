@@ -209,6 +209,11 @@ export default class SintesisEval extends SintesisParserVisitor {
 
     // obtenemos la referencia al miembro
     let memoryref =    this.visit(ctx.mem);
+
+    // para cuando el objeto es un string
+    if(memoryref && !(memoryref instanceof MemoryRef) && typeof memoryref==='string')
+      memoryref = new MemoryRef(new Variable(memoryref))
+
     if (!memoryref || !(memoryref instanceof MemoryRef))
       throw new SintesisError(ctx.mem, this.t("operador izquierdo inválido"));
 
@@ -1065,6 +1070,11 @@ export default class SintesisEval extends SintesisParserVisitor {
     str = str.substr(1, str.length - 2);
     return str;
   }
+
+    // Visit a parse tree produced by SintesisParser#stringLiteral.
+    visitExpMemberString(ctx) {
+      return this.visitStringLiteral(ctx);      
+    }
 
   // Visit a parse tree produced by SintesisParser#listLiteral.
      visitListLiteral(ctx) {
