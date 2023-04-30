@@ -1,6 +1,33 @@
+
+function randomUUID() {
+    return 'xxxx'.replace(/[xy]/g, function(c) {
+    var r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+    });
+    }
+
+    var ID = 1
+
 class Variable {
     constructor(value) {
         this.value = value
+/*
+        let id
+        // crea un uuid
+        if (typeof Symbol === 'function' && typeof Symbol() === 'symbol') {
+            id = Symbol();
+          } else {
+            id = Math.random().toString(36).substring(2, 15) +
+              Math.random().toString(36).substring(2, 15);
+          }
+        //this.symbol = Symbol();
+        // const id = Object.getOwnPropertySymbols(this)[0];
+        //this.uuid = id.toString().slice(10, -1).padStart(16, '0');
+        this.uuid = id;
+        */
+
+        this.uuid = ID++ //randomUUID();
+        VariableList[this.uuid] = this
     }
 
     get value() {
@@ -52,3 +79,5 @@ class Variable {
 }
 
 export default Variable
+
+export const VariableList = {}

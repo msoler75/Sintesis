@@ -1,10 +1,10 @@
-const imprimirCadaLinea = 0;
+const imprimirCadaLinea = 1;
 
 import Dictionary from "./internals/Dictionary.js";
 import List from "./internals/List.js";
 import Class from "./internals/Class.js";
 import valueOf from "./internals/ValueOf.js";
-import Variable from "./internals/Variable.js";
+import Variable, {VariableList} from "./internals/Variable.js";
 import Function from "./internals/Function.js";
 import Instance from "./internals/Instance.js";
 import Iterator from "./internals/Iterator.js";
@@ -1030,6 +1030,7 @@ export default class SintesisEval extends SintesisParserVisitor {
       result.push(r);
       // console.log('print '+r)
     }
+    //console.log(VariableList)
     let str = result.join(" ").replace(/\\n/g, "\n");
     this.output += str + "\n";
     // console.log('PRINTING', r);

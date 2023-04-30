@@ -1,6 +1,7 @@
 import Class from "./internals/Class.js";
 import RefClass from "./internals/RefClass.js";
 import Function from "./internals/Function.js";
+import Instance from "./internals/Instance.js";
 import "./internals/ArrayUtilsHacked.js";
 
 import getId from "./internals/GetId.js";
@@ -38,7 +39,7 @@ class SintesisSymbolParser extends SintesisParserVisitor {
       // comprobamos accesibilidad de atributos métodos
       // if(memoryref._variable&&memoryref._variable instanceof Function)
       if (!SymbolFinder.canAccess(memoryref, ctx))
-        throw new SintesisError(null, ctx, "acceso no permitido");
+        throw new SintesisError("error de compilación", ctx, "acceso no permitido");
     }
   }
 
@@ -92,7 +93,7 @@ class SintesisSymbolParser extends SintesisParserVisitor {
         const fn = st.getRef(id);
         if (!(fn._variable instanceof RefClass))
           throw new SintesisError(
-            null,
+            "error de compilación",
             ctx.id,
             "el símbolo '%s' ya fue definido",
             id
@@ -156,10 +157,10 @@ class SintesisSymbolParser extends SintesisParserVisitor {
         "'%s' no es una clase",
         id
       );
-    let obj = new Instance(memoryref.variable);
+    // let obj = new Instance(memoryref.variable);
     let values = ctx.args ? this.visit(ctx.args) : [];
     if (values) ctx.args.values = values;
-    let constructor = obj.getConstructor(values.length);
+    let constructor = memoryref.variable.getConstructor(values.length);
     if (!constructor)
       throw new SintesisError(
         "error de compilación",
@@ -207,13 +208,13 @@ class SintesisSymbolParser extends SintesisParserVisitor {
       let memoryref = SymbolFinder.findSymbol(ctx, extend);
       if (!memoryref)
         throw new SintesisError(
-          null,
+          "error de compilación",
           ctx.id,
           "no existe la clase '%s'",
           extend
         );
       if (!(memoryref.variable instanceof Class))
-        throw new SintesisError(null, ctx.id, "'%s' no es una clase", extend);
+        throw new SintesisError("error de compilación", ctx.id, "'%s' no es una clase", extend);
       extendedCls = memoryref.variable;
     }
 
@@ -245,7 +246,7 @@ class SintesisSymbolParser extends SintesisParserVisitor {
             var numargs = Math.ceil((a[0].children.length - 2) / 2);
             if (!extendedCls.getConstructor(numargs))
               throw new SintesisError(
-                null,
+                "error de compilación",
                 a[0],
                 "número de argumentos incorrecto"
               );
@@ -254,7 +255,7 @@ class SintesisSymbolParser extends SintesisParserVisitor {
         }
         if (!callingSuper)
           throw new SintesisError(
-            null,
+            "error de compilación",
             firstStatement,
             "debe llamar al método constructor de la clase padre"
           );

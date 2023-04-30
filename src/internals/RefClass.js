@@ -10,7 +10,7 @@ import {
 // es un puntero a un miembro de una instancia
 
 class RefClass extends Variable {
-    constructor(class_or_instance, id, ctx) {
+    constructor(class_or_instance, id) {
         super({
             classInstance: class_or_instance,
             id
@@ -26,7 +26,7 @@ class RefClass extends Variable {
         } else {
             var i = 2 / 0;
             console.error(i)
-            return thisvalue.classInstance.class.name + '.' + this.value.id
+            return this.value.classInstance.class.name + '.' + this.value.id
         }
 
         const s = this

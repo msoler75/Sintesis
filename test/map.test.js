@@ -2,7 +2,7 @@ import { expect } from "chai";
 import equalsIgnoringSpaces from "../chai-extensions.js";
 import exec from "../lib/exec.js";
 
-describe("Map", () => {
+describe("Diccionarios", () => {
   it("1", async () =>
     expect(
       await exec(`
@@ -31,7 +31,7 @@ describe("Map", () => {
     a = {}
     a['jorge'] = 33
     a['jaime'] = 77
-    imprimir indiceDe(a, 77), indiceDe(a, 99)
+    imprimir 'jorge' en a, 'jesus' en a
     `)
-    ).equalsIgnoringSpaces(`jaime nulo`));
+    ).equalsIgnoringSpaces(`cierto falso`));
 });
