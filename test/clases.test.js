@@ -3,6 +3,19 @@ import equalsIgnoringSpaces from "../chai-extensions.js";
 import exec from "../lib/exec.js";
 
 describe("Clases", () => {
+
+  
+  it("0. descripción de clase", async () =>
+    expect(
+      await exec(`
+    clase Persona {
+      nombre
+      }
+      `)
+    ).equalsIgnoringSpaces(``));
+      
+
+
   it("1. descripción de clase", async () =>
     expect(
       await exec(`

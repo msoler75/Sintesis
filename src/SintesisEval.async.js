@@ -10,7 +10,7 @@ import Instance from "./internals/Instance.js";
 import Iterator from "./internals/Iterator.js";
 import MemoryRef from "./internals/MemoryRef.js";
 import { printObject, printThing, sprintf } from "./utils/Print.js";
-import SintesisError from "./SintesisError.js";
+import {SintesisError} from "./SintesisError.js";
 import "./internals/ArrayUtils.js";
 // import SintesisSymbolParser from './SintesisSymbolParser.js'
 import { SymbolFinder } from "./internals/Symbols.js";
@@ -36,11 +36,6 @@ export default class SintesisEval extends SintesisParserVisitor {
   constructor(tokens) {
     super();
     this.tokens = tokens;
-    this.t = sprintf;
-  }
-
-  setTextFunction(tt) {
-    this.t = tt;
   }
 
   // Visit a parse tree produced by SintesisParser#program.
@@ -104,23 +99,20 @@ export default class SintesisEval extends SintesisParserVisitor {
   async visitExpNew(ctx) {
     const id = ctx.id.text;
     let memoryref = SymbolFinder.findSymbol(ctx, id);
-    if (!memoryref)
-      throw new SintesisError(ctx.id, this.t("no existe la clase '%s'", id));
-    if (!(memoryref.variable instanceof Class))
-      throw new SintesisError(ctx.id, this.t("'%s' no es una clase", id));
+    //if (!memoryref)
+      //throw new SintesisError(null, ctx.id, "no existe la clase '%s'", id);
+    //if (!(memoryref.variable instanceof Class))
+      //throw new SintesisError(null, ctx.id, "'%s' no es una clase", id);
     let obj = new Instance(memoryref.variable);
     let values = ctx.args ? await this.visit(ctx.args) : [];
     if (values) ctx.args.values = values;
     let constructor = obj.getConstructor(values.length);
-    if (!constructor)
-      throw new SintesisError(
-        ctx.args,
-        this.t("no existe un método constructor") + " " + values.length
-          ? values.length == 1
-            ? this.t("con un argumento")
-            : this.t("con %d argumentos", values.length)
-          : this.t("sin argumentos")
-      );
+    /*if (!constructor)
+    throw new SintesisError(null, 
+      ctx.args,
+      "no existe un método constructor " + !values.length?"sin argumentos": values.length==1?"con un argumento": "con %d argumentos", 
+      values.length
+    );*/
     this.callToFunction(new MemoryRef(obj, constructor.name), ctx.args);
     return new MemoryRef(obj);
   }
@@ -139,18 +131,7 @@ export default class SintesisEval extends SintesisParserVisitor {
     const values = ctxArgs ? ctxArgs.values : [];
 
     if (params.length !== values.length)
-      throw new SintesisError(
-        ctxArgs,
-        (fn.isConstructor
-          ? this.t("el constructor")
-          : this.t("la función '%s'", fn.name)) +
-          " " +
-          (params.length
-            ? params.length == 1
-              ? this.t("requiere un argumento")
-              : this.t("requiere %d argumentos", params.length)
-            : this.t("no tiene argumentos"))
-      );
+      throw new SintesisError(null,  ctxArgs,"número de argumentos incorrecto")
 
     if (fn.class && inst instanceof Instance)
       SymbolFinder.pushStack(fn.class.context, inst);
@@ -194,9 +175,9 @@ export default class SintesisEval extends SintesisParserVisitor {
   // Visit a parse tree produced by SintesisParser#returnStatement.
   async visitReturnStatement(ctx) {
     if (!SymbolFinder.insideFunction(ctx))
-      throw new SintesisError(
+      throw new SintesisError(null, 
         ctx,
-        this.t("se ha intentado retornar sin estar dentro de función o método")
+        "se ha intentado retornar sin estar dentro de función o método"
       );
     let r = ctx.exp ? await this.visit(ctx.exp) : null;
     // r = valueOf(r)
@@ -235,17 +216,17 @@ export default class SintesisEval extends SintesisParserVisitor {
 
     // comprobamos si es válido
     if (!memoryref || !(memoryref instanceof MemoryRef))
-      throw new SintesisError(ctx.mem, this.t("operador izquierdo inválido"));
+      throw new SintesisError(null, ctx.mem, "operador izquierdo inválido");
 
     // comprobamos accesibilidad de atributos métodos
     if (!SymbolFinder.canAccess(memoryref, ctx))
-      throw new SintesisError(ctx.mem, this.t("acceso no permitido"));
+      throw new SintesisError(null, ctx.mem, "acceso no permitido");
 
     // obtenemos el índice
     let index = await this.visit(ctx.idx);
     index = valueOf(index);
     if (index === undefined || index === null)
-      throw new SintesisError(ctx.idx, this.t("índice no válido"));
+      throw new SintesisError(null, ctx.idx, "índice no válido");
 
     // si no existe la variable de referencia, creamos la variable dinámicamente
     // to-do: mover este código a memoryref.assign ??
@@ -262,19 +243,19 @@ export default class SintesisEval extends SintesisParserVisitor {
         !memoryref.variable.getMemberRef) ||
       (typeof memoryref.variable.value === "string" && !ctx.args)
     )
-      throw new SintesisError(
+      throw new SintesisError(null, 
         ctx.mem,
-        this.t("operador izquierdo no es un tipo válido")
+        "operador izquierdo no es un tipo válido"
       );
 
     let ref = memoryref.variable;
-    // if (!ref) throw new SintesisError(ctx.idx, this.t("no encontrado"));
+    // if (!ref) throw new SintesisError(null, ctx.idx, "no encontrado");
     // comprobamos si existe la referencia
     try {
       if (memoryref.variable.getMemberRef)
         ref = ref.getMemberRef(index, !!this.createIndexIfNotExists);
     } catch (err) {
-      if (typeof index !== "string") throw new SintesisError(ctx.idx, err);
+      if (typeof index !== "string") throw new SintesisError(null, ctx.idx, err);
       ref = null;
     }
 
@@ -282,14 +263,14 @@ export default class SintesisEval extends SintesisParserVisitor {
     ref = ref ? new MemoryRef(memoryref.variable, index) : null;
 
     if (!ref && ctx.args)
-      throw new SintesisError(
+      throw new SintesisError(null, 
         ctx.idx,
-        this.t("'%s' no es un método válido", index)
+        "'%s' no es un método válido", index
       );
 
     // comprobamos accesibilidad de atributos métodos
     if (ref && !SymbolFinder.canAccess(ref, ctx))
-      throw new SintesisError(ctx.idx, this.t("acceso no permitido"));
+      throw new SintesisError(null, ctx.idx, "acceso no permitido");
 
     // si no es una llamada a un método, devolvemos el valor
     if (!ctx.args || !ref) return ref;
@@ -305,7 +286,7 @@ export default class SintesisEval extends SintesisParserVisitor {
         const result = executeStringMethod(ctx, ref, index, values);
         return result;
       } catch (err) {
-        throw new SintesisError(ctx.idx, this.t(err.message, index));
+        throw new SintesisError(null, ctx.idx, err.message, index);
       }
     }
 
@@ -314,15 +295,15 @@ export default class SintesisEval extends SintesisParserVisitor {
         const result = executeListMethod(ctx, ref, index, values);
         return result;
       } catch (err) {
-        throw new SintesisError(ctx.idx, this.t(err.message, index));
+        throw new SintesisError(null, ctx.idx, err.message, index);
       }
     }
 
     // comprobamos el tipo
     if (!(ref.variable instanceof Function))
-      throw new SintesisError(
+      throw new SintesisError(null, 
         ctx.mem,
-        this.t("'%s' no se ha encontrado", index)
+        "'%s' no se ha encontrado", index
       );
 
     return this.callToFunction(ref, ctx.args);
@@ -339,7 +320,7 @@ export default class SintesisEval extends SintesisParserVisitor {
     const logC = ctx.getText();
     const memoryref = await this.visit(ctx.mem);
     if (!memoryref)
-      throw new SintesisError(ctx.mem, this.t("función no encontrada"));
+      throw new SintesisError(null, ctx.mem, "función no encontrada");
 
     let values = ctx.args ? await this.visit(ctx.args) : [];
     if (values) ctx.args.values = values;
@@ -349,7 +330,7 @@ export default class SintesisEval extends SintesisParserVisitor {
       return this.callToFunction(new MemoryRef(obj, met.name), ctx.args);
     }
     if (!(obj instanceof Function))
-      throw new SintesisError(ctx.mem, this.t("función no encontrada"));
+      throw new SintesisError(null, ctx.mem, "función no encontrada");
     return this.callToFunction(memoryref, ctx.args);
   }
 
@@ -378,9 +359,9 @@ export default class SintesisEval extends SintesisParserVisitor {
       !(memoryref instanceof MemoryRef) ||
       memoryref._variable instanceof Error
     )
-      throw new SintesisError(
+      throw new SintesisError(null, 
         ctx.dest,
-        this.t("el operador izquierdo de asignación es inválido")
+        "el operador izquierdo de asignación es inválido"
       );
 
     let result = await this.visit(ctx.exp);
@@ -407,7 +388,7 @@ export default class SintesisEval extends SintesisParserVisitor {
     var value = valueOf(await this.visit(ctx.exp));
     if (!value) return 0;
     if (typeof value !== "object")
-      throw new SintesisError(ctx.exp, this.t("tipo incorrecto"));
+      throw new SintesisError(null, ctx.exp, "tipo incorrecto");
     if (Array.isArray(value)) {
       let list = new List(value);
       return list.size();
@@ -420,7 +401,7 @@ export default class SintesisEval extends SintesisParserVisitor {
     const key = valueOf(await this.visit(ctx.key));
     const obj = valueOf(await this.visit(ctx.dest));
     if (typeof obj !== "object")
-      return new SintesisError(ctx.dest, this.t("tipo incorrecto"));
+      return new SintesisError(null, ctx.dest, "tipo incorrecto");
     return key in obj;
   }
 
@@ -429,11 +410,11 @@ export default class SintesisEval extends SintesisParserVisitor {
     const memoryref = await this.visit(ctx.dest);
     this.allowSymbolNotFound = false;
     if (!memoryref)
-      throw new SintesisError(ctx.dest, this.t("símbolo no encontrado"));
+      throw new SintesisError(null, ctx.dest, "símbolo no encontrado");
     if (!(memoryref instanceof MemoryRef))
-      throw new SintesisError(
+      throw new SintesisError(null, 
         ctx.dest,
-        this.t("operador izquierdo no es válido")
+        "operador izquierdo no es válido"
       );
     let e1 = valueOf(memoryref);
     let e2 = valueOf(await this.visit(ctx.exp));
@@ -485,13 +466,18 @@ export default class SintesisEval extends SintesisParserVisitor {
     }
     if (typeof e1 === "object" && typeof e2 === "object")
       return { ...e1, ...e2 };
+
+    // convierte a string el segundo valor, si el primero lo es
+    if (typeof e1 === "string" && typeof e2 !== "string")
+      return e1 + printObject(e2);
+
     if (
       typeof e1 === "object" ||
       typeof e2 === "object" ||
       Array.isArray(e1) ||
       Array.isArray(e2)
     )
-      throw new SintesisError(ctx, this.t("tipos incompatibles"));
+      throw new SintesisError(null, ctx, "tipos incompatibles");
     return e1 + e2;
   }
 
@@ -567,10 +553,10 @@ export default class SintesisEval extends SintesisParserVisitor {
 
   // Visit a parse tree produced by SintesisParser#expMath.
   async visitExpMath(ctx) {
-    const funcname = ctx.fn.text;
-    const args = await this.visit(ctx.args);
+    const funcname = getId(ctx.mem)
+    const args = valueOf(await this.visit(ctx.args));
     if (!(funcname in Math))
-      throw new SintesisError(ctx.fn, this.t("no existe este método"));
+      throw new SintesisError(null, ctx.fn, "no existe este método");
     return Math[funcname].apply(this, args);
   }
 
@@ -611,7 +597,7 @@ export default class SintesisEval extends SintesisParserVisitor {
     const collection = await this.visit(iter.coll);
 
     if (!Iterator.iterable(collection))
-      throw new SintesisError(ctx.coll, this.t("el valor no es iterable"));
+      throw new SintesisError(null, ctx.coll, "el valor no es iterable");
 
     let iterator = new Iterator(collection);
 
@@ -698,14 +684,14 @@ export default class SintesisEval extends SintesisParserVisitor {
       }
       case "NumberOfContext":
         if (args.length < 1)
-          throw new SintesisError(
+          throw new SintesisError(null, 
             ctx.args,
-            this.t("debe especificar un argumento")
+            "debe especificar un argumento"
           );
         if ((t0 !== "string") & (t0 !== "object"))
-          throw new SintesisError(
+          throw new SintesisError(null, 
             ctx.args.children[1],
-            this.t("tipo incorrecto")
+            "tipo incorrecto"
           );
         const v = Array.isArray(a0)
           ? new List(a0)
@@ -715,28 +701,28 @@ export default class SintesisEval extends SintesisParserVisitor {
         return v instanceof Variable ? v.size() : v.length;
       case "IndexOfContext":
         if (args.length < 2)
-          throw new SintesisError(
+          throw new SintesisError(null, 
             ctx.args,
-            this.t("debe especificar dos argumentos")
+            "debe especificar dos argumentos"
           );
         if (t0 !== "string" && !Array.isArray(a0) && t0 !== "object")
-          throw new SintesisError(
+          throw new SintesisError(null, 
             ctx.args.children[1],
-            this.t("tipo incorrecto")
+            "tipo incorrecto"
           );
         return t0 === "object"
           ? new Dictionary(a0).indexOf(a1)
           : a0.indexOf(a1);
       case "ConvertContext":
         if (args.length < 2)
-          throw new SintesisError(
+          throw new SintesisError(null, 
             ctx.args,
-            this.t("debe especificar dos argumentos")
+            "debe especificar dos argumentos"
           );
         if (t1 !== "string")
-          throw new SintesisError(
+          throw new SintesisError(null, 
             ctx.args.children[3],
-            this.t("tipo incorrecto")
+            "tipo incorrecto"
           );
         if (paramInteger.includes(a1.toLowerCase())) {
           if (t0 === "number") return Math.floor(a0);
@@ -758,71 +744,71 @@ export default class SintesisEval extends SintesisParserVisitor {
           if (t0 === "string") return a0;
           if (t0 === "number") return "" + a0;
         } else
-          throw new SintesisError(
+          throw new SintesisError(null, 
             ctx.args.children[3],
-            this.t("tipo incorrecto")
+            "tipo incorrecto"
           );
-        throw new SintesisError(
+        throw new SintesisError(null, 
           ctx.args.children[1],
-          this.t("no se pudo convertir")
+          "no se pudo convertir"
         );
 
       case "SubContext":
         if (args.length < 2)
-          throw new SintesisError(
+          throw new SintesisError(null, 
             ctx.args,
-            this.t("debe especificar al menos dos argumentos")
+            "debe especificar al menos dos argumentos"
           );
         if (t0 !== "string" && !Array.isArray(a0))
-          throw new SintesisError(
+          throw new SintesisError(null, 
             ctx.args.children[1],
-            this.t("tipo incorrecto")
+            "tipo incorrecto"
           );
         let start = a1;
         let end = a2;
         if (t1 !== "number")
-          throw new SintesisError(
+          throw new SintesisError(null, 
             ctx.args.children[3],
-            this.t("tipo incorrecto")
+            "tipo incorrecto"
           );
         if (start < 0)
-          throw new SintesisError(
+          throw new SintesisError(null, 
             ctx.args.children[3],
             "No puede ser negativo"
           );
         if (end && typeof end !== "number")
-          throw new SintesisError(
+          throw new SintesisError(null, 
             ctx.args.children[5],
-            this.t("tipo incorrecto")
+            "tipo incorrecto"
           );
         if (Array.isArray(a0)) return a0.slice(start, end);
         return a0.substring(start, end);
       case "LowerContext":
       case "UpperContext":
         if (args.length < 1)
-          throw new SintesisError(
+          throw new SintesisError(null, 
             ctx.args,
-            this.t("debe especificar un argumento")
+            "debe especificar un argumento"
           );
         if (t0 !== "string")
-          throw new SintesisError(
+          throw new SintesisError(null, 
             ctx.args.children[1],
-            this.t("tipo incorrecto")
+            "tipo incorrecto"
           );
         return fn == "LowerContext" ? a0.toLowerCase() : a0.toUpperCase();
       case "MinContext":
       case "MaxContext":
         if (args.length < 1)
-          throw new SintesisError(
+          throw new SintesisError(null, 
             ctx.args,
-            this.t("debe especificar al menos un argumento")
+            "debe especificar al menos un argumento"
           );
         for (var i in args) {
           var arg = valueOf(args[i]);
           if (typeof arg !== "number")
-            throw new SintesisError(
+            throw new SintesisError(null, 
               ctx.args.children[1 + i * 2],
-              this.t("tipo incorrecto")
+              "tipo incorrecto"
             );
         }
         const fz = fn === "MaxContext" ? Math.max : Math.min;
@@ -838,14 +824,14 @@ export default class SintesisEval extends SintesisParserVisitor {
       }
       case "OrdContext": {
         if (args.length < 1)
-          throw new SintesisError(
+          throw new SintesisError(null, 
             ctx.args,
-            this.t("debe especificar un argumento")
+            "debe especificar un argumento"
           );
         if (t0 !== "string")
-          throw new SintesisError(
+          throw new SintesisError(null, 
             ctx.args.children[1],
-            this.t("tipo incorrecto")
+            "tipo incorrecto"
           );
         // https://locutus.io/php/strings/ord/
         const str = a0 + "";
@@ -865,14 +851,14 @@ export default class SintesisEval extends SintesisParserVisitor {
       }
       case "ChrContext": {
         if (args.length < 1)
-          throw new SintesisError(
+          throw new SintesisError(null, 
             ctx.args,
-            this.t("debe especificar un argumento")
+            "debe especificar un argumento"
           );
         if (t0 !== "number")
-          throw new SintesisError(
+          throw new SintesisError(null, 
             ctx.args.children[1],
-            this.t("tipo incorrecto")
+            "tipo incorrecto"
           );
         let n = a0;
         // https://stackoverflow.com/questions/37395989/javascript-equivalent-of-phps-chr-function
@@ -957,7 +943,7 @@ export default class SintesisEval extends SintesisParserVisitor {
     const memoryref = SymbolFinder.findSymbol(ctx, id);
     // comprobamos accesibilidad de atributos métodos
     if (!SymbolFinder.canAccess(memoryref, ctx))
-      throw new SintesisError(ctx, this.t("acceso no permitido"));
+      throw new SintesisError(null, ctx, "acceso no permitido");
     // console.log('EXPIDER', memoryref)
     return memoryref;
   }
@@ -970,7 +956,7 @@ export default class SintesisEval extends SintesisParserVisitor {
     const memoryref = SymbolFinder.findSymbol(ctx, id);
     // comprobamos accesibilidad de atributos métodos
     if (!SymbolFinder.canAccess(memoryref, ctx))
-      throw new SintesisError(ctx, this.t("acceso no permitido"));
+      throw new SintesisError(null, ctx, "acceso no permitido");
     // console.log('EXPIDER', memoryref)
     return memoryref;
   }
@@ -988,7 +974,7 @@ export default class SintesisEval extends SintesisParserVisitor {
   async visitExpAttributes(ctx) {
     // console.log('#visitExpAttributes')
     if (!SymbolFinder.insideClass(ctx))
-      throw new SintesisError(ctx, this.t("referencia fuera de clase"));
+      throw new SintesisError(null, ctx, "referencia fuera de clase");
     const s = SymbolFinder.findSymbol(ctx, "___attributes");
     // console.log(s)
     // console.log(printObject(s))
@@ -997,7 +983,7 @@ export default class SintesisEval extends SintesisParserVisitor {
 
   async visitExpMethods(ctx) {
     if (!SymbolFinder.insideClass(ctx))
-      throw new SintesisError(ctx, this.t("referencia fuera de clase"));
+      throw new SintesisError(null, ctx, "referencia fuera de clase");
     return SymbolFinder.findSymbol(ctx, "___methods");
   }
 
@@ -1005,11 +991,11 @@ export default class SintesisEval extends SintesisParserVisitor {
   async visitExpSuper(ctx) {
     const class_ctx = SymbolFinder.getClassContext(ctx);
     if (!class_ctx)
-      throw new SintesisError(ctx, this.t("referencia fuera de clase"));
+      throw new SintesisError(null, ctx, "referencia fuera de clase");
     if (!class_ctx.symbolTable.class.superClass)
-      throw new SintesisError(
+      throw new SintesisError(null, 
         ctx,
-        this.t("no existe clase padre de esta clase")
+        "no existe clase padre de esta clase"
       );
     return class_ctx.symbolTable.getRef("___super");
   }
@@ -1050,8 +1036,8 @@ export default class SintesisEval extends SintesisParserVisitor {
     return str;
   }
 
-  /*                                                                                    async visitStepStatement(ctx) {
-    return                                                                                    await this.visitChildren(ctx)
+  /*                                                                                     async visitStepStatement(ctx) {
+    return                                                                                     await this.visitChildren(ctx)
   } */
 
   // Visit a parse tree produced by SintesisParser#expLiteral.
@@ -1157,19 +1143,16 @@ await     items.mapAsyncSequence(async(x) => {
                 keyContext = keyContext.children[0];
                 break;
               default:
-                  throw new SintesisError(
-                    x,
-                    this.t("tipo o formato incorrecto")
-                  );
+                throw new SintesisError(null, x, "tipo o formato incorrecto");
             }
           }
           break;
         default:
           //m.setValue(key,
           if (key === undefined)
-            throw new SintesisError(x, this.t("tipo o formato incorrecto"));
+            throw new SintesisError(null, x, "tipo o formato incorrecto");
           if (key === null)
-            throw new SintesisError(x, this.t("la clave no puede ser nula"));
+            throw new SintesisError(null, x, "la clave no puede ser nula");
           obj[key] = valueOf(await this.visit(x));
           key = undefined;
       }
@@ -1185,7 +1168,7 @@ await     items.mapAsyncSequence(async(x) => {
     const memoryref = await this.visit(ctx.dest);
     const obj = valueOf(memoryref._variable);
     if (typeof obj !== "object")
-      return new SintesisError(ctx.dest, this.t("tipo incorrecto"));
+      return new SintesisError(null, ctx.dest, "tipo incorrecto");
     return delete memoryref._variable.value[memoryref._index];
   }
 
@@ -1205,11 +1188,11 @@ await     items.mapAsyncSequence(async(x) => {
     var memoryref = await this.visit(ctx.dest);
     memoryref = memoryref;
     if (!memoryref)
-      throw new SintesisError(ctx.dest, this.t("símbolo no encontrado"));
+      throw new SintesisError(null, ctx.dest, "símbolo no encontrado");
     if (!(memoryref instanceof MemoryRef))
-      throw new SintesisError(
+      throw new SintesisError(null, 
         ctx.dest,
-        this.t("operador izquierdo de '%s' es inválido", ctx.op.text)
+        "operador izquierdo de '%s' es inválido", ctx.op.text
       );
     if (pre) {
       memoryref.increment(inc);

@@ -1,0 +1,1 @@
+--timeout 3000 // establece un tiempo límite de 3 segundos para todas las pruebas
