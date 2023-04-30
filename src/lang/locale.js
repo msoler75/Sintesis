@@ -72,5 +72,6 @@ export const translate = async (str, ...args) => {
   //console.log('translate', str, args)
   const slug = slugify(str.replace(/'?%[ds]'?\s?|\s?'?%[ds]'?/g, ""));
   // obtenemos la cadena traducida de la base de datos
-  return sprintf(await _t(slug), ...args);
+  const r = await _t(slug)
+  return sprintf(r==str?str:r , ...args);
 };

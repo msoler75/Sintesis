@@ -48,12 +48,19 @@ export const handleError = async (code, err) => {
   if (err instanceof SyntaxError) {
     const data = JSON.parse(err.message);
     const m1 = data.msg.match("no viable alternative at input '(.*)'")
+    const m2 = data.msg.match("mismatched input '(.+?)' expecting (.+)")
     if(m1)
     {
         data.msg = "no se esperaba '%s'"
         data.args = [m1[1]]
         if(data.args[0]=='<EOF>')
         data.args[0] = await translate('<fin de archivo>')
+    }
+    else if(m2) {
+        data.msg = "no se esperaba '%s'"
+        data.args = [m2[1]]
+        // if(data.args[0]=='<EOF>')
+        // data.args[0] = await translate('<fin de archivo>')
     }
       /*.replace("extraneous", await translate("extrana"))
       .replace("input", await translate("entrada"))
