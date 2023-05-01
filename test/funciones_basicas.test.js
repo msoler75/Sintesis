@@ -26,9 +26,9 @@ describe("Funciones básicas", () => {
       await exec(`        
         imprimir Mates.max(1, 2, 3, 4, 5)
         imprimir Mates.min(1, 2, 3, 4, 5)
-        imprimir Mates.round(6.7)
-        imprimir Mates.floor(6.7)
-        imprimir Mates.ceil(6.7)
+        imprimir Mates.redondear(6.7)
+        imprimir Mates.suelo(6.7)
+        imprimir Mates.techo(6.7)
     `)
     ).equalsIgnoringSpaces(`5 1 7 6 7`));
 

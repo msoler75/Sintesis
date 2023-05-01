@@ -14,7 +14,7 @@ imprimir "4. " + [1,2,3].indiceDe(0)
 imprimir "\nConvertir valores"
 imprimir "1. " + convert(2, "texto")         // segundo argumento: t, texto
 imprimir "2. " + convert("2.5", "entero")    // segundo argumento: e, ent, entero
-imprimir "3. " + convert("2.5", "decimal")   // segundo argumento: d, dec, decimal
+imprimir "3. " + convert("2", "decimal")   // segundo argumento: d, dec, decimal
 
 imprimir "\nsubparte de un texto o un array"
 imprimir "1. " + "hola".sub(1)
@@ -27,8 +27,8 @@ imprimir "1. " + "HoLa, ¿Qué TaL?".mayúsculas()   // alternativas: mayusculas
 imprimir "2. " + "HoLa, ¿Qué TaL?".minúsculas()   // alternativas: minusculas, minúsculas
 
 imprimir "\nValor máximo o mínimo de un conjunto de números"
-imprimir "1. " + Mates.max([1, 2, 3])
-imprimir "2. " + Mates.min([1, 2, 3])
+imprimir "1. " + Mates.max(1, 2, 3)
+imprimir "2. " + Mates.min(1, 2, 3)
 
 imprimir "\nGenerador de valores aleatorios, pudiendo indicar el valor máximo y opcionalmente el mínimo"
 imprimir "1. " + aleatorio()    // de 0 a .9999999999999 en formato decimal
