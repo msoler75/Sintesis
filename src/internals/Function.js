@@ -1,4 +1,3 @@
-import words from '../lang/words.es.js'
 import Variable from './Variable.js'
 import Class from './Class.js'
 
@@ -22,8 +21,7 @@ class Function extends Variable {
   }
 
   toString() {
-    // return `${words.FUNCTION} (${this.params.join(', ')})`
-    return `${words.FUNCTION_SHORT}(${this.params.join(', ')})`
+    return `f(${this.params.join(', ')})`
   }
 }
 

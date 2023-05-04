@@ -47,5 +47,15 @@
     "metodo-no-encontrado":"método '%s' no encontrado",
     "atributo-no-encontrado":"atributo '%s' no encontrado",
     "el-indice-debe-ser-numerico":"índice debe ser numérico",
-    "numero-de-argumentos-incorrecto": "número de argumentos incorrecto"
+    "numero-de-argumentos-incorrecto": "número de argumentos incorrecto",
+    "clase":"clase",
+    "atributos":"atributos",
+    "métodos":"métodos",
+    "extiende":"extiende",
+    "función":"función",
+    "nulo":"nulo",
+    "cierto":"cierto",
+    "falso":"falso",
+    "referencia":"referencia",
+    "instancia":"instancia"
 }

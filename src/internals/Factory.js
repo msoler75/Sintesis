@@ -235,6 +235,7 @@ Object.defineProperty(List.prototype, "setVariable", {
   },
 });
 
+/*
 Object.defineProperty(List.prototype, "appendVariable", {
   value: function (value) {
     return this.setVariable(this.size(), value);
@@ -247,7 +248,7 @@ Object.defineProperty(List.prototype, "insertVariable", {
     return this.setVariable(0, value);
   },
 });
-
+*/
 Object.defineProperty(List.prototype, "setValue", {
   value: function (index, value) {
     if (value instanceof Variable) return this.setVariable(index, value);
@@ -258,6 +259,7 @@ Object.defineProperty(List.prototype, "setValue", {
   },
 });
 
+/* 
 Object.defineProperty(List.prototype, "insertValue", {
   value: function (value) {
     this._value.unshift(new Variable());
@@ -282,6 +284,7 @@ Object.defineProperty(List.prototype, "delete", {
     }
   },
 });
+*/
 
 function executeStringMethod(ctx, ref, method, args) {
   const str = ref._variable.value;

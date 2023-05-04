@@ -1,7 +1,10 @@
 import exec from "./lib/exec.js";
 import fs from "fs";
 import {handleError} from "./src/SintesisError.js";
-import { translate } from "./src/lang/locale.js";
+import {defineTranslateCallback, translate} from './src/lang/SintesisLang.js'
+import { translateI18 } from "./lang/locale.js";
+
+defineTranslateCallback(translateI18)
 
 const ucfirst = (text) => {
   return text.charAt(0).toUpperCase() + text.slice(1);

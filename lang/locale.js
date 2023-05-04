@@ -3,11 +3,9 @@ import backend from "i18next-fs-backend";
 import i18nextMiddleware from "i18next-express-middleware";
 import path from "path";
 import { fileURLToPath } from "url";
-import { sprintf } from "../utils/Print.js";
+import { sprintf } from "../src/utils/Print.js";
 
 var loaded = false;
-
-
 
 export const loadLocales = async () => {
   const currentFilePath = fileURLToPath(import.meta.url);
@@ -32,6 +30,7 @@ export const loadLocales = async () => {
 };
 
 export const _t = async (slug) => {
+  console.log('_t', slug)
   // cargamos las traducciones en caso de ser necesario
   if (!loaded) 
     await loadLocales();
@@ -66,7 +65,7 @@ export const slugify = (text) =>
     .replace(/[^\w\-]+/g, "") // remove all non-word chars
     .replace(/\-\-+/g, "-"); // replace multiple '-' with single '-'
 
-export const translate = async (str, ...args) => {
+export const translateI18 = async (str, ...args) => {
   // convertimos a slug, y quitamos los %s y %d:
 
   //console.log('translate', str, args)

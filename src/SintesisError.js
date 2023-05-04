@@ -1,5 +1,5 @@
 import antlr4 from "antlr4";
-import { loadLocales, translate } from "./lang/locale.js";
+import { translate } from "./lang/SintesisLang.js";
 
 export class SintesisErrorListener extends antlr4.error.ErrorListener {
   syntaxError(recognizer, offendingSymbol, line, column, msg, err) {
@@ -59,8 +59,8 @@ export const handleError = async (code, err) => {
     else if(m2) {
         data.msg = "no se esperaba '%s'"
         data.args = [m2[1]]
-        // if(data.args[0]=='<EOF>')
-        // data.args[0] = await translate('<fin de archivo>')
+        if(data.args[0]=='<EOF>')
+        data.args[0] = await translate('<fin de archivo>')
     }
       /*.replace("extraneous", await translate("extrana"))
       .replace("input", await translate("entrada"))

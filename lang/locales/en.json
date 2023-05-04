@@ -50,5 +50,15 @@
     "metodo-no-encontrado":"method '%s' not found",
     "atributo-no-encontrado":"property '%s' not found",
     "el-indice-debe-ser-numerico":"index must be numeric",
-    "numero-de-argumentos-incorrecto": "invalid argument number"
+    "numero-de-argumentos-incorrecto": "invalid argument number",
+    "clase":"class",
+    "atributos":"attributes",
+    "métodos":"methods",
+    "extiende":"extends",
+    "función":"function",
+    "nulo":"null",
+    "cierto":"true",
+    "falso":"false",
+    "referencia":"refer",
+    "instancia":"instance"
 }

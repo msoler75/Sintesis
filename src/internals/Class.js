@@ -1,4 +1,4 @@
-import words from '../lang/words.es.js'
+import {translate} from '../lang/SintesisLang.js'
 import {
     printObject
 } from '../utils/Print.js'
@@ -65,7 +65,7 @@ class Class {
     */
 
     toString() {
-        return `${words.CLASS} ${this.name} { ${words.ATTRIBUTES}: ${printObject(this.attributes)}, ${words.METHODS}: ${printObject(this.methods)}}`
+        return translate('clase')+` ${this.name} ${translate('atributos')}: ${printObject(this.attributes)}, ${translate('métodos')}: ${printObject(this.methods)}}`
     }
 
 }

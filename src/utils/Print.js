@@ -2,7 +2,7 @@ import Class from '../internals/Class.js'
 import Instance from '../internals/Instance.js'
 import RefClass from '../internals/RefClass.js'
 import MemoryRef from '../internals/MemoryRef.js'
-import words from '../lang/words.es.js'
+import {translate} from '../lang/SintesisLang.js'
 
 
 const TAB = '  '
@@ -43,16 +43,16 @@ function printThing(obj) {
         return obj.toString()
 
     if (obj instanceof Class)
-        return `(${words.CLASS})`
+        return translate('clase')
 
     if (obj instanceof Instance)
-        return `(${words.INSTANCE})`
+        return translate('instancia')
 
     if (obj instanceof RefClass)
-        return `${words.REFERENCE}`
+        return translate('referencia')
 
     if (obj instanceof Function)
-        return `${words.FUNCTION}`
+        return translate('función')
 
     if ('children' in obj)
         console.warn('dont use context classes here')
@@ -65,9 +65,9 @@ function printThing(obj) {
  * No debe usarse para ningun otro tipo (Variable, Clase, Función...)
  */
 function printObject(obj) {
-    if (obj === undefined || obj === null) return words.NULL
-    if (obj === true) return words.TRUE
-    if (obj === false) return words.FALSE
+    if (obj === undefined || obj === null) return translate('nulo')
+    if (obj === true) return translate('cierto')
+    if (obj === false) return translate('falso')
     if (!obj || typeof obj !== 'object')
         return obj
     let values = []

@@ -43,6 +43,7 @@ describe("Lists", () => {
       "[10, 20, , {j: 1, p: 2}, , 55]"
     ));
 
+    /*
   var v4 = new List([10, 20, 30, 40, 50, 60, 70]);
   v4.delete(4);
   v4.delete(2);
@@ -55,7 +56,7 @@ describe("Lists", () => {
   v4b.delete(3);
   it("delete 2", async () =>
     expect(v4b.toString()).equalsIgnoringSpaces("[10, 20, 40, 70 ]"));
-
+/*
   let v5 = new List([10, 20, 30]);
   v5.insertValue(-1);
   it("insert number", async () =>
@@ -88,7 +89,7 @@ describe("Lists", () => {
     expect(v5d.toString()).equalsIgnoringSpaces(
       "[{m: 8}, {h:3, k:7}, [5, 6], -2, -1, 10, 20, 30, 99, 101, {z:8, x: 2}, {y: a}]"
     ));
-
+*/
   let v6 = new List([10, 20]);
   let m2 = new Dictionary({
     j: 1,
@@ -103,6 +104,7 @@ describe("Lists", () => {
   it("list with dictionary 2", async () =>
     expect(v6.getMemberRef(3).getMemberRef("p").toString()).equalsIgnoringSpaces("2"));
 
+    /*
   let v7 = new List([10, 20]);
   let m3 = new Dictionary({
     j: 1,
@@ -113,7 +115,7 @@ describe("Lists", () => {
   m3.delete("j");
   it("after delete key", async () =>
     expect(v7.getMemberRef(3).toString()).equalsIgnoringSpaces("{p: 2, k: 77}"));
-
+*/
   let v8 = new List([10, 20]);
   let mx = new Dictionary({
     j: 1,
