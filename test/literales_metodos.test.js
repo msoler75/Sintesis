@@ -72,6 +72,13 @@ describe("Métodos en Literales", async (t) => {
 `)
     ).equalsIgnoringSpaces(`[hola, mundo]`));
 
+  it("array join to string", async () =>
+    expect(
+      await exec(`
+   imprimir [1,2,3].join('-')
+`)
+    ).equalsIgnoringSpaces(`1-2-3`));
+
   it("string case", async () =>
     expect(
       await exec(`

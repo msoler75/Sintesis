@@ -164,11 +164,19 @@ function executeListMethod(ctx, ref, method, args) {
       array.sort((a, b) => a.compareTo(b));
       return ref;
     case "sub":
+      if(args.length<1)
+        throw new Error("número de argumentos incorrecto");
       return args.length>1?array.slice(v0, v1):array.slice(v0)      
+    case "join":
+    case "unir":
+      if(args.length<1)
+        throw new Error("número de argumentos incorrecto");
+      return array.join(v0);
   }
   throw new Error(`método '%s' no encontrado`);
 }
 
+// TO-DO este método y la comprobación de los métodos se puede ahorrar?
 Object.defineProperty(List.prototype, "getMemberRef", {
   value: function (index, create) {
     index = _checkIndex(index, true);
@@ -199,7 +207,11 @@ Object.defineProperty(List.prototype, "getMemberRef", {
           "invertir",
           "sort",
           "ordenar",
-          "sub"
+          "sub",
+          "split",
+          "dividir",
+          "unir",
+          "join"
         ].includes(index) &&
         !create
       )
