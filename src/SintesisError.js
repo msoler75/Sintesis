@@ -47,22 +47,18 @@ export class SintesisError {
 export const handleError = async (code, err) => {
   if (err instanceof SyntaxError) {
     const data = JSON.parse(err.message);
-    const m1 = data.msg.match("no viable alternative at input '(.*)'")
-    const m2 = data.msg.match("mismatched input '(.+?)' expecting (.+)")
-    if(m1)
-    {
-        data.msg = "no se esperaba '%s'"
-        data.args = [m1[1]]
-        if(data.args[0]=='<EOF>')
-        data.args[0] = await translate('<fin de archivo>')
+    const m1 = data.msg.match("no viable alternative at input '(.*)'");
+    const m2 = data.msg.match("mismatched input '(.+?)' expecting (.+)");
+    if (m1) {
+      data.msg = "no se esperaba '%s'";
+      data.args = [m1[1]];
+    } else if (m2) {
+      data.msg = "no se esperaba '%s'";
+      data.args = [m2[1]];
     }
-    else if(m2) {
-        data.msg = "no se esperaba '%s'"
-        data.args = [m2[1]]
-        if(data.args[0]=='<EOF>')
-        data.args[0] = await translate('<fin de archivo>')
-    }
-      /*.replace("extraneous", await translate("extrana"))
+    if (data.args && data.args[0] == "<EOF>")
+      data.args[0] = await translate("<fin de archivo>");
+    /*.replace("extraneous", await translate("extrana"))
       .replace("input", await translate("entrada"))
       .replace("expecting", await translate("se esperaba"))
       .replace("mismatched", await translate("no coincide"))
@@ -70,10 +66,10 @@ export const handleError = async (code, err) => {
       .replace(/\bat\b/g, await translate("en"))
       .replace("missing", await translate("se esperaba")) */
 
-    printError(code, (await translate("error de sintaxis")) + ":", data);
+    await printError(code, "error de sintaxis", data);
   } else if (err instanceof SintesisError) {
     //SintesisError
-    printError(code, (await translate(err.category)) + ":", err);
+    await printError(code, err.category, err);
   } else console.error(err);
 };
 
@@ -83,9 +79,9 @@ const ucfirst = (text) => {
 
 export const printError = async (code, titulo, err) => {
   const lines = code.split("\n");
+  if (!titulo) titulo = "error";
   let line = lines[err.line - 1];
-  if(!err.args)
-  err.args = []
+  if (!err.args) err.args = [];
   let numline = ucfirst(await translate("línea")) + " " + err.line + ":   ";
   console.log(numline + line);
   console.log(
@@ -93,7 +89,7 @@ export const printError = async (code, titulo, err) => {
       "^".repeat(err.stop - err.start + 1)
   );
   console.log(
-    ucfirst(titulo),
+    ucfirst(await translate(titulo)) + ":",
     await translate(err.msg, ...err.args)
   );
 };

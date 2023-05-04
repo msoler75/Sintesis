@@ -154,23 +154,20 @@ function executeListMethod(ctx, ref, method, args) {
         return 1;
       }
       return -1; */
-    case "reverse":
-    case "invertir":
-      // ref.value =
-      array.reverse();
-      return ref;
     case "sort":
     case "ordenar":
       array.sort((a, b) => a.compareTo(b));
       return ref;
     case "sub":
-      if(args.length<1)
-        throw new Error("número de argumentos incorrecto");
-      return args.length>1?array.slice(v0, v1):array.slice(v0)      
+      if (args.length < 1) throw new Error("número de argumentos incorrecto");
+      return args.length > 1 ? array.slice(v0, v1) : array.slice(v0);
+    case "invertir":
+    case "reverse":
+      const copy =[...array]
+      return copy.reverse()
     case "join":
     case "unir":
-      if(args.length<1)
-        throw new Error("número de argumentos incorrecto");
+      if (args.length < 1) throw new Error("número de argumentos incorrecto");
       return array.join(v0);
   }
   throw new Error(`método '%s' no encontrado`);
@@ -211,7 +208,9 @@ Object.defineProperty(List.prototype, "getMemberRef", {
           "split",
           "dividir",
           "unir",
-          "join"
+          "join",
+          "invertir",
+          "reverse"
         ].includes(index) &&
         !create
       )
@@ -315,6 +314,9 @@ function executeStringMethod(ctx, ref, method, args) {
     case "split":
     case "dividir":
       return str.split(v0);
+    case "invertir":
+    case "reverse":
+      return str.split("").reverse().join("");
     case "trim":
     case "limpiar":
     case "nettoyer":

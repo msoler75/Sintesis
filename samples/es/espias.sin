@@ -1,0 +1,8 @@
+def encriptar2(mensaje) {
+    palabras =[]
+   para cada indice, palabra de palabras
+    palabras[indice] = 1
+    
+    return 2
+}
+imprimir encriptar2("")

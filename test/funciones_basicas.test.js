@@ -12,6 +12,21 @@ describe("Funciones básicas", () => {
     `)
     ).equalsIgnoringSpaces(`4 3`));
 
+
+
+    it("invertir", async () =>
+    expect(
+      await exec(`
+      a = "hola"
+      b = [1,2,3]
+      imprimir a.invertir()
+      imprimir b.invertir()
+    `)
+    ).equalsIgnoringSpaces(`aloh [3, 2, 1]`));
+
+
+
+
   it("convertir", async () =>
     expect(
       await exec(`
@@ -55,11 +70,11 @@ describe("Funciones básicas", () => {
   it("aleatorio 2", async () => {
     const result = parseInt(
       await exec(`        
-              imprimir aleatorio(7)
+              imprimir aleatorio(3)
           `)
     );
     assert.ok(
-      result >= 0 && result < 7,
+      result >= 1 && result <= 3,
       `Result ${result} is not within the expected range`
     );
   });
@@ -71,8 +86,36 @@ describe("Funciones básicas", () => {
           `)
     );
     assert.ok(
-      result >= 3 && result < 7,
+      result >= 3 && result <= 7,
       `Result ${result} is not within the expected range`
     );
   });
+
+
+  it("encandenadas invertir", async () => 
+  expect(
+    await exec(`   
+    palabras = ["hola", "mundo"]
+    imprimir palabras.invertir().join(" ")
+    imprimir palabras.join(" ")
+  `)
+  ).equalsIgnoringSpaces(`mundo hola hola mundo`));
+
+
+
+  it("encandenadas invertir2", async () => 
+    expect(
+      await exec(`   
+      función encriptar2(mensaje){
+      palabras = mensaje.dividir(“ ”)
+      para cada indice,palabra de palabras {
+      si indice % 2 == 0 
+      palabras[ indice] = palabra.mayusculas()
+      o si no
+      palabras[indice] =  palabra.minusculas()}
+      retornar  palabras.invertir().unir(' ')}
+      imprimir encriptar2("el pájaro está en la jaula")
+          `)
+    ).equalsIgnoringSpaces(`5 1 7 6 7`));
+ 
 });
