@@ -1,3 +1,3 @@
-export var translate = async (x) => x
+export var translate = (x) => x
 
 export const defineTranslateCallback = (newTranslateCallback) => translate = newTranslateCallback

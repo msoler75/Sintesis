@@ -44,7 +44,7 @@ export class SintesisError {
   }
 }
 
-export const handleError = async (code, err) => {
+export const handleError = (code, err) => {
   if (err instanceof SyntaxError) {
     const data = JSON.parse(err.message);
     const m1 = data.msg.match("no viable alternative at input '(.*)'");
@@ -57,19 +57,19 @@ export const handleError = async (code, err) => {
       data.args = [m2[1]];
     }
     if (data.args && data.args[0] == "<EOF>")
-      data.args[0] = await translate("<fin de archivo>");
-    /*.replace("extraneous", await translate("extrana"))
-      .replace("input", await translate("entrada"))
-      .replace("expecting", await translate("se esperaba"))
-      .replace("mismatched", await translate("no coincide"))
-      .replace("alternative", await translate("alternativa"))
-      .replace(/\bat\b/g, await translate("en"))
-      .replace("missing", await translate("se esperaba")) */
+      data.args[0] = translate("<fin de archivo>");
+    /*.replace("extraneous", translate("extrana"))
+      .replace("input", translate("entrada"))
+      .replace("expecting", translate("se esperaba"))
+      .replace("mismatched", translate("no coincide"))
+      .replace("alternative", translate("alternativa"))
+      .replace(/\bat\b/g, translate("en"))
+      .replace("missing", translate("se esperaba")) */
 
-    await printError(code, "error de sintaxis", data);
+    printError(code, "error de sintaxis", data);
   } else if (err instanceof SintesisError) {
     //SintesisError
-    await printError(code, err.category, err);
+    printError(code, err.category, err);
   } else console.error(err);
 };
 
@@ -77,19 +77,19 @@ const ucfirst = (text) => {
   return text.charAt(0).toUpperCase() + text.slice(1);
 };
 
-export const printError = async (code, titulo, err) => {
+export const printError = (code, titulo, err) => {
   const lines = code.split("\n");
   if (!titulo) titulo = "error";
   let line = lines[err.line - 1];
   if (!err.args) err.args = [];
-  let numline = ucfirst(await translate("línea")) + " " + err.line + ":   ";
+  let numline = ucfirst(translate("línea")) + " " + err.line + ":   ";
   console.log(numline + line);
   console.log(
     " ".repeat(numline.length + err.column) +
       "^".repeat(err.stop - err.start + 1)
   );
   console.log(
-    ucfirst(await translate(titulo)) + ":",
-    await translate(err.msg, ...err.args)
+    ucfirst(translate(titulo)) + ":",
+    translate(err.msg, ...err.args)
   );
 };

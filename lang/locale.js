@@ -7,7 +7,7 @@ import { sprintf } from "../src/utils/Print.js";
 
 var loaded = false;
 
-export const loadLocales = async () => {
+export const initI18 = async () => {
   const currentFilePath = fileURLToPath(import.meta.url);
   const currentDirPath = path.dirname(currentFilePath);
   const localesPath = path.join(currentDirPath, "./locales", "{{lng}}.json");
@@ -29,11 +29,13 @@ export const loadLocales = async () => {
     });
 };
 
-export const _t = async (slug) => {
-  console.log('_t', slug)
+export const _t = (slug) => {
+  // console.log('_t', slug)
   // cargamos las traducciones en caso de ser necesario
-  if (!loaded) 
-    await loadLocales();
+  if (!loaded) {
+    loadLocales();
+    return slug;
+  }
   return i18next.t(slug);
 };
 
@@ -65,12 +67,12 @@ export const slugify = (text) =>
     .replace(/[^\w\-]+/g, "") // remove all non-word chars
     .replace(/\-\-+/g, "-"); // replace multiple '-' with single '-'
 
-export const translateI18 = async (str, ...args) => {
+export const translateI18 = (str, ...args) => {
   // convertimos a slug, y quitamos los %s y %d:
 
   //console.log('translate', str, args)
   const slug = slugify(str.replace(/'?%[ds]'?\s?|\s?'?%[ds]'?/g, ""));
   // obtenemos la cadena traducida de la base de datos
-  const r = await _t(slug)
+  const r = _t(slug)
   return sprintf(r==str?str:r , ...args);
 };

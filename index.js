@@ -2,7 +2,7 @@ import exec from "./lib/exec.js";
 import fs from "fs";
 import {handleError} from "./src/SintesisError.js";
 import {defineTranslateCallback, translate} from './src/lang/SintesisLang.js'
-import { translateI18 } from "./lang/locale.js";
+import { translateI18, initI18 } from "./lang/locale.js";
 
 defineTranslateCallback(translateI18)
 
@@ -11,11 +11,17 @@ const ucfirst = (text) => {
 };
 
 async function main() {
+
   const command_arg = process.argv[2];
 
   if (!command_arg) {
-    console.log(ucfirst(await translate("debes especificar un archivo o un programa")));
+    console.log(ucfirst(translate("debes especificar un archivo o un programa")));
   } else {
+
+    // cargamos el sistema de traducciones
+    await initI18()
+
+    // procesamos el código o archivo
     let sintesis_code = command_arg;
     let file = command_arg;
     if (file.match(/.*\.s(in|intesis)?$/) || fs.existsSync(file)) {
